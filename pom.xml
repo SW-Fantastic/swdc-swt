@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.swdc.swt</groupId>
+    <artifactId>application-swt</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+
+    <properties>
+        <swt.version>4.6.1</swt.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+    </properties>
+
+
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>3.0.8</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.swdc.swt</groupId>
+            <artifactId>swt-wapper-x64</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.swdc</groupId>
+            <artifactId>application-component</artifactId>
+            <version>1.3-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.swdc</groupId>
+            <artifactId>application-configure</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.babel</groupId>
+            <artifactId>chinese</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/libs/org.eclipse.jface.nl_zh_4.19.0.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+</project>
