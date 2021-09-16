@@ -1,8 +1,36 @@
 package org.swdc.swt.widgets;
 
-import java.util.Locale;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
-public class WidgetUtils {
+
+public class SWTWidgets {
+
+    private static final Display display = new Display();
+    private static final FormToolkit toolkit = new FormToolkit(SWTWidgets.getDisplay());
+
+
+    public static FormToolkit factory() {
+        return toolkit;
+    }
+
+    public static boolean isFormAPI(Composite w) {
+        boolean isFormWidget = w.getClass().getPackage().getName().contains("org.eclipse.ui.forms");
+        if (w.getParent() == null && !isFormWidget) {
+            return false;
+        } else if (w.getParent() != null && !isFormWidget) {
+            return isFormAPI(w.getParent());
+        } else if (w.getParent() == null && isFormWidget) {
+            return true;
+        } else {
+            return w.getParent() != null && isFormWidget;
+        }
+    }
+
+    public static Display getDisplay() {
+        return display;
+    }
 
     public static SWTColor colorHex(String colorStr){
         int[] rgb = hex2RGB(colorStr);

@@ -4,8 +4,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
-import org.swdc.swt.widgets.WidgetUtils;
 
 public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
@@ -53,14 +53,18 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
                 swtWidget.ready(stage);
                 swtWidget = swtWidget.getNext();
             }
-
         }
     }
 
     @Override
     public Composite getWidget(Composite parent) {
         if (composite == null && parent != null) {
-            composite = new Composite(parent,flag);
+            boolean isFormWidget = parent.getClass().getPackage().getName().contains("org.eclipse.ui.forms");
+            if (isFormWidget) {
+                composite = SWTWidgets.factory().createComposite(parent,flag);
+            } else {
+                composite = new Composite(parent,flag);
+            }
             composite.setSize(width,height);
             if (this.layout != null) {
                 composite.setLayout(layout.getLayout());

@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +76,13 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
     @Override
     public Table getWidget(Composite parent) {
         if (this.table == null && parent != null) {
-            this.table = new Table(parent,this.flags);
-
+            if (SWTWidgets.isFormAPI(parent)) {
+                FormToolkit toolkit = SWTWidgets.factory();
+                this.table = toolkit.createTable(parent,this.flags);
+                toolkit.paintBordersFor(parent);
+            } else {
+                this.table = new Table(parent,this.flags);
+            }
         }
         return table;
     }

@@ -118,4 +118,9 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
         }
         this.widget = widget;
     }
+
+    public static SWTScrollPane scrollPane(int flag) {
+        return new SWTScrollPane(flag);
+    }
+
 }

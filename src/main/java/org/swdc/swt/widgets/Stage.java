@@ -3,7 +3,10 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Shell;
+import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTLayout;
+
+import java.lang.reflect.Field;
 
 public class Stage implements SWTContainer  {
 
@@ -65,6 +68,21 @@ public class Stage implements SWTContainer  {
         target.getWidget(this.shell);
         target.setStage(this);
         target.ready(this);
+        if (controller != null && target.getId() != null){
+            Field[] fields = controller.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                Widget widget = field.getAnnotation(Widget.class);
+                if (widget == null || !widget.value().equals(target.getId())) {
+                    continue;
+                }
+                try {
+                    field.setAccessible(true);
+                    field.set(controller,target);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+        }
         return target;
     }
 

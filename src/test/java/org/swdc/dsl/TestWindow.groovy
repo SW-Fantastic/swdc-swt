@@ -1,10 +1,10 @@
 import org.eclipse.jface.dialogs.MessageDialog
 import org.eclipse.swt.SWT
 import org.eclipse.swt.widgets.Display
+import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
 import org.swdc.swt.layouts.SWTBorderLayout
-import org.swdc.swt.layouts.SWTFillLayout
 import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTRowLayout
 import org.swdc.swt.widgets.SWTButton
@@ -13,6 +13,11 @@ import org.swdc.swt.widgets.SWTDateTime
 import org.swdc.swt.widgets.SWTLabel
 import org.swdc.swt.widgets.SWTLink
 import org.swdc.swt.widgets.SWTList
+import org.swdc.swt.widgets.SWTTree
+import org.swdc.swt.widgets.SWTWidgets
+import org.swdc.swt.widgets.form.SWTFormExpandPane
+import org.swdc.swt.widgets.form.SWTFormHyperLink
+import org.swdc.swt.widgets.form.SWTFormText
 import org.swdc.swt.widgets.pane.SWTPane
 import org.swdc.swt.widgets.SWTScale
 import org.swdc.swt.widgets.SWTSlider
@@ -24,14 +29,46 @@ import org.swdc.swt.widgets.SWTTable
 import org.swdc.swt.widgets.SWTTableColumn
 import org.swdc.swt.widgets.SWTText
 import org.swdc.swt.widgets.Stage
+import org.swdc.swt.widgets.form.SWTFormSection
 
 class TestWindow extends Stage {
+
+    private demoTable() {
+        SWTTable.table(SWT.NORMAL | SWT.FULL_SELECTION).define {
+
+            data Arrays.asList(
+                    new TestCell("aaa", "bbb"),
+                    new TestCell("1234", "cdef")
+            )
+
+            autoColumnWidth true
+
+            layout SWTGridLayout.cell().define {
+                colSpan 6
+                fillWidth true
+                fillHeight false
+                rowAlignment SWT.FILL
+                columnAlignment SWT.CENTER
+            }
+            children widget {
+                SWTTableColumn.tableColumn(SWT.CANCEL, "Test Col").define {
+                    width 120
+                    factory (TestCell obj) -> obj.getName()
+                }
+            } >> widget {
+                SWTTableColumn.tableColumn(SWT.CANCEL, "Col").define {
+                    width 120
+                    factory (TestCell obj) -> obj.getProp()
+                }
+            }
+        }
+    }
 
     void create() {
 
         controller new TestController()
         text "hello"
-        size 800,400
+        size 800,600
         layout SWTGridLayout.gridLayout().define {
             margin 6,6
             spacing 8,8
@@ -42,6 +79,11 @@ class TestWindow extends Stage {
                 text "change"
                 color "#66CCFF"
                 backgroundColor "#E6E6E6"
+                id "lblTest"
+                layout SWTGridLayout.cell().define {
+                    colSpan 2
+                    rowAlignment SWT.FILL
+                }
             }
         } >> widget {
             SWTText.textView(SWT.NORMAL|SWT.MULTI|SWT.V_SCROLL, "Test \nText").define {
@@ -65,34 +107,7 @@ class TestWindow extends Stage {
                 }
             }
         } >> widget {
-            SWTTable.table(SWT.NORMAL|SWT.FULL_SELECTION).define {
-
-                data Arrays.asList(
-                        new TestCell("aaa","bbb"),
-                        new TestCell("1234","cdef")
-                )
-
-                autoColumnWidth true
-
-                layout SWTGridLayout.cell().define {
-                    colSpan 6
-                    fillWidth true
-                    fillHeight false
-                    rowAlignment SWT.FILL
-                    columnAlignment SWT.CENTER
-                }
-                children widget {
-                    SWTTableColumn.tableColumn(SWT.CANCEL, "Test Col").define {
-                        width 120
-                        factory ( TestCell obj ) -> obj.getName()
-                    }
-                } >> widget {
-                    SWTTableColumn.tableColumn(SWT.CANCEL, "Col").define {
-                        width 120
-                        factory ( TestCell obj ) -> obj.getProp()
-                    }
-                }
-            }
+            demoTable()
         } >> widget {
             SWTComboBox.comboBox(SWT.NORMAL).define {
                 layout SWTGridLayout.cell().define {
@@ -106,13 +121,14 @@ class TestWindow extends Stage {
 
                 layout SWTGridLayout.cell().define {
                     colSpan 6
+                    rowSpan 4
+                    fillHeight true
                     fillWidth true
+                    columnAlignment SWT.FILL
                     rowAlignment SWT.FILL
                     width 120
                     height 120
                 }
-
-                size 0,120
 
                 children widget {
                     SWTTab.tab(SWT.NORMAL,"Tab 0").define {
@@ -152,18 +168,37 @@ class TestWindow extends Stage {
                 } >> widget {
                     SWTTab.tab(SWT.NORMAL, "control A").define {
                         children SWTPane.pane(SWT.NORMAL).define {
-                            layout SWTRowLayout.rowLayout(SWT.NORMAL)
+                            layout SWTRowLayout.rowLayout(SWT.HORIZONTAL)
                             children widget {
-                                SWTSpinner.spinner(SWT.NORMAL)
+                                SWTSpinner.spinner(SWT.NORMAL).define {
+                                    layout SWTRowLayout.cell().define {
+                                        size 80,SWT.DEFAULT
+                                    }
+                                }
                             } >> widget {
-                                SWTDateTime.dateTime(SWT.NORMAL)
+                                SWTDateTime.dateTime(SWT.NORMAL).define {
+                                    layout SWTRowLayout.cell().define {
+                                        size 80,SWT.DEFAULT
+                                    }
+                                }
                             } >> widget {
-                                SWTScale.scale(SWT.NORMAL)
+                                SWTScale.scale(SWT.NORMAL).define {
+                                    layout SWTRowLayout.cell().define {
+                                        size 80,SWT.DEFAULT
+                                    }
+                                }
                             } >> widget {
-                                SWTSlider.slider(SWT.NORMAL)
+                                SWTSlider.slider(SWT.NORMAL).define {
+                                    layout SWTRowLayout.cell().define {
+                                        size 80,SWT.DEFAULT
+                                    }
+                                }
                             } >> widget {
-                                new SWTLink(SWT.NORMAL).define {
+                                SWTLink.link(SWT.NORMAL).define {
                                     text "link text"
+                                    layout SWTRowLayout.cell().define {
+                                        size 80,SWT.DEFAULT
+                                    }
                                 }
                             }
                         }
@@ -171,12 +206,85 @@ class TestWindow extends Stage {
                 } >> widget {
                     SWTTab.tab(SWT.NORMAL,"Scroll").define {
                         children widget {
-                            SWTScrollPane pane = new SWTScrollPane(SWT.H_SCROLL | SWT.V_SCROLL)
-                            pane.size(120,120)
-                            pane.children(new SWTPane(SWT.NORMAL).size(1000,1000).layout(SWTGridLayout.gridLayout().define {
-                                columns 8
-                            }))
-                            pane
+                            SWTScrollPane.scrollPane(SWT.H_SCROLL|SWT.V_SCROLL).define {
+                                size 120,120
+                                children widget {
+                                    SWTPane.pane(SWT.NORMAL).define {
+                                        size 1000,1000
+                                        layout SWTGridLayout.gridLayout().define {
+                                            columns 8
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } >> widget {
+                    SWTTab.tab(SWT.NORMAL,"Tree").define {
+                        children widget{
+                            new SWTTree(SWT.NORMAL)
+                        }
+                    }
+                } >> widget {
+                    SWTTab.tab(SWT.NORMAL,"Form Section").define {
+                        children widget{
+                            SWTFormSection.section(Section.TITLE_BAR|Section.TWISTIE).define {
+                                text "Title"
+                                expand true
+                                children widget {
+                                    SWTPane.pane(SWT.NORMAL).define {
+                                        layout SWTGridLayout.gridLayout().define {
+                                            columns 4
+                                        }
+                                        children widget {
+                                            SWTLabel.label(SWT.NORMAL, "Test Sec")
+                                        } >> widget {
+                                            SWTButton.button(SWT.NORMAL,"Frm Button").define {
+                                                action {
+                                                    MessageDialog.openInformation(this.getShell(),"Frm Button","clicked")
+                                                }
+                                            }
+                                        } >> widget{
+                                            SWTFormHyperLink.hyperLink(SWT.NORMAL).define {
+                                                text "Hyper Link"
+                                                action {
+                                                    MessageDialog.openInformation(this.getShell(),"HyperLink","HyperLink 被激活。。")
+                                                }
+                                            }
+                                        } >> widget {
+                                            SWTText.textView(SWT.NORMAL,"Text").define {
+                                                layout SWTGridLayout.cell().define {
+                                                    colSpan 4
+                                                    rowAlignment SWT.FILL
+                                                    fillWidth true
+                                                }
+                                            }
+                                        } >>widget {
+                                            new SWTFormText(SWT.NORMAL).define {
+                                                parseTag false
+                                                text "测试文本"
+                                            }
+                                        } >> widget {
+                                            demoTable()
+                                        } >> widget {
+                                            SWTFormExpandPane.expandPane(Section.TWISTIE).define {
+                                                text "Expand Pane"
+                                                layout SWTGridLayout.cell().define {
+                                                    colSpan 4
+                                                    rowSpan 2
+                                                    rowAlignment SWT.FILL
+                                                    columnAlignment SWT.FILL
+                                                    fillHeight true
+                                                    fillWidth true
+                                                }
+                                                children widget {
+                                                    demoTable()
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -185,13 +293,10 @@ class TestWindow extends Stage {
     }
 
     static void main(String[] args) {
-        System.err.println(System.currentTimeMillis() / 1000)
-        Display display = new Display();
+        Display display = SWTWidgets.getDisplay();
 
-        System.err.println(System.currentTimeMillis() / 1000)
         TestWindow window = new TestWindow()
         window.create()
-        System.err.println(System.currentTimeMillis() / 1000)
         window.show()
 
         while(!window.isDisposed()){

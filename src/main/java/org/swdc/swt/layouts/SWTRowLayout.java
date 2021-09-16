@@ -27,6 +27,11 @@ public class SWTRowLayout implements SWTLayout {
         return this;
     }
 
+    public SWTRowLayout fill(boolean fill) {
+        layout.fill = fill;
+        return this;
+    }
+
     public SWTRowLayout marginLeft(int margin) {
         layout.marginLeft = margin;
         return this;
@@ -60,6 +65,10 @@ public class SWTRowLayout implements SWTLayout {
     @Override
     public Layout getLayout() {
         return layout;
+    }
+
+    public static SWTRowData cell() {
+        return new SWTRowData();
     }
 
     public static SWTRowLayout rowLayout(int flags) {

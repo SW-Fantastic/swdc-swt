@@ -1,12 +1,17 @@
 package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.beans.ObservableSizeValue;
+import org.swdc.swt.beans.ObservableValue;
 
 import java.lang.reflect.Method;
 
@@ -16,13 +21,11 @@ public class SWTButton extends SWTWidget<Button> {
 
     private Button button;
 
-    private String text;
+    private ObservableValue<String> text = new ObservableValue<>();
+
+    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
 
     private String methodName;
-
-    private int width;
-
-    private int height;
 
     private SelectionListener clickListener;
 
@@ -42,35 +45,44 @@ public class SWTButton extends SWTWidget<Button> {
     };
 
     public SWTButton(int flags, String text) {
-        this.text = text;
+        this.text.set(text);
         this.flags = flags;
+        this.text.addListener((oldVal, newVal) -> {
+            if (this.button != null) {
+                button.setText(this.text.isEmpty() ? "" : this.text.get());
+            }
+        });
+        this.size.addListener((oldVal, newVal) -> {
+            if (this.button != null && !this.size.isEmpty()) {
+                this.button.setSize(this.size.get());
+            }
+        });
     }
 
     public SWTButton text(String text) {
-        this.text = text;
-        if (this.button != null) {
-            button.setText(text);
-        }
+        this.text.set(text);
         return this;
     }
 
     public SWTButton size(int width, int height) {
-        this.width = width;
-        this.height = height;
-        if (this.button != null) {
-            this.button.setSize(width,height);
-        }
+        this.size.set(new Point(width,height));
         return this;
     }
 
     @Override
     public Button getWidget(Composite parent) {
         if (this.button == null && parent != null) {
-            button = new Button(parent,flags);
+            if (SWTWidgets.isFormAPI(parent)) {
+                FormToolkit toolkit = SWTWidgets.factory();
+                button = toolkit.createButton(parent,"",flags);
+                toolkit.paintBordersFor(parent);
+            } else {
+                button = new Button(parent,flags);
+            }
             button.addSelectionListener(dispatcher);
 
-            if (this.text != null) {
-                button.setText(text);
+            if (!this.text.isEmpty()) {
+                button.setText(text.get());
             }
 
             if (this.color != null) {
@@ -159,7 +171,7 @@ public class SWTButton extends SWTWidget<Button> {
         if (button == null) {
             return this;
         }
-        Color swtColor = WidgetUtils.color(color).getColor();
+        Color swtColor = SWTWidgets.color(color).getColor();
         if (swtColor != null) {
             button.setForeground(swtColor);
         }
@@ -171,7 +183,7 @@ public class SWTButton extends SWTWidget<Button> {
         if (button == null) {
             return this;
         }
-        SWTColor swtColor = WidgetUtils.color(color);
+        SWTColor swtColor = SWTWidgets.color(color);
         if (swtColor != null) {
             button.setBackground(swtColor.getColor());
         }

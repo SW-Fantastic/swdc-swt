@@ -52,6 +52,14 @@ public class SWTList extends SWTWidget<List> {
         return this;
     }
 
+    public <T> T getSelected() {
+        int selected = this.list.getSelectionIndex();
+        if (selected > 0) {
+            return (T)data.get(selected);
+        }
+        return null;
+    }
+
     public SWTList size(int width, int height) {
         this.width = width;
         this.height = height;
@@ -72,7 +80,6 @@ public class SWTList extends SWTWidget<List> {
                 list.add(val);
             }
         }
-
     }
 
     @Override

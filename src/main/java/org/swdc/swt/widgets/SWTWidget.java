@@ -12,6 +12,8 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
 
     private SWTWidget prev;
 
+    private String id;
+
     private Stage stage;
 
     private LayoutData layoutData;
@@ -97,4 +99,12 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
 
     }
 
+    public SWTWidget<T> id(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getId() {
+        return id;
+    }
 }

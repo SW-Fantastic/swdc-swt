@@ -2,6 +2,7 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Widget;
 
 public class SWTLink extends SWTWidget<Link> {
 
@@ -21,6 +22,10 @@ public class SWTLink extends SWTWidget<Link> {
             this.link.setText(text);
         }
         return this;
+    }
+
+    public static SWTLink link(int flags) {
+        return new SWTLink(flags);
     }
 
     @Override

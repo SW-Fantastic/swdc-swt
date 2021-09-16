@@ -1,27 +1,42 @@
 package org.swdc.swt.widgets;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.beans.ObservableSizeValue;
+import org.swdc.swt.beans.ObservableValue;
 
 public class SWTText extends SWTWidget<Text> {
 
     private int flags;
 
-    private String text;
+    private ObservableValue<String> text = new ObservableValue<>();
 
-    private int width;
-    private int height;
+    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
 
     private Text textField;
 
     public SWTText(int flag, String text) {
         this.flags = flag;
-        this.text = text;
+        this.text.set(text);
+        this.text.addListener(((oldVal, newVal) -> {
+            if (textField != null && !this.text.isEmpty()) {
+                textField.setText(this.text.get());
+            }
+        }));
+
+        this.size.addListener(((oldVal, newVal) -> {
+            if (textField != null && !this.size.isEmpty()) {
+                textField.setSize(this.size.get());
+            }
+        }));
     }
 
 
     public SWTText text(String text) {
-        this.text = text;
+        this.text.set(text);
         if (this.textField != null) {
             this.textField.setText(text);
         }
@@ -29,8 +44,7 @@ public class SWTText extends SWTWidget<Text> {
     }
 
     public SWTText size(int width, int height) {
-        this.width = width;
-        this.height = height;
+        this.size.set(new Point(width,height));
         if (this.textField != null) {
             this.textField.setSize(width,height);
         }
@@ -41,13 +55,19 @@ public class SWTText extends SWTWidget<Text> {
     @Override
     public Text getWidget(Composite parent) {
         if (this.textField == null && parent != null) {
-            textField = new Text(parent,this.flags);
-            textField.setSize(this.width,this.height);
+            if (SWTWidgets.isFormAPI(parent)) {
+                FormToolkit toolkit = SWTWidgets.factory();
+                textField = toolkit.createText(parent,"",this.flags);
+                toolkit.paintBordersFor(parent);
+            } else {
+                textField = new Text(parent,this.flags);
+            }
+            textField.setSize(this.size.get());
             if (this.getLayoutData() != null) {
                 textField.setLayoutData(this.getLayoutData().get());
             }
-            if (this.text != null) {
-                textField.setText(this.text);
+            if (!this.text.isEmpty()) {
+                textField.setText(this.text.get());
             }
         }
         return textField;
