@@ -1,6 +1,7 @@
 package org.swdc.swt.widgets.pane;
 
 import org.eclipse.swt.widgets.Composite;
+import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
@@ -17,9 +18,7 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
     private SWTLayout layout;
 
-    private int width;
-
-    private int height;
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTPane(int flag) {
         this.flag  = flag;
@@ -27,11 +26,7 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
 
     public SWTPane size(int width, int height) {
-        this.width  = width;
-        this.height = height;
-        if (this.composite != null) {
-            this.composite.setSize(width,height);
-        }
+        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -65,10 +60,10 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
             } else {
                 composite = new Composite(parent,flag);
             }
-            composite.setSize(width,height);
             if (this.layout != null) {
                 composite.setLayout(layout.getLayout());
             }
+            this.sizeProperty.manage(composite);
         }
         return composite;
     }

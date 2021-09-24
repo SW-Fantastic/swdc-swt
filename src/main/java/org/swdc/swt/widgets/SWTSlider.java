@@ -2,6 +2,8 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Slider;
+import org.swdc.swt.beans.RangeProperty;
+import org.swdc.swt.beans.SizeProperty;
 
 public class SWTSlider extends SWTWidget<Slider> {
 
@@ -9,37 +11,31 @@ public class SWTSlider extends SWTWidget<Slider> {
 
     private Slider slider;
 
-    private int max;
+    private RangeProperty rangeProperty = new RangeProperty();
 
-    private int min;
-
-    private int increment;
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTSlider(int flags) {
         this.flags = flags;
     }
 
     public SWTSlider min(int min) {
-        this.min = min;
-        if (this.slider != null) {
-            this.slider.setMinimum(min);
-        }
+        rangeProperty.setMin(min);
         return this;
     }
 
     public SWTSlider max(int max) {
-        this.max = max;
-        if (slider != null) {
-            slider.setMaximum(max);
-        }
+        this.rangeProperty.setMax(max);
         return this;
     }
 
     public SWTSlider increment(int inc) {
-        this.increment = inc;
-        if (this.slider != null) {
-            this.slider.setIncrement(inc);
-        }
+        this.rangeProperty.setIncrease(inc);
+        return this;
+    }
+
+    public SWTSlider size(int width, int height) {
+        sizeProperty.set(width,height);
         return this;
     }
 
@@ -50,9 +46,8 @@ public class SWTSlider extends SWTWidget<Slider> {
             if (this.getLayoutData() != null) {
                 this.slider.setLayoutData(getLayoutData().get());
             }
-            this.slider.setMaximum(max);
-            this.slider.setMinimum(min);
-            this.slider.setIncrement(increment);
+            this.rangeProperty.manage(this.slider);
+            this.sizeProperty.manage(this.slider);
         }
         return this.slider;
     }

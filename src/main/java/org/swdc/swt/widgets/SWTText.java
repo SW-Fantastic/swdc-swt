@@ -7,47 +7,32 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.beans.ObservableSizeValue;
 import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 
 public class SWTText extends SWTWidget<Text> {
 
     private int flags;
 
-    private ObservableValue<String> text = new ObservableValue<>();
+    private TextProperty textProperty = new TextProperty();
 
-    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
+    private SizeProperty sizeProperty = new SizeProperty();
 
     private Text textField;
 
     public SWTText(int flag, String text) {
         this.flags = flag;
-        this.text.set(text);
-        this.text.addListener(((oldVal, newVal) -> {
-            if (textField != null && !this.text.isEmpty()) {
-                textField.setText(this.text.get());
-            }
-        }));
-
-        this.size.addListener(((oldVal, newVal) -> {
-            if (textField != null && !this.size.isEmpty()) {
-                textField.setSize(this.size.get());
-            }
-        }));
+        this.textProperty.set(text);
     }
 
 
     public SWTText text(String text) {
-        this.text.set(text);
-        if (this.textField != null) {
-            this.textField.setText(text);
-        }
+        this.textProperty.set(text);
         return this;
     }
 
     public SWTText size(int width, int height) {
-        this.size.set(new Point(width,height));
-        if (this.textField != null) {
-            this.textField.setSize(width,height);
-        }
+        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -62,13 +47,17 @@ public class SWTText extends SWTWidget<Text> {
             } else {
                 textField = new Text(parent,this.flags);
             }
-            textField.setSize(this.size.get());
             if (this.getLayoutData() != null) {
                 textField.setLayoutData(this.getLayoutData().get());
             }
-            if (!this.text.isEmpty()) {
-                textField.setText(this.text.get());
-            }
+
+            textField.addModifyListener(m -> {
+                textProperty.setDirectly(textField.getText());
+            });
+
+
+            textProperty.manage(textField);
+            sizeProperty.manage(textField);
         }
         return textField;
     }

@@ -117,6 +117,14 @@ public class ObservableValue<T> {
         }
     }
 
+    public void setWithoutListener(T s) {
+        T old = val;
+        this.val = s;
+        if (emitter != null ) {
+            this.emitter.onNext(s);
+        }
+    }
+
     public T get() {
         return this.val;
     }

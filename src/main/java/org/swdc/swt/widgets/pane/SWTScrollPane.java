@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
+import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
@@ -34,9 +35,9 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
 
     private int flag;
 
-    private int width;
+    private SizeProperty sizeProperty = new SizeProperty();
 
-    private  int height;
+    private SizeProperty fixSizeProperty = new SizeProperty();
 
     private boolean fixWidth;
 
@@ -47,11 +48,7 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
     }
 
     public SWTScrollPane size(int width, int height) {
-        this.width = width;
-        this.height = height;
-        if (this.scrolledComposite != null) {
-            scrolledComposite.setMinSize(width,height);
-        }
+        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -64,6 +61,8 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
     public void ready(Stage stage) {
         if (this.widget != null) {
             Widget composite = this.widget.getWidget(scrolledComposite);
+            this.widget.setStage(stage);
+            this.widget.ready(stage);
             Control control = (Control) composite;
             scrolledComposite.setContent(control);
             control.requestLayout();
@@ -87,7 +86,7 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
         if (scrolledComposite == null && parent != null) {
             wrapper = new Composite(parent,SWT.NONE);
             wrapper.setLayout(new FillLayout());
-            wrapper.setSize(width,height);
+            sizeProperty.manage(wrapper);
             scrolledComposite = new ScrolledComposite(wrapper,flag);
             scrolledComposite.setExpandVertical(true);
             scrolledComposite.setExpandHorizontal(true);

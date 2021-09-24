@@ -1,13 +1,16 @@
 package org.swdc.swt.widgets.form;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.ui.forms.events.ExpansionAdapter;
+import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.ObservableSizeValue;
+import org.swdc.swt.beans.ExpandProperty;
 import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
@@ -16,9 +19,10 @@ import org.swdc.swt.widgets.Stage;
 public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements SWTContainer {
 
     private int flag;
-    private ObservableValue<String> text = new ObservableValue<>("");
-    private ObservableValue<Boolean> expand = new ObservableValue<>(false);
-    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
+    private TextProperty text = new TextProperty();
+
+    private ExpandProperty expandProperty = new ExpandProperty();
+    private SizeProperty sizeProperty = new SizeProperty();
 
     private SWTWidget widget;
 
@@ -26,22 +30,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
 
     public SWTFormExpandPane(int flag) {
         this.flag = flag;
-
-        this.text.addListener(((oldVal, newVal) ->  {
-            if (this.composite != null && !this.text.isEmpty()) {
-                this.composite.setText(text.get());
-            }
-        }));
-        this.expand.addListener((oldVal, newVal) -> {
-            if (this.composite != null && !this.expand.isEmpty()) {
-                this.composite.setExpanded(this.expand.get());
-            }
-        });
-        this.size.addListener((oldVal, newVal) -> {
-            if (this.composite != null && !this.size.isEmpty()) {
-                this.composite.setSize(this.size.get());
-            }
-        });
     }
 
     @Override
@@ -60,12 +48,12 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
     }
 
     public SWTFormExpandPane expand(boolean expand) {
-        this.expand.set(expand);
+        this.expandProperty.set(expand);
         return this;
     }
 
     public SWTFormExpandPane size(int width, int height) {
-        this.size.set(new Point(width,height));
+        this.sizeProperty.set(new Point(width,height));
         return this;
     }
 
@@ -75,18 +63,18 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
             FormToolkit toolkit = SWTWidgets.factory();
             composite = toolkit.createExpandableComposite(parent,this.flag);
             toolkit.paintBordersFor(parent);
-            if (!text.isEmpty()) {
-                composite.setText(text.get());
-            }
-            if (!this.size.isEmpty()) {
-                composite.setSize(this.size.get());
-            }
-            if (!this.expand.isEmpty()) {
-                composite.setExpanded(this.expand.get());
-            }
             if (this.getLayoutData() != null) {
                 composite.setLayoutData(getLayoutData().get());
             }
+            composite.addExpansionListener(new ExpansionAdapter(){
+                @Override
+                public void expansionStateChanged(ExpansionEvent e) {
+                    expandProperty.setDirectly(composite.isExpanded());
+                }
+            });
+            text.manage(composite);
+            expandProperty.manage(composite);
+            sizeProperty.manage(composite);
         }
         return composite;
     }

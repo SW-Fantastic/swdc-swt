@@ -1,56 +1,30 @@
 package org.swdc.swt.widgets;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.ObservableSizeValue;
+import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 
 public class SWTLabel extends SWTWidget<Label> {
 
     private Label label;
 
-    private ObservableValue<String> text = new ObservableValue<>("");
-    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
+    private TextProperty text = new TextProperty();
+    private SizeProperty sizeProperty = new SizeProperty();
 
-    private ObservableValue<String> color = new ObservableValue<>();
-    private String backgroundColor;
+    private ColorProperty colorProperty = new ColorProperty();
 
     private int flag;
 
     public SWTLabel(int flag, String text) {
         this.text.set(text);
-
-        this.text.addListener(((oldVal, newVal) -> {
-            if (label != null) {
-                label.setText(this.text.isEmpty()  ? "" : this.text.get());
-            }
-        }));
-
-        this.color.addListener(((oldVal, newVal) -> {
-            if (label != null && !color.isEmpty()) {
-                Color swtColor = SWTWidgets.color(color.get()).getColor();
-                if (swtColor != null) {
-                    label.setForeground(swtColor);
-                }
-                label.setForeground(swtColor);
-            }
-        }));
-
-        this.size.addListener(this::sizeChanged);
         this.flag = flag;
     }
 
-    public void sizeChanged(Point oldVal, Point newVal) {
-        if (this.label != null && !size.isEmpty()) {
-            Point size = this.size.get();
-            label.setSize(size);
-            label.requestLayout();
-        }
-    }
 
     public Label getWidget(Composite parent) {
         if (label == null && parent != null) {
@@ -61,18 +35,12 @@ public class SWTLabel extends SWTWidget<Label> {
             }  else {
                 label =  new Label(parent,flag);
             }
-            if (!text.isEmpty()) {
-                label.setText(text.get());
-            }
-            if (!color.isEmpty()) {
-                this.color(color.get());
-            }
-            if (backgroundColor != null) {
-                this.backgroundColor(backgroundColor);
-            }
             if (this.getLayoutData() != null) {
                 label.setLayoutData(this.getLayoutData().get());
             }
+            this.text.manage(label);
+            this.sizeProperty.manage(label);
+            this.colorProperty.manage(label);
         }
         return label;
     }
@@ -83,24 +51,17 @@ public class SWTLabel extends SWTWidget<Label> {
     }
 
     public SWTLabel color(String color) {
-        this.color.set(color);
+        this.colorProperty.setForeground(color);
         return this;
     }
 
     public SWTLabel backgroundColor(String color) {
-        this.backgroundColor = color;
-        if (label == null) {
-            return this;
-        }
-        SWTColor swtColor = SWTWidgets.color(color);
-        if (swtColor != null) {
-            label.setBackground(swtColor.getColor());
-        }
+        colorProperty.setBackground(color);
         return this;
     }
 
     public SWTLabel size(int width, int height) {
-        this.size.set(new Point(width,height));
+        this.sizeProperty.set(width,height);
         return this;
     }
 

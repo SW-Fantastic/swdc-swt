@@ -2,6 +2,8 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
+import org.swdc.swt.beans.RangeProperty;
+import org.swdc.swt.beans.SizeProperty;
 
 public class SWTSpinner extends SWTWidget<Spinner> {
 
@@ -9,35 +11,31 @@ public class SWTSpinner extends SWTWidget<Spinner> {
 
     private int flag;
 
-    private int max;
-    private int min;
-    private int increment;
+    private RangeProperty rangeProperty = new RangeProperty();
+
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTSpinner(int flag) {
         this.flag = flag;
     }
 
     public SWTSpinner min(int min) {
-        this.min = min;
-        if (this.spinner != null) {
-            spinner.setMinimum(min);
-        }
+        this.rangeProperty.setMin(min);
         return this;
     }
 
     public SWTSpinner max(int max) {
-        this.max = max;
-        if (this.spinner != null) {
-            spinner.setMaximum(max);
-        }
+        this.rangeProperty.setMax(max);
         return this;
     }
 
     public SWTSpinner increment(int inc) {
-        this.increment = inc;
-        if (this.spinner != null) {
-            spinner.setIncrement(inc);
-        }
+        this.rangeProperty.setIncrease(inc);
+        return this;
+    }
+
+    public SWTSpinner size(int width, int height) {
+        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -48,6 +46,8 @@ public class SWTSpinner extends SWTWidget<Spinner> {
             if (this.getLayoutData() != null) {
                 spinner.setLayoutData(this.getLayoutData().get());
             }
+            rangeProperty.manage(spinner);
+            sizeProperty.manage(spinner);
         }
         return spinner;
     }

@@ -8,6 +8,8 @@ import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTButton;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
@@ -18,10 +20,14 @@ import java.lang.reflect.Method;
 public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
 
     private int flag;
-    private ObservableValue<String> text = new ObservableValue<>();
+
+    private TextProperty textProperty = new TextProperty();
+
     private Hyperlink hyperlink;
     private Method actionMethod;
     private String methodName;
+
+    private SizeProperty sizeProperty = new SizeProperty();
 
     private HyperlinkAdapter linkActivated;
 
@@ -36,15 +42,10 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
 
     public SWTFormHyperLink (int flag) {
         this.flag = flag;
-        this.text.addListener(((oldVal, newVal) -> {
-            if (this.hyperlink != null && !text.isEmpty()) {
-                this.hyperlink.setText(text.get());
-            }
-        }));
     }
 
     public SWTFormHyperLink text(String text) {
-        this.text.set(text);
+        this.textProperty.set(text);
         return this;
     }
 
@@ -59,6 +60,7 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
     }
 
     public SWTFormHyperLink action(String name) {
+        this.methodName = name;
         this.linkActivated = new HyperlinkAdapter() {
             @Override
             public void linkActivated(HyperlinkEvent e) {
@@ -107,16 +109,20 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
         }
     }
 
+    public SWTFormHyperLink size(int width, int height){
+        this.sizeProperty.set(width,height);
+        return this;
+    }
+
     @Override
     public Hyperlink getWidget(Composite parent) {
         if (hyperlink == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             hyperlink = toolkit.createHyperlink(parent,"",flag);
             toolkit.paintBordersFor(parent);
-            if (!text.isEmpty()) {
-                hyperlink.setText(text.get());
-            }
             hyperlink.addHyperlinkListener(dispatcher);
+            textProperty.manage(hyperlink);
+            sizeProperty.manage(hyperlink);
         }
         return hyperlink;
     }

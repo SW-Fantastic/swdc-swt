@@ -2,10 +2,9 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.swdc.swt.beans.SizeProperty;
 
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.function.Function;
 
 public class SWTList extends SWTWidget<List> {
 
@@ -17,13 +16,11 @@ public class SWTList extends SWTWidget<List> {
 
     private int flags;
 
-    private int width;
-
-    private int height;
-
     private java.util.List<Object> data;
 
     private ListFactory factory;
+
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTList(int flag) {
         this.flags = flag;
@@ -61,11 +58,7 @@ public class SWTList extends SWTWidget<List> {
     }
 
     public SWTList size(int width, int height) {
-        this.width = width;
-        this.height = height;
-        if (this.list != null) {
-            this.list.setSize(width,height);
-        }
+        sizeProperty.set(width,height);
         return this;
     }
 
@@ -89,6 +82,7 @@ public class SWTList extends SWTWidget<List> {
             if (this.getLayoutData() != null) {
                 list.setLayoutData(getLayoutData().get());
             }
+            sizeProperty.manage(list);
         }
         return list;
     }

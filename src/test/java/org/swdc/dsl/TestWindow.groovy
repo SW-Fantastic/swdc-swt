@@ -5,6 +5,7 @@ import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
 import org.swdc.swt.layouts.SWTBorderLayout
+import org.swdc.swt.layouts.SWTFillLayout
 import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTRowLayout
 import org.swdc.swt.widgets.SWTButton
@@ -13,15 +14,22 @@ import org.swdc.swt.widgets.SWTDateTime
 import org.swdc.swt.widgets.SWTLabel
 import org.swdc.swt.widgets.SWTLink
 import org.swdc.swt.widgets.SWTList
+import org.swdc.swt.widgets.SWTToolBar
+import org.swdc.swt.widgets.SWTToolItem
 import org.swdc.swt.widgets.SWTTree
 import org.swdc.swt.widgets.SWTWidgets
+import org.swdc.swt.widgets.form.SWTForm
 import org.swdc.swt.widgets.form.SWTFormExpandPane
 import org.swdc.swt.widgets.form.SWTFormHyperLink
 import org.swdc.swt.widgets.form.SWTFormText
+import org.swdc.swt.widgets.pane.SWTCTab
+import org.swdc.swt.widgets.pane.SWTCTabPane
+import org.swdc.swt.widgets.pane.SWTGroup
 import org.swdc.swt.widgets.pane.SWTPane
 import org.swdc.swt.widgets.SWTScale
 import org.swdc.swt.widgets.SWTSlider
 import org.swdc.swt.widgets.SWTSpinner
+import org.swdc.swt.widgets.pane.SWTSashForm
 import org.swdc.swt.widgets.pane.SWTScrollPane
 import org.swdc.swt.widgets.pane.SWTTab
 import org.swdc.swt.widgets.pane.SWTTabPane
@@ -30,6 +38,7 @@ import org.swdc.swt.widgets.SWTTableColumn
 import org.swdc.swt.widgets.SWTText
 import org.swdc.swt.widgets.Stage
 import org.swdc.swt.widgets.form.SWTFormSection
+import org.swdc.swt.widgets.pane.SWTViewForm
 
 class TestWindow extends Stage {
 
@@ -145,8 +154,19 @@ class TestWindow extends Stage {
                             SWTPane.pane(SWT.NORMAL).define {
                                 layout SWTBorderLayout.borderLayout()
                                 children widget {
-                                    SWTButton.button(SWT.NORMAL,"BD 0").define {
-                                        layout SWTBorderLayout.top(60)
+                                    new SWTToolBar(SWT.FLAT|SWT.HORIZONTAL).define {
+                                        backgroundColor "#CECECE"
+                                        layout SWTBorderLayout.top(32)
+                                        children widget {
+                                            new SWTToolItem(SWT.PUSH).define {
+                                                text "Tool"
+                                            }
+                                        } >> widget {
+                                            new SWTToolItem(SWT.SEPARATOR).define {
+                                                size 120,SWT.DEFAULT
+                                                control SWTButton.button(SWT.PUSH,"Test")
+                                            }
+                                        }
                                     }
                                 } >> widget {
                                     SWTButton.button(SWT.NORMAL, "BD 1").define {
@@ -284,6 +304,75 @@ class TestWindow extends Stage {
                                         }
                                     }
                                 }
+                            }
+                        }
+                    }
+                } >> widget {
+                    SWTTab.tab(SWT.NORMAL,"Form").define {
+                        children widget {
+                            new SWTForm(SWT.NORMAL).define {
+                                text "Form"
+                                children widget {
+                                    SWTLabel.label(SWT.NORMAL,"Form Label")
+                                }
+                            }
+                        }
+                    }
+                } >> widget {
+                    SWTTab.tab(SWT.NORMAL,"Group").define {
+                        children widget {
+                            new SWTGroup(SWT.FLAT).define {
+                                text "GroupTest"
+                                children widget {
+                                    SWTButton.button(SWT.FLAT, "Grouped Button")
+                                }
+                            }
+                        }
+                    }
+                } >> widget {
+                    SWTTab.tab(SWT.HORIZONTAL,"Sash").define {
+                        children new SWTSashForm(SWT.HORIZONTAL).define {
+                            spacing 2
+                            percentage 1,2
+                            children widget {
+                                SWTButton.button(SWT.FLAT,"Test A")
+                            } >> widget {
+                                SWTButton.button(SWT.FLAT,"Test B")
+                            }
+                        }
+                    }
+                }
+            }
+        } >> widget {
+            new SWTCTabPane(SWT.BORDER).define {
+                layout SWTGridLayout.cell().define {
+                    colSpan 6
+                    rowSpan 4
+                    fillHeight true
+                    fillWidth true
+                    columnAlignment SWT.FILL
+                    rowAlignment SWT.FILL
+                    width 120
+                    height 120
+                }
+                children widget {
+                    new SWTCTab(SWT.NORMAL).define {
+                        text "CTabTest"
+                        children widget {
+                            SWTButton.button(SWT.FLAT,"Test Content")
+                        }
+                    }
+                } >> widget {
+                    new SWTCTab(SWT.NORMAL).define {
+                        text "ViewForm"
+                        children widget {
+                            new SWTViewForm(SWT.NORMAL).define {
+                                left SWTButton.button(SWT.FLAT,"TestLeft").define {
+                                    size 120,SWT.DEFAULT
+                                }
+                                right SWTButton.button(SWT.FLAT,"TestRight")
+                                center SWTButton.button(SWT.FLAT,"TestCenter")
+                                bottom SWTButton.button(SWT.FLAT,"TestBottom")
                             }
                         }
                     }

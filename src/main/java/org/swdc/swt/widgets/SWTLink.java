@@ -2,7 +2,8 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Widget;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 
 public class SWTLink extends SWTWidget<Link> {
 
@@ -10,17 +11,16 @@ public class SWTLink extends SWTWidget<Link> {
 
     private Link link;
 
-    private String text;
+    private TextProperty text = new TextProperty();
+
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTLink(int flag) {
         this.flags = flag;
     }
 
     public SWTLink text(String text) {
-        this.text = text;
-        if (this.link != null) {
-            this.link.setText(text);
-        }
+        this.text.set(text);
         return this;
     }
 
@@ -28,16 +28,20 @@ public class SWTLink extends SWTWidget<Link> {
         return new SWTLink(flags);
     }
 
+    public SWTLink size(int width, int height) {
+        this.sizeProperty.set(width,height);
+        return this;
+    }
+
     @Override
     public Link getWidget(Composite parent) {
         if (link == null && parent != null) {
             link = new Link(parent,this.flags);
-            if (this.text != null) {
-                link.setText(text);
-            }
             if (this.getLayoutData() != null) {
                 this.link.setLayoutData(getLayoutData().get());
             }
+            sizeProperty.manage(link);
+            text.manage(link);
         }
         return link;
     }

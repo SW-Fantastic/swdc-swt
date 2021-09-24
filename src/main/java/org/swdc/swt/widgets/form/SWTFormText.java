@@ -1,10 +1,11 @@
 package org.swdc.swt.widgets.form;
 
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormText;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 
@@ -12,7 +13,8 @@ public class SWTFormText extends SWTWidget<FormText> {
 
     private int flag;
 
-    private ObservableValue<String> text = new ObservableValue<>("");
+    private SizeProperty sizeProperty = new SizeProperty();
+    private TextProperty text = new TextProperty();
     private ObservableValue<Boolean> parseTags = new ObservableValue<>(true);
     private ObservableValue<Boolean> expandURLs = new ObservableValue<>(true);
 
@@ -20,7 +22,6 @@ public class SWTFormText extends SWTWidget<FormText> {
 
     public SWTFormText(int flag) {
         this.flag = flag;
-        this.text.addListener(this::onTextChange);
     }
 
     public SWTFormText parseTag(Boolean tag) {
@@ -28,14 +29,14 @@ public class SWTFormText extends SWTWidget<FormText> {
         return this;
     }
 
-    private void onTextChange(String oldVal,String newVal) {
-        if (this.formText != null && !text.isEmpty() && !parseTags.isEmpty() && !expandURLs.isEmpty()) {
-            this.formText.setText(text.get(),parseTags.get(),expandURLs.get());
-        }
-    }
 
     public SWTFormText text(String text) {
         this.text.set(text);
+        return this;
+    }
+
+    public SWTFormText size(int width, int height) {
+        this.sizeProperty.set(width, height);
         return this;
     }
 
@@ -44,9 +45,8 @@ public class SWTFormText extends SWTWidget<FormText> {
         if (this.formText == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             this.formText = toolkit.createFormText(parent,false);
-            if (!this.text.isEmpty()) {
-                this.onTextChange(null,null);
-            }
+            this.text.manage(formText);
+            this.sizeProperty.manage(formText);
         }
         return formText;
     }

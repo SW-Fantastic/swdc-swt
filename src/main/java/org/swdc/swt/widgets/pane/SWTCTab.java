@@ -1,5 +1,7 @@
 package org.swdc.swt.widgets.pane;
 
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.*;
 import org.swdc.swt.beans.SizeProperty;
@@ -8,9 +10,9 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
 
-public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
+public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
 
-    private TabItem item;
+    private CTabItem item;
 
     private int flag;
 
@@ -20,34 +22,33 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
 
     private SizeProperty sizeProperty = new SizeProperty();
 
-    public SWTTab(int flag) {
+    public SWTCTab(int flag) {
         this.flag = flag;
     }
-
-    public SWTTab size(int width, int height) {
+    public SWTCTab size(int width, int height) {
         this.sizeProperty.set(width,height);
         return this;
     }
 
 
-    public SWTTab text(String  text) {
+    public SWTCTab text(String  text) {
         this.text.set(text);
         return this;
     }
 
     @Override
-    public TabItem getWidget(Composite parent) {
+    public CTabItem getWidget(Composite parent) {
         if (parent == null) {
             return null;
         }
-        if (!(parent instanceof TabFolder)) {
+        if (!(parent instanceof CTabFolder)) {
             throw new RuntimeException("Tab必须位于TabPane内部");
         }
 
-        TabFolder tabFolder = (TabFolder) parent;
+        CTabFolder tabFolder = (CTabFolder) parent;
 
         if (item == null) {
-            item = new TabItem(tabFolder,this.flag);
+            item = new CTabItem(tabFolder,this.flag);
         }
         this.sizeProperty.manage(item);
         this.text.manage(item);
@@ -76,9 +77,4 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
         }
         this.widget = widget;
     }
-
-    public static SWTTab tab(int flag, String name) {
-        return new SWTTab(flag).text(name);
-    }
-
 }

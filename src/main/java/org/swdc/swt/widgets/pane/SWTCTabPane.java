@@ -1,30 +1,30 @@
 package org.swdc.swt.widgets.pane;
 
+import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.TabFolder;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
 
-public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
-
-    private TabFolder folder;
+public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
 
     private int flags;
 
-    private SWTTab tabs;
+    private CTabFolder folder;
+
+    private SWTCTab tabs;
 
     private SizeProperty sizeProperty = new SizeProperty();
 
     private SWTLayout layout;
 
-    public SWTTabPane(int flags) {
-        this.flags = flags;
+    public SWTCTabPane(int flag) {
+        this.flags = flag;
     }
 
-    public SWTTabPane tabLayout(SWTLayout layout) {
+    public SWTCTabPane tabLayout(SWTLayout layout) {
         this.layout = layout;
         if (this.folder != null) {
             this.folder.setLayout(layout.getLayout());
@@ -32,15 +32,15 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
         return this;
     }
 
-    public SWTTabPane size(int width, int height) {
+    public SWTCTabPane size(int width, int height) {
         this.sizeProperty.set(width,height);
         return this;
     }
 
     @Override
-    public TabFolder getWidget(Composite parent) {
+    public CTabFolder getWidget(Composite parent) {
         if (this.folder == null && parent != null){
-            this.folder = new TabFolder(parent,flags);
+            this.folder = new CTabFolder(parent,flags);
 
             if (this.layout != null) {
                 folder.setLayout(layout.getLayout());
@@ -51,10 +51,10 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
             }
 
             if (this.tabs != null) {
-                SWTTab item = (SWTTab) tabs.getFirst();
+                SWTCTab item = (SWTCTab) tabs.getFirst();
                 while (item != null) {
                     item.getWidget(this.folder);
-                    item = (SWTTab) item.getNext();
+                    item = (SWTCTab) item.getNext();
                 }
             }
             this.sizeProperty.manage(folder);
@@ -66,25 +66,21 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
     @Override
     public void ready(Stage stage) {
         if (this.tabs != null) {
-            SWTTab item = (SWTTab) tabs.getFirst();
+            SWTCTab item = (SWTCTab) tabs.getFirst();
             while (item != null) {
                 item.setStage(stage);
                 item.ready(stage);
-                item = (SWTTab) item.getNext();
+                item = (SWTCTab) item.getNext();
             }
         }
     }
 
     @Override
     public void children(SWTWidget widget) {
-        if (!(widget instanceof SWTTab)) {
+        if (!(widget instanceof SWTCTab)) {
             throw new RuntimeException("TabPane内部只能使用SWTTab");
         }
-        this.tabs = (SWTTab) widget;
-    }
-
-    public static SWTTabPane tabPane(int flags) {
-        return new SWTTabPane(flags);
+        this.tabs = (SWTCTab) widget;
     }
 
 }

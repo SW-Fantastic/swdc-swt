@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.beans.SizeProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,8 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
     private int flags;
 
     private boolean showHeader = true;
+
+    private SizeProperty sizeProperty = new SizeProperty();
 
     private int width;
 
@@ -129,6 +132,8 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
                 table.setLayoutData(this.getLayoutData().get());
             }
 
+            this.sizeProperty.manage(table);
+
         }
         return this;
     }
@@ -154,11 +159,7 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
     }
 
     public SWTTable size(int width, int height) {
-        this.width = width;
-        this.height = height;
-        if (this.table != null) {
-            table.setSize(width,height);
-        }
+        this.sizeProperty.set(width,height);
         return this;
     }
 

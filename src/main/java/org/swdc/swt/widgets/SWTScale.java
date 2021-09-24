@@ -2,6 +2,8 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scale;
+import org.swdc.swt.beans.RangeProperty;
+import org.swdc.swt.beans.SizeProperty;
 
 public class SWTScale extends SWTWidget<Scale> {
 
@@ -9,37 +11,31 @@ public class SWTScale extends SWTWidget<Scale> {
 
     private Scale scale;
 
-    private int max;
+    private RangeProperty rangeProperty = new RangeProperty();
 
-    private int min;
-
-    private int increment;
+    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTScale(int flags) {
         this.flags = flags;
     }
 
     public SWTScale max(int max) {
-        if (scale != null) {
-            scale.setMaximum(max);
-        }
-        this.max = max;
+        rangeProperty.setMax(max);
         return this;
     }
 
     public SWTScale min(int min) {
-        if (scale != null) {
-            scale.setMinimum(min);
-        }
-        this.min = min;
+        rangeProperty.setMin(min);
         return this;
     }
 
     public SWTScale increment(int inc) {
-        if (scale != null) {
-            scale.setIncrement(inc);
-        }
-        increment = inc;
+        rangeProperty.setIncrease(inc);
+        return this;
+    }
+
+    public SWTScale size(int width, int height) {
+        sizeProperty.set(width, height);
         return this;
     }
 
@@ -50,9 +46,8 @@ public class SWTScale extends SWTWidget<Scale> {
             if (this.getLayoutData() != null) {
                 scale.setLayoutData(getLayoutData().get());
             }
-            scale.setMinimum(min);
-            scale.setMaximum(max);
-            scale.setIncrement(increment);
+            sizeProperty.manage(scale);
+            rangeProperty.manage(scale);
         }
         return scale;
     }
