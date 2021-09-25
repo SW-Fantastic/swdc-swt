@@ -1,13 +1,13 @@
 package org.swdc.swt.widgets;
 
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.beans.ColorProperty;
-import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
+import org.swdc.swt.layouts.LayoutData;
+import org.swdc.swt.layouts.SWTFormData;
 
 public class SWTLabel extends SWTWidget<Label> {
 
@@ -25,8 +25,14 @@ public class SWTLabel extends SWTWidget<Label> {
         this.flag = flag;
     }
 
+    @Override
+    public void ready(Stage stage) {
+        if (this.label != null) {
+            SWTWidgets.setupLayoutData(this,label);
+        }
+    }
 
-    public Label getWidget(Composite parent) {
+    protected Label getWidget(Composite parent) {
         if (label == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -34,9 +40,6 @@ public class SWTLabel extends SWTWidget<Label> {
                 toolkit.paintBordersFor(parent);
             }  else {
                 label =  new Label(parent,flag);
-            }
-            if (this.getLayoutData() != null) {
-                label.setLayoutData(this.getLayoutData().get());
             }
             this.text.manage(label);
             this.sizeProperty.manage(label);

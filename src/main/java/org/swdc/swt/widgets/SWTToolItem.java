@@ -39,7 +39,7 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
     public void ready(Stage stage) {
         if (this.widget != null && item != null) {
             Widget widget = this.widget.getWidget(item.getParent());
-            this.widget.setStage(stage);
+            this.widget.initStage(stage);
             this.widget.ready(stage);
             item.setControl((Control) widget);
         } else if (!text.isEmpty() && item != null){
@@ -65,7 +65,7 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
     }
 
     @Override
-    public ToolItem getWidget(Composite parent) {
+    protected ToolItem getWidget(Composite parent) {
         if (!(parent instanceof ToolBar)) {
             throw new RuntimeException("ToolItem 必须放置在ToolBar里面");
         }

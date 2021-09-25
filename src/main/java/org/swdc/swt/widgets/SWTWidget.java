@@ -1,22 +1,49 @@
 package org.swdc.swt.widgets;
 
-import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
 import org.swdc.swt.layouts.LayoutData;
 
+import java.lang.reflect.Field;
+import java.util.List;
+
 public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidget<T>> {
 
+    /**
+     * 下一个，本类的链表结构
+     */
     private SWTWidget next;
 
+    /**
+     * 上一个，本类的链表结构
+     */
     private SWTWidget prev;
 
+    /**
+     * Id，用于查找组件和Controller的注入
+     */
     private String id;
 
+    /**
+     * 窗口
+     */
     private Stage stage;
 
+    /**
+     * 本组件的layoutData。
+     */
     private LayoutData layoutData;
+
+    /**
+     *
+     * 创建后的组件，
+     * 本类的实例的create方法被调用后，
+     * 将会创建SWT的widget。
+     */
+    private T widget;
+
+    private SWTContainer parent;
 
     public SWTWidget rightShift(SWTWidget item) {
         if (this.next == null) {
@@ -42,14 +69,28 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return stage;
     }
 
-
-
     /**
      * 用来传递stage窗口和在它里面的controller
      * @param stage
      */
-    public void setStage(Stage stage) {
+    public void initStage(Stage stage) {
         this.stage = stage;
+        Object controller = stage.getController();
+        if (controller != null && this.getId() != null){
+            Field[] fields = controller.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                org.swdc.swt.Widget widget = field.getAnnotation(org.swdc.swt.Widget.class);
+                if (widget == null || !widget.value().equals(this.getId())) {
+                    continue;
+                }
+                try {
+                    field.setAccessible(true);
+                    field.set(controller,this);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                }
+            }
+        }
     }
 
     public SWTWidget getFirst(){
@@ -84,12 +125,18 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return layoutData;
     }
 
+    public T create(Composite parent,SWTContainer parentWidget) {
+        this.parent = parentWidget;
+        this.widget = getWidget(parent);
+        return widget;
+    }
+
     /**
      * 创建SWT组件
      * @param parent
      * @return
      */
-    public abstract T getWidget(Composite parent);
+    protected abstract T getWidget(Composite parent);
 
     /**
      * 初始化此组件（SWT组件此时应当已经创建娲完毕）
@@ -102,6 +149,55 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
     public SWTWidget<T> id(String id) {
         this.id = id;
         return this;
+    }
+
+    public <R extends Widget> R findById(String id) {
+        if (id.equals(this.getId())) {
+            if (this.widget != null) {
+                return (R) widget;
+            }
+        }
+
+        if (widget != null && this instanceof SWTContainer) {
+            R target = doFindWidget(id,(SWTContainer) this);
+            if (target != null) {
+                return target;
+            }
+        }
+
+        return this.parent != null ? doFindWidget(id,parent) : null;
+    }
+
+    private <R extends Widget> R  doFindWidget(String id, SWTContainer parent) {
+        List<SWTWidget> children = parent.children();
+        for (SWTWidget item: children) {
+
+            if (item == null) {
+                continue;
+            }
+
+            SWTWidget widget = item.getFirst();
+            while (widget != null) {
+                if (id.equals(widget.getId())) {
+                    return (R) widget.getWidget();
+                } else if (widget instanceof SWTContainer) {
+                    R target = doFindWidget(id,(SWTContainer) item);
+                    if (target != null) {
+                        return target;
+                    }
+                }
+                widget = widget.getNext();
+            }
+        }
+        return null;
+    }
+
+    public SWTContainer getParent() {
+        return parent;
+    }
+
+    public T getWidget() {
+        return widget;
     }
 
     public String getId() {

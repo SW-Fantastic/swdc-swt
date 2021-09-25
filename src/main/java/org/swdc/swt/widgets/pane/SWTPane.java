@@ -8,6 +8,9 @@ import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
     private int flag;
@@ -40,19 +43,23 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
-        if (this.composite != null) {
-            SWTWidget swtWidget = widget;
-            while (swtWidget != null) {
-                swtWidget.getWidget(composite);
-                swtWidget.setStage(stage);
-                swtWidget.ready(stage);
-                swtWidget = swtWidget.getNext();
-            }
+        if (composite == null) {
+            return;
         }
+        SWTWidget swtWidget = widget;
+        while (swtWidget != null) {
+            swtWidget.create(composite,this);
+            swtWidget.initStage(stage);
+            swtWidget.ready(stage);
+            swtWidget = swtWidget.getNext();
+        }
+
+        SWTWidgets.setupLayoutData(this,composite);
+
     }
 
     @Override
-    public Composite getWidget(Composite parent) {
+    protected Composite getWidget(Composite parent) {
         if (composite == null && parent != null) {
             boolean isFormWidget = parent.getClass().getPackage().getName().contains("org.eclipse.ui.forms");
             if (isFormWidget) {
@@ -73,8 +80,17 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
         this.widget = widget;
     }
 
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(widget);
+    }
+
     public static SWTPane pane(int flag) {
         return new SWTPane(flag);
     }
 
+    @Override
+    public SWTLayout getLayout() {
+        return layout;
+    }
 }

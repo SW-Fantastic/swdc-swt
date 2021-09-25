@@ -6,7 +6,11 @@ import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
 
@@ -38,7 +42,7 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
     }
 
     @Override
-    public CTabFolder getWidget(Composite parent) {
+    protected CTabFolder getWidget(Composite parent) {
         if (this.folder == null && parent != null){
             this.folder = new CTabFolder(parent,flags);
 
@@ -46,14 +50,10 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
                 folder.setLayout(layout.getLayout());
             }
 
-            if (this.getLayoutData() != null) {
-                this.folder.setLayoutData(getLayoutData().get());
-            }
-
             if (this.tabs != null) {
                 SWTCTab item = (SWTCTab) tabs.getFirst();
                 while (item != null) {
-                    item.getWidget(this.folder);
+                    item.create(this.folder,this);
                     item = (SWTCTab) item.getNext();
                 }
             }
@@ -65,13 +65,17 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
+        if (folder == null) {
+            return;
+        }
         if (this.tabs != null) {
             SWTCTab item = (SWTCTab) tabs.getFirst();
             while (item != null) {
-                item.setStage(stage);
+                item.initStage(stage);
                 item.ready(stage);
                 item = (SWTCTab) item.getNext();
             }
+            SWTWidgets.setupLayoutData(this,folder);
         }
     }
 
@@ -83,4 +87,8 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
         this.tabs = (SWTCTab) widget;
     }
 
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(tabs);
+    }
 }

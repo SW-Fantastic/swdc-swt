@@ -48,7 +48,7 @@ public class SWTTableColumn extends SWTWidget<TableColumn> {
     }
 
     @Override
-    public TableColumn getWidget(Composite parent) {
+    protected TableColumn getWidget(Composite parent) {
         if (this.tableColumn == null && parent != null) {
             if (!(parent instanceof Table)) {
                 throw new RuntimeException("Table column 需要在table中创建。");

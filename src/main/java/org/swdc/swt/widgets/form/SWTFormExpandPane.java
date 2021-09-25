@@ -8,7 +8,6 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.beans.ExpandProperty;
-import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
@@ -35,10 +34,11 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
     @Override
     public void ready(Stage stage) {
         if (this.composite != null) {
-            Control tartget = (Control) widget.getWidget(composite);
-            widget.setStage(stage);
+            Control tartget = (Control) widget.create(composite,this);
+            widget.initStage(stage);
             widget.ready(stage);
             composite.setClient(tartget);
+            SWTWidgets.setupLayoutData(this,composite);
         }
     }
 
@@ -58,14 +58,12 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
     }
 
     @Override
-    public ExpandableComposite getWidget(Composite parent) {
+    protected ExpandableComposite getWidget(Composite parent) {
         if (parent != null && this.composite == null) {
             FormToolkit toolkit = SWTWidgets.factory();
             composite = toolkit.createExpandableComposite(parent,this.flag);
             toolkit.paintBordersFor(parent);
-            if (this.getLayoutData() != null) {
-                composite.setLayoutData(getLayoutData().get());
-            }
+
             composite.addExpansionListener(new ExpansionAdapter(){
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {

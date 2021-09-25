@@ -38,13 +38,11 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
         return this;
     }
 
+
     @Override
-    public ToolBar getWidget(Composite parent) {
+    protected ToolBar getWidget(Composite parent) {
         if (toolBar == null && parent != null) {
             toolBar = new ToolBar(parent,flag);
-            if (this.getLayoutData() != null) {
-                toolBar.setLayoutData(getLayoutData().get());
-            }
             if (!this.background.isEmpty()) {
                 SWTColor swtColor = SWTWidgets.color(background.get());
                 if (swtColor != null && swtColor.getColor() != null) {
@@ -58,15 +56,19 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
+        if (toolBar == null) {
+            return;
+        }
         if (this.widget != null) {
             SWTToolItem item = this.widget;
             while (item != null) {
                 item.getWidget(this.toolBar);
-                item.setStage(stage);
+                item.initStage(stage);
                 item.ready(stage);
                 item = (SWTToolItem) item.getNext();
             }
         }
+        SWTWidgets.setupLayoutData(this,toolBar);
     }
 
     @Override

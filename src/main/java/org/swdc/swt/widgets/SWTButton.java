@@ -1,18 +1,19 @@
 package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.beans.*;
+import org.swdc.swt.layouts.LayoutData;
+import org.swdc.swt.layouts.SWTFormData;
 
 import java.lang.reflect.Method;
+import java.util.function.Consumer;
 
 public class SWTButton extends SWTWidget<Button> {
 
@@ -21,25 +22,13 @@ public class SWTButton extends SWTWidget<Button> {
     private Button button;
 
     private TextProperty text = new TextProperty();
-
     private SizeProperty sizeProperty = new SizeProperty();
-
-    private String methodName;
-
-    private SelectionListener clickListener;
-
-    private Method actionMethod;
-
     private ColorProperty colorProperty = new ColorProperty();
 
-    private SelectionAdapter dispatcher = new SelectionAdapter() {
-        @Override
-        public void widgetSelected(SelectionEvent selectionEvent) {
-            if (SWTButton.this.clickListener != null) {
-                SWTButton.this.clickListener.widgetSelected(selectionEvent);
-            }
-        }
-    };
+    private SelectionProperty selectionProperty = new SelectionProperty();
+
+    private SelectionListener clickListener = selectionProperty.dispatcher();
+
 
     public SWTButton(int flags, String text) {
         this.text.set(text);
@@ -57,7 +46,7 @@ public class SWTButton extends SWTWidget<Button> {
     }
 
     @Override
-    public Button getWidget(Composite parent) {
+    protected Button getWidget(Composite parent) {
         if (this.button == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -65,11 +54,6 @@ public class SWTButton extends SWTWidget<Button> {
                 toolkit.paintBordersFor(parent);
             } else {
                 button = new Button(parent,flags);
-            }
-            button.addSelectionListener(dispatcher);
-
-            if (this.getLayoutData() != null) {
-                button.setLayoutData(this.getLayoutData().get());
             }
 
             sizeProperty.manage(button);
@@ -80,27 +64,14 @@ public class SWTButton extends SWTWidget<Button> {
         return button;
     }
 
-
     @Override
     public void ready(Stage stage) {
+        SWTWidgets.setupLayoutData(this,this.button);
 
-        Object controller = stage.getController();
-        if (controller == null || methodName == null) {
-            return;
-        }
-
-        Class controllerClazz = controller.getClass();
-        if (actionMethod == null) {
-            try {
-                actionMethod = controllerClazz.getMethod(methodName);
-            } catch (Exception e) {
-                try {
-                    actionMethod = controllerClazz.getMethod(methodName,SelectionEvent.class);
-                } catch (Exception ex) {
-                    throw new RuntimeException("找不到可用的方法：" + methodName);
-                }
-            }
-        }
+        // 接管本组件的SelectionEvent
+        selectionProperty.manage(this);
+        // 添加本Section的Listener到button。
+        button.addSelectionListener(clickListener);
     }
 
     public SWTButton action(Closure closure) {
@@ -114,33 +85,7 @@ public class SWTButton extends SWTWidget<Button> {
     }
 
     public SWTButton action(String methodName) {
-        this.methodName = methodName;
-        this.clickListener = new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent selectionEvent) {
-                Stage stage = SWTButton.this.getStage();
-                Object controller = stage.getController();
-                if (controller == null) {
-                    return;
-                }
-
-                Method finalMethod = actionMethod;
-                if (actionMethod == null) {
-                    return;
-                }
-
-                try {
-                    if (finalMethod.getParameterCount() > 0) {
-                        finalMethod.invoke(controller,selectionEvent);
-                    } else {
-                        finalMethod.invoke(controller);
-                    }
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-
+        this.selectionProperty.set(methodName);
         return this;
     }
 

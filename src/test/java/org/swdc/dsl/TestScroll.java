@@ -1,10 +1,7 @@
 package org.swdc.dsl;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.swdc.swt.layouts.SWTGridLayout;
@@ -52,13 +49,12 @@ public class TestScroll {
         pane.children(new SWTPane(SWT.NORMAL).size(1000,1000));
         pane.layout(SWTGridLayout.cell().fillHeight(false).fillWidth(true));
 
-        pane.getWidget(shell);
-
+        pane.create(shell,null);
 
         StageTest test = new StageTest();
         test.children(pane);
 
-        pane.setStage(test);
+        pane.initStage(test);
         pane.ready(test);
 
         shell.pack();

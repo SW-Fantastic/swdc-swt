@@ -6,8 +6,11 @@ import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
 import org.swdc.swt.layouts.SWTBorderLayout
 import org.swdc.swt.layouts.SWTFillLayout
+import org.swdc.swt.layouts.SWTFormData
+import org.swdc.swt.layouts.SWTFormLayout
 import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTRowLayout
+import org.swdc.swt.layouts.SWTStackLayout
 import org.swdc.swt.widgets.SWTButton
 import org.swdc.swt.widgets.SWTComboBox
 import org.swdc.swt.widgets.SWTDateTime
@@ -22,6 +25,7 @@ import org.swdc.swt.widgets.form.SWTForm
 import org.swdc.swt.widgets.form.SWTFormExpandPane
 import org.swdc.swt.widgets.form.SWTFormHyperLink
 import org.swdc.swt.widgets.form.SWTFormText
+import org.swdc.swt.widgets.pane.SWTCBanner
 import org.swdc.swt.widgets.pane.SWTCTab
 import org.swdc.swt.widgets.pane.SWTCTabPane
 import org.swdc.swt.widgets.pane.SWTGroup
@@ -139,7 +143,24 @@ class TestWindow extends Stage {
                     height 120
                 }
 
-                children widget {
+                children widget{
+                    SWTTab.tab(SWT.FLAT,"Stack").define {
+                        children SWTPane.pane(SWT.FLAT).define {
+                            id "stack"
+                            layout new SWTStackLayout()
+                            children widget {
+                                SWTButton.button(SWT.FLAT,"Test A").define {
+                                    id "btnA"
+                                }
+                            } >> widget {
+                                SWTButton.button(SWT.FLAT, "Test B").define {
+                                    id "btnB"
+                                }
+                            }
+                        }
+                    }
+
+                } >> widget {
                     SWTTab.tab(SWT.NORMAL,"Tab 0").define {
                         children widget {
                             SWTButton.button(SWT.NORMAL,"Test Tab")
@@ -367,12 +388,57 @@ class TestWindow extends Stage {
                         text "ViewForm"
                         children widget {
                             new SWTViewForm(SWT.NORMAL).define {
-                                left SWTButton.button(SWT.FLAT,"TestLeft").define {
-                                    size 120,SWT.DEFAULT
-                                }
+                                left SWTButton.button(SWT.FLAT,"TestLeft")
                                 right SWTButton.button(SWT.FLAT,"TestRight")
                                 center SWTButton.button(SWT.FLAT,"TestCenter")
                                 bottom SWTButton.button(SWT.FLAT,"TestBottom")
+                            }
+                        }
+                    }
+                } >> widget {
+                    new SWTCTab(SWT.NORMAL).define {
+                        text "cbanner"
+                        children widget {
+                            new SWTCBanner(SWT.FLAT).define {
+                                left SWTButton.button(SWT.FLAT,"TestLeft")
+                                right SWTButton.button(SWT.FLAT,"TestRight").define {
+                                    size 420,SWT.DEFAULT
+                                }
+                                bottom SWTButton.button(SWT.FLAT,"TestBottom")
+                            }
+                        }
+                    }
+                } >> widget {
+                    new SWTCTab(SWT.NORMAL).define {
+                        text "formLayout"
+                        children widget {
+                            SWTPane.pane(SWT.FLAT).define {
+                                layout new SWTFormLayout().define {
+
+                                }
+                                children widget {
+                                    SWTLabel.label(SWT.FLAT,"Test Label").define {
+                                        id "tlb"
+                                    }
+                                } >> widget {
+                                    SWTButton.button(SWT.FLAT,"Test Form").define {
+                                        layout new SWTFormData().define {
+                                            right().id("tlb")
+                                                    .offset(400)
+                                            top().id("tlb")
+                                                    .offset(80)
+                                        }
+                                    }
+                                } >> widget {
+                                    SWTComboBox.comboBox(SWT.FLAT).define {
+                                        layout new SWTFormData().define {
+                                            right().id("tlb")
+                                                    .offset(200)
+                                            top().id("tlb")
+                                                    .offset(80)
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

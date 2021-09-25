@@ -49,23 +49,22 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
             Composite parent = form.getBody();
             SWTWidget swtWidget = widget;
             while (swtWidget != null) {
-                swtWidget.getWidget(parent);
-                swtWidget.setStage(stage);
+                swtWidget.create(parent,this);
+                swtWidget.initStage(stage);
                 swtWidget.ready(stage);
                 swtWidget = swtWidget.getNext();
             }
+            SWTWidgets.setupLayoutData(this,form);
         }
     }
 
     @Override
-    public Form getWidget(Composite parent) {
+    protected Form getWidget(Composite parent) {
         if (form == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             form = toolkit.createForm(parent);
             toolkit.paintBordersFor(parent);
-            if (this.getLayoutData() != null) {
-                form.setLayoutData(getLayoutData().get());
-            }
+
             if (this.layout != null) {
                 form.getBody().setLayout(layout.getLayout());
             } else {

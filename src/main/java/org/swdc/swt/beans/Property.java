@@ -4,8 +4,13 @@ package org.swdc.swt.beans;
 import org.eclipse.swt.widgets.Widget;
 
 /**
- * Widget的属性，监控属性的变化
- * 自动调整widget。
+ * Widget的属性
+ * 在getWidget中使用。
+ * 监控ObservableValue的变化，并修改Widget。
+ *
+ * Property for Widget，
+ * should be use on override “getWidget” method。
+ * listening the ObservableValue and adjust Widget。
  *
  * @param <T>
  */

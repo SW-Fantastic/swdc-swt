@@ -13,7 +13,11 @@ import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -59,14 +63,19 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
 
     @Override
     public void ready(Stage stage) {
+        if (wrapper == null) {
+            return;
+        }
         if (this.widget != null) {
-            Widget composite = this.widget.getWidget(scrolledComposite);
-            this.widget.setStage(stage);
+            Widget composite = this.widget.create(scrolledComposite,this);
+            this.widget.initStage(stage);
             this.widget.ready(stage);
             Control control = (Control) composite;
             scrolledComposite.setContent(control);
             control.requestLayout();
+
         }
+        SWTWidgets.setupLayoutData(this,this.wrapper);
     }
 
     public SWTScrollPane fixWidth(boolean fixWidth) {
@@ -82,7 +91,7 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
     }
 
     @Override
-    public Composite getWidget(Composite parent) {
+    protected Composite getWidget(Composite parent) {
         if (scrolledComposite == null && parent != null) {
             wrapper = new Composite(parent,SWT.NONE);
             wrapper.setLayout(new FillLayout());
@@ -116,6 +125,11 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
             throw new RuntimeException("只能放一个");
         }
         this.widget = widget;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(widget);
     }
 
     public static SWTScrollPane scrollPane(int flag) {

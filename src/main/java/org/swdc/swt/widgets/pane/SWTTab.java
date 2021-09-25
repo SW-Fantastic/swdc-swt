@@ -8,6 +8,9 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
 
     private TabItem item;
@@ -36,7 +39,7 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
     }
 
     @Override
-    public TabItem getWidget(Composite parent) {
+    protected TabItem getWidget(Composite parent) {
         if (parent == null) {
             return null;
         }
@@ -59,9 +62,9 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
         if (widget == null) {
             return;
         }
-        Widget view = widget.getWidget(this.item.getParent());
+        Widget view = widget.create(this.item.getParent(),this);
         Control target = (Control) view;
-        widget.setStage(stage);
+        widget.initStage(stage);
         widget.ready(stage);
         if (target instanceof ScrolledComposite) {
             target = target.getParent();
@@ -75,6 +78,11 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
             throw new RuntimeException("Tab的内容仅允许一个组件。");
         }
         this.widget = widget;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(this.widget);
     }
 
     public static SWTTab tab(int flag, String name) {

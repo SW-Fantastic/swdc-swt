@@ -64,24 +64,26 @@ public class SWTList extends SWTWidget<List> {
 
     @Override
     public void ready(Stage stage) {
-        if (data != null && factory != null) {
-            for (Object item : data) {
-                if (item == null) {
-                    continue;
+        if (list != null) {
+            if (data != null && factory != null) {
+                for (Object item : data) {
+                    if (item == null) {
+                        continue;
+                    }
+                    String val = factory.getValue(item);
+                    list.add(val);
                 }
-                String val = factory.getValue(item);
-                list.add(val);
             }
+            SWTWidgets.setupLayoutData(this,list);
         }
+
     }
 
+
     @Override
-    public List getWidget(Composite parent) {
+    protected List getWidget(Composite parent) {
         if (this.list == null && parent != null) {
             list = new List(parent,flags);
-            if (this.getLayoutData() != null) {
-                list.setLayoutData(getLayoutData().get());
-            }
             sizeProperty.manage(list);
         }
         return list;

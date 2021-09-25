@@ -8,6 +8,7 @@ import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
+import org.swdc.swt.widgets.Stage;
 
 public class SWTFormText extends SWTWidget<FormText> {
 
@@ -29,6 +30,13 @@ public class SWTFormText extends SWTWidget<FormText> {
         return this;
     }
 
+    @Override
+    public void ready(Stage stage) {
+        if (this.formText == null) {
+            return;
+        }
+        SWTWidgets.setupLayoutData(this,this.formText);
+    }
 
     public SWTFormText text(String text) {
         this.text.set(text);
@@ -41,7 +49,7 @@ public class SWTFormText extends SWTWidget<FormText> {
     }
 
     @Override
-    public FormText getWidget(Composite parent) {
+    protected FormText getWidget(Composite parent) {
         if (this.formText == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             this.formText = toolkit.createFormText(parent,false);

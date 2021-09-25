@@ -40,12 +40,17 @@ public class SWTSlider extends SWTWidget<Slider> {
     }
 
     @Override
-    public Slider getWidget(Composite parent) {
+    public void ready(Stage stage) {
+        if (this.slider != null) {
+            SWTWidgets.setupLayoutData(this,this.slider);
+        }
+    }
+
+    @Override
+    protected Slider getWidget(Composite parent) {
         if (this.slider == null && parent != null) {
             this.slider = new Slider(parent,this.flags);
-            if (this.getLayoutData() != null) {
-                this.slider.setLayoutData(getLayoutData().get());
-            }
+
             this.rangeProperty.manage(this.slider);
             this.sizeProperty.manage(this.slider);
         }

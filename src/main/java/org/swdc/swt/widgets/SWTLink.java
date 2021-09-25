@@ -34,12 +34,16 @@ public class SWTLink extends SWTWidget<Link> {
     }
 
     @Override
-    public Link getWidget(Composite parent) {
+    public void ready(Stage stage) {
+        if (this.link != null) {
+            SWTWidgets.setupLayoutData(this,this.link);
+        }
+    }
+
+    @Override
+    protected Link getWidget(Composite parent) {
         if (link == null && parent != null) {
             link = new Link(parent,this.flags);
-            if (this.getLayoutData() != null) {
-                this.link.setLayoutData(getLayoutData().get());
-            }
             sizeProperty.manage(link);
             text.manage(link);
         }

@@ -6,9 +6,11 @@ import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
 
@@ -60,28 +62,26 @@ public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
-        if (this.form != null) {
-            SWTWidget swtWidget = widget;
-            while (swtWidget != null) {
-                swtWidget.getWidget(form);
-                swtWidget.setStage(stage);
-                swtWidget.ready(stage);
-                swtWidget = swtWidget.getNext();
-            }
-            if (!percentage.isEmpty()) {
-                form.setWeights(percentage.get());
-            }
+        if (form == null) {
+            return;
         }
+        SWTWidget swtWidget = widget;
+        while (swtWidget != null) {
+            swtWidget.create(form,this);
+            swtWidget.initStage(stage);
+            swtWidget.ready(stage);
+            swtWidget = swtWidget.getNext();
+        }
+        if (!percentage.isEmpty()) {
+            form.setWeights(percentage.get());
+        }
+        SWTWidgets.setupLayoutData(this,form);
     }
 
     @Override
-    public SashForm getWidget(Composite parent) {
+    protected SashForm getWidget(Composite parent) {
         if (this.form == null && parent != null) {
             this.form = new SashForm(parent,this.flag);
-            if (this.getLayoutData() != null) {
-                this.form.setLayoutData(getLayoutData().get());
-            }
-
             form.SASH_WIDTH = spec.get();
             this.sizeProperty.manage(form);
         }
@@ -96,5 +96,10 @@ public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
     @Override
     public void children(SWTWidget widget) {
         this.widget = widget;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(this.widget);
     }
 }

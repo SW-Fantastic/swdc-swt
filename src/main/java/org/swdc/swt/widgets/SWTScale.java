@@ -40,12 +40,17 @@ public class SWTScale extends SWTWidget<Scale> {
     }
 
     @Override
-    public Scale getWidget(Composite parent) {
+    public void ready(Stage stage) {
+        if (scale != null) {
+            SWTWidgets.setupLayoutData(this,scale);
+        }
+    }
+
+    @Override
+    protected Scale getWidget(Composite parent) {
         if (this.scale == null && parent != null) {
             scale = new Scale(parent,this.flags);
-            if (this.getLayoutData() != null) {
-                scale.setLayoutData(getLayoutData().get());
-            }
+
             sizeProperty.manage(scale);
             rangeProperty.manage(scale);
         }

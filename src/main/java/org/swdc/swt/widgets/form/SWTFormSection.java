@@ -1,6 +1,5 @@
 package org.swdc.swt.widgets.form;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -53,22 +52,19 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
             if(widget.getFirst() != widget.getLast()) {
                 throw new RuntimeException("Section只能放置一个Widget");
             }
-            Widget target = widget.getWidget(section);
-            widget.setStage(stage);
+            Widget target = widget.create(section,this);
+            widget.initStage(stage);
             widget.ready(stage);
             section.setClient((Control) target);
+            SWTWidgets.setupLayoutData(this,section);
         }
     }
 
     @Override
-    public Section getWidget(Composite parent) {
+    protected Section getWidget(Composite parent) {
         if (section == null && parent != null) {
             section = SWTWidgets.factory().createSection(parent,this.flags);
             SWTWidgets.factory().paintBordersFor(section);
-            if (this.getLayoutData() != null) {
-                section.setLayoutData(getLayoutData().get());
-            }
-
 
             this.expandProperty.manage(section);
             this.textProperty.manage(section);

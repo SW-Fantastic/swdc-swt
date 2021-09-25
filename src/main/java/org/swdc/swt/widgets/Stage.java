@@ -3,10 +3,9 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Shell;
-import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTLayout;
 
-import java.lang.reflect.Field;
+import java.util.*;
 
 public class Stage implements SWTContainer  {
 
@@ -17,6 +16,10 @@ public class Stage implements SWTContainer  {
     private SWTLayout layout;
 
     private SWTWidget widget;
+
+    private boolean initialized;
+
+    private Map<String, SWTWidget> widgetMap = new HashMap<>();
 
     public Stage controller(Object controller) {
         this.controller = controller;
@@ -65,28 +68,24 @@ public class Stage implements SWTContainer  {
             throw new RuntimeException("ui定义中，widget必须为SWTWidget的类型或者其子类");
         }
         SWTWidget target = closure.call();
-        target.getWidget(this.shell);
-        target.setStage(this);
+        target.create(this.shell,this);
+        target.initStage(this);
         target.ready(this);
-        if (controller != null && target.getId() != null){
-            Field[] fields = controller.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                Widget widget = field.getAnnotation(Widget.class);
-                if (widget == null || !widget.value().equals(target.getId())) {
-                    continue;
-                }
-                try {
-                    field.setAccessible(true);
-                    field.set(controller,target);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                }
-            }
+        if (target.getId() != null) {
+            widgetMap.put(target.getId(),target);
         }
+
         return target;
     }
 
     public Stage show() {
+        if (!initialized) {
+            if (this.controller != null && this.controller instanceof Initialize) {
+                Initialize initialize = (Initialize) controller;
+                initialize.initialize();
+            }
+            initialized = true;
+        }
         shell.open();
         return this;
     }
@@ -97,5 +96,10 @@ public class Stage implements SWTContainer  {
 
     public Shell getShell() {
         return shell;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return new ArrayList<>(widgetMap.values());
     }
 }

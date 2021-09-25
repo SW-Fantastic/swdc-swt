@@ -4,15 +4,16 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
 
@@ -39,15 +40,17 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
-        if (this.group != null) {
-            SWTWidget swtWidget = widget;
-            while (swtWidget != null) {
-                swtWidget.getWidget(group);
-                swtWidget.setStage(stage);
-                swtWidget.ready(stage);
-                swtWidget = swtWidget.getNext();
-            }
+        if (group == null) {
+            return;
         }
+        SWTWidget swtWidget = widget;
+        while (swtWidget != null) {
+            swtWidget.create(group,this);
+            swtWidget.initStage(stage);
+            swtWidget.ready(stage);
+            swtWidget = swtWidget.getNext();
+        }
+        SWTWidgets.setupLayoutData(this,group);
     }
 
     public SWTGroup text(String text){
@@ -61,12 +64,10 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
     }
 
     @Override
-    public Group getWidget(Composite parent) {
+    protected Group getWidget(Composite parent) {
         if (parent != null && group == null) {
             group = new Group(parent,this.flags);
-            if (this.getLayoutData() != null) {
-                this.group.setLayoutData(this.getLayoutData().get());
-            }
+
             if (this.layout != null){
                 group.setLayout(layout.getLayout());
             } else {
@@ -76,6 +77,11 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
             textProperty.manage(group);
         }
         return group;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(this.widget);
     }
 
     @Override

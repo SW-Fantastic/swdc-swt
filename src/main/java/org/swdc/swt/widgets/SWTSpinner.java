@@ -40,12 +40,17 @@ public class SWTSpinner extends SWTWidget<Spinner> {
     }
 
     @Override
-    public Spinner getWidget(Composite parent) {
+    public void ready(Stage stage) {
+        if (this.spinner != null) {
+            SWTWidgets.setupLayoutData(this,spinner);
+        }
+    }
+
+    @Override
+    protected Spinner getWidget(Composite parent) {
         if (this.spinner == null && parent != null) {
             spinner = new Spinner(parent,this.flag);
-            if (this.getLayoutData() != null) {
-                spinner.setLayoutData(this.getLayoutData().get());
-            }
+
             rangeProperty.manage(spinner);
             sizeProperty.manage(spinner);
         }

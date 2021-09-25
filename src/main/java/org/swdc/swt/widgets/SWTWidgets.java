@@ -1,8 +1,12 @@
 package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.layouts.LayoutData;
+import org.swdc.swt.layouts.SWTFormData;
 
 
 public class SWTWidgets {
@@ -86,6 +90,19 @@ public class SWTWidgets {
             return rgb;
         }
         return null;
+    }
+
+    public static void setupLayoutData(SWTWidget widget, Control target) {
+        // LayoutData
+        if (widget.getLayoutData() != null) {
+            LayoutData data = widget.getLayoutData();
+            if (data instanceof SWTFormData) {
+                SWTFormData formData = (SWTFormData) data;
+                target.setLayoutData(formData.get(widget));
+            } else {
+                target.setLayoutData(data.get());
+            }
+        }
     }
 
 

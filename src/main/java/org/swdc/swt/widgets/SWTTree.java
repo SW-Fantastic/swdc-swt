@@ -16,13 +16,21 @@ public class SWTTree extends SWTWidget<Tree> {
         this.flag = flag;
     }
 
-    public SWTTree size(int width,int height) {
+    @Override
+    public void ready(Stage stage) {
+        if (tree == null) {
+            return;
+        }
+        SWTWidgets.setupLayoutData(this,tree);
+    }
+
+    public SWTTree size(int width, int height) {
         this.sizeProperty.set(width,height);
         return this;
     }
 
     @Override
-    public Tree getWidget(Composite parent) {
+    protected Tree getWidget(Composite parent) {
         if (this.tree == null && parent != null) {
             tree = new Tree(parent,flag);
             if (this.getLayoutData() != null) {

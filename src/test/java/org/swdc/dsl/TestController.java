@@ -3,12 +3,25 @@ package org.swdc.dsl;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.swdc.swt.Widget;
+import org.swdc.swt.layouts.SWTStackLayout;
+import org.swdc.swt.widgets.Initialize;
+import org.swdc.swt.widgets.SWTButton;
 import org.swdc.swt.widgets.SWTLabel;
+import org.swdc.swt.widgets.pane.SWTPane;
 
-public class TestController {
+public class TestController implements Initialize {
 
     @Widget("lblTest")
     private SWTLabel label;
+
+    @Widget("stack")
+    private SWTPane stackPane;
+
+    @Widget("btnA")
+    private SWTButton btnA;
+
+    @Widget("btnB")
+    private SWTButton btnB;
 
     private boolean flag = false;
 
@@ -24,4 +37,22 @@ public class TestController {
         flag = !flag;
     }
 
+    public void change() {
+        if (flag) {
+            SWTStackLayout stackLayout = (SWTStackLayout) stackPane.getLayout();
+            stackLayout.top(btnA);
+        } else {
+            SWTStackLayout stackLayout = (SWTStackLayout) stackPane.getLayout();
+            stackLayout.top(btnB);
+        }
+        flag = !flag;
+    }
+
+    @Override
+    public void initialize() {
+        SWTStackLayout stackLayout = (SWTStackLayout) stackPane.getLayout();
+        stackLayout.top(btnA);
+        btnA.action("change");
+        btnB.action("change");
+    }
 }

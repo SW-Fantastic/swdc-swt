@@ -10,6 +10,9 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
 
     private CTabItem item;
@@ -37,7 +40,7 @@ public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
     }
 
     @Override
-    public CTabItem getWidget(Composite parent) {
+    protected CTabItem getWidget(Composite parent) {
         if (parent == null) {
             return null;
         }
@@ -57,12 +60,12 @@ public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
-        if (widget == null) {
+        if (widget == null || item == null) {
             return;
         }
-        Widget view = widget.getWidget(this.item.getParent());
+        Widget view = widget.create(this.item.getParent(),this);
         Control target = (Control) view;
-        widget.setStage(stage);
+        widget.initStage(stage);
         widget.ready(stage);
         if (target instanceof ScrolledComposite) {
             target = target.getParent();
@@ -76,5 +79,10 @@ public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
             throw new RuntimeException("Tab的内容仅允许一个组件。");
         }
         this.widget = widget;
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Arrays.asList(this.widget);
     }
 }

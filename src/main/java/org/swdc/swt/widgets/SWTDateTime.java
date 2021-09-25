@@ -3,6 +3,8 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.layouts.LayoutData;
+import org.swdc.swt.layouts.SWTFormData;
 
 public class SWTDateTime extends SWTWidget<DateTime> {
 
@@ -22,7 +24,14 @@ public class SWTDateTime extends SWTWidget<DateTime> {
     }
 
     @Override
-    public DateTime getWidget(Composite parent) {
+    public void ready(Stage stage) {
+        if (this.dateTime != null) {
+            SWTWidgets.setupLayoutData(this,this.dateTime);
+        }
+    }
+
+    @Override
+    protected DateTime getWidget(Composite parent) {
         if (dateTime == null && parent != null) {
             dateTime = new DateTime(parent,this.flag);
             if (this.getLayoutData() != null ) {

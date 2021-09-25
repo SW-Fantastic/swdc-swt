@@ -1,6 +1,5 @@
 package org.swdc.swt.widgets;
 
-import groovy.lang.Closure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -53,6 +52,11 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
 
     @Override
     public void ready(Stage stage) {
+
+        if (table == null) {
+            return;
+        }
+
         this.table.setHeaderVisible(showHeader);
         this.table.setSize(width,height);
         this.table.setLinesVisible(lines);
@@ -60,7 +64,7 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
             SWTWidget item = columns.getFirst();
             while (item != null) {
                 item.getWidget(this.table);
-                item.setStage(stage);
+                item.initStage(stage);
                 item.ready(stage);
                 item = item.getNext();
             }
@@ -74,10 +78,12 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
             this.table.addControlListener(autoColumnSizeListener);
         }
 
+        SWTWidgets.setupLayoutData(this,this.table);
+
     }
 
     @Override
-    public Table getWidget(Composite parent) {
+    protected Table getWidget(Composite parent) {
         if (this.table == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();

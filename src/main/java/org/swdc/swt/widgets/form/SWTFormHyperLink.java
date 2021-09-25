@@ -7,10 +7,8 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
-import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
-import org.swdc.swt.widgets.SWTButton;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
@@ -107,6 +105,7 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
                 }
             }
         }
+        SWTWidgets.setupLayoutData(this,hyperlink);
     }
 
     public SWTFormHyperLink size(int width, int height){
@@ -115,7 +114,7 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
     }
 
     @Override
-    public Hyperlink getWidget(Composite parent) {
+    protected Hyperlink getWidget(Composite parent) {
         if (hyperlink == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             hyperlink = toolkit.createHyperlink(parent,"",flag);
