@@ -21,17 +21,10 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
 
     private SWTLayout layout;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTPane(int flag) {
         this.flag  = flag;
     }
 
-
-    public SWTPane size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
 
     public SWTPane layout(SWTLayout layout) {
         this.layout = layout;
@@ -70,7 +63,6 @@ public class SWTPane extends SWTWidget<Composite> implements SWTContainer {
             if (this.layout != null) {
                 composite.setLayout(layout.getLayout());
             }
-            this.sizeProperty.manage(composite);
         }
         return composite;
     }

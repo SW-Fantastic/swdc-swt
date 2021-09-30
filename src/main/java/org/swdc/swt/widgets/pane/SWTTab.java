@@ -21,17 +21,9 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
 
     private SWTWidget widget;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTTab(int flag) {
         this.flag = flag;
     }
-
-    public SWTTab size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
-
 
     public SWTTab text(String  text) {
         this.text.set(text);
@@ -52,7 +44,6 @@ public class SWTTab extends SWTWidget<TabItem> implements SWTContainer {
         if (item == null) {
             item = new TabItem(tabFolder,this.flag);
         }
-        this.sizeProperty.manage(item);
         this.text.manage(item);
         return item;
     }

@@ -23,7 +23,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
 
     private SWTWidget widget;
 
-    private SizeProperty sizeProperty = new SizeProperty();
     private TextProperty textProperty = new TextProperty();
     private ExpandProperty expandProperty = new ExpandProperty();
 
@@ -38,11 +37,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
 
     public SWTFormSection text(String text) {
         this.textProperty.set(text);
-        return this;
-    }
-
-    public SWTFormSection size(int width, int height) {
-        this.sizeProperty.set(new Point(width,height));
         return this;
     }
 
@@ -68,7 +62,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
 
             this.expandProperty.manage(section);
             this.textProperty.manage(section);
-            this.sizeProperty.manage(section);
 
             section.addExpansionListener(new ExpansionAdapter() {
                 @Override

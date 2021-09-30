@@ -12,8 +12,6 @@ public class SWTText extends SWTWidget<Text> {
 
     private TextProperty textProperty = new TextProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private Text textField;
 
     public SWTText(int flag, String text) {
@@ -24,11 +22,6 @@ public class SWTText extends SWTWidget<Text> {
 
     public SWTText text(String text) {
         this.textProperty.set(text);
-        return this;
-    }
-
-    public SWTText size(int width, int height) {
-        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -52,13 +45,7 @@ public class SWTText extends SWTWidget<Text> {
                 textField = new Text(parent,this.flags);
             }
 
-            textField.addModifyListener(m -> {
-                textProperty.setDirectly(textField.getText());
-            });
-
-
             textProperty.manage(textField);
-            sizeProperty.manage(textField);
         }
         return textField;
     }

@@ -22,7 +22,6 @@ public class SWTButton extends SWTWidget<Button> {
     private Button button;
 
     private TextProperty text = new TextProperty();
-    private SizeProperty sizeProperty = new SizeProperty();
     private ColorProperty colorProperty = new ColorProperty();
 
     private SelectionProperty selectionProperty = new SelectionProperty();
@@ -40,11 +39,6 @@ public class SWTButton extends SWTWidget<Button> {
         return this;
     }
 
-    public SWTButton size(int width, int height) {
-        this.sizeProperty.set(new Point(width,height));
-        return this;
-    }
-
     @Override
     protected Button getWidget(Composite parent) {
         if (this.button == null && parent != null) {
@@ -55,8 +49,6 @@ public class SWTButton extends SWTWidget<Button> {
             } else {
                 button = new Button(parent,flags);
             }
-
-            sizeProperty.manage(button);
             colorProperty.manage(button);
             text.manage(button);
 
@@ -66,6 +58,9 @@ public class SWTButton extends SWTWidget<Button> {
 
     @Override
     public void ready(Stage stage) {
+        if (button == null) {
+            return;
+        }
         SWTWidgets.setupLayoutData(this,this.button);
 
         // 接管本组件的SelectionEvent

@@ -13,8 +13,6 @@ public class SWTSpinner extends SWTWidget<Spinner> {
 
     private RangeProperty rangeProperty = new RangeProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTSpinner(int flag) {
         this.flag = flag;
     }
@@ -34,11 +32,6 @@ public class SWTSpinner extends SWTWidget<Spinner> {
         return this;
     }
 
-    public SWTSpinner size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (this.spinner != null) {
@@ -52,7 +45,6 @@ public class SWTSpinner extends SWTWidget<Spinner> {
             spinner = new Spinner(parent,this.flag);
 
             rangeProperty.manage(spinner);
-            sizeProperty.manage(spinner);
         }
         return spinner;
     }

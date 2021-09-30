@@ -44,6 +44,10 @@ public class SWTWidgets {
         return new SWTColor(rgb[0],rgb[1],rgb[2]);
     }
 
+    public String colorHex(int r,int g,int b){
+        return String.format("#%02X%02X%02X", r,g,b);
+    }
+
     public static SWTColor color(String color) {
         try {
             if (color.startsWith("#")) {
@@ -51,7 +55,7 @@ public class SWTWidgets {
             } else if (color.toLowerCase().startsWith("rgb")) {
 
                 color = color.toLowerCase();
-                color = color.substring(color.indexOf("rgb(") + 1, color.indexOf(")") + 1);
+                color = color.substring(color.indexOf("(") + 1, color.indexOf(")"));
                 String[] rgb = color.split(",");
 
                 if (rgb.length < 3) {

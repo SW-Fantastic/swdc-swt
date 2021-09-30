@@ -1,5 +1,6 @@
 import org.eclipse.jface.dialogs.MessageDialog
 import org.eclipse.swt.SWT
+import org.eclipse.swt.widgets.CoolBar
 import org.eclipse.swt.widgets.Display
 import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
@@ -12,11 +13,15 @@ import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTRowLayout
 import org.swdc.swt.layouts.SWTStackLayout
 import org.swdc.swt.widgets.SWTButton
+import org.swdc.swt.widgets.SWTCanvas
 import org.swdc.swt.widgets.SWTComboBox
+import org.swdc.swt.widgets.SWTCoolBar
+import org.swdc.swt.widgets.SWTCoolItem
 import org.swdc.swt.widgets.SWTDateTime
 import org.swdc.swt.widgets.SWTLabel
 import org.swdc.swt.widgets.SWTLink
 import org.swdc.swt.widgets.SWTList
+import org.swdc.swt.widgets.SWTProgressBar
 import org.swdc.swt.widgets.SWTToolBar
 import org.swdc.swt.widgets.SWTToolItem
 import org.swdc.swt.widgets.SWTTree
@@ -143,7 +148,21 @@ class TestWindow extends Stage {
                     height 120
                 }
 
-                children widget{
+                children widget {
+                    SWTTab.tab(SWT.FLAT, "coolbar").define {
+                       children SWTPane.pane(SWT.NONE).define {
+                           layout SWTRowLayout.rowLayout(SWT.VERTICAL)
+                           children new SWTCoolBar(SWT.FLAT).define {
+                               children new SWTCoolItem(SWT.NONE).define {
+                                   control SWTButton.button(SWT.FLAT,"Cool item")
+                                            .define {
+                                                size 80,24
+                                            }
+                               }
+                           }
+                       }
+                    }
+                } >> widget{
                     SWTTab.tab(SWT.FLAT,"Stack").define {
                         children SWTPane.pane(SWT.FLAT).define {
                             id "stack"
@@ -241,6 +260,10 @@ class TestWindow extends Stage {
                                         size 80,SWT.DEFAULT
                                     }
                                 }
+                            } >> widget {
+                                new SWTProgressBar(SWT.FILL)
+                            } >> widget {
+                                new SWTCanvas(SWT.FLAT|SWT.BORDER)
                             }
                         }
                     }

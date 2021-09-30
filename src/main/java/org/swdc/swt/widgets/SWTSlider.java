@@ -13,8 +13,6 @@ public class SWTSlider extends SWTWidget<Slider> {
 
     private RangeProperty rangeProperty = new RangeProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTSlider(int flags) {
         this.flags = flags;
     }
@@ -34,11 +32,6 @@ public class SWTSlider extends SWTWidget<Slider> {
         return this;
     }
 
-    public SWTSlider size(int width, int height) {
-        sizeProperty.set(width,height);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (this.slider != null) {
@@ -52,7 +45,6 @@ public class SWTSlider extends SWTWidget<Slider> {
             this.slider = new Slider(parent,this.flags);
 
             this.rangeProperty.manage(this.slider);
-            this.sizeProperty.manage(this.slider);
         }
         return this.slider;
     }

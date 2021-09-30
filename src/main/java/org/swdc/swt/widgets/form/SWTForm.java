@@ -22,15 +22,9 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
     private SWTLayout layout;
 
     private TextProperty textProperty = new TextProperty();
-    private SizeProperty sizeProperty = new SizeProperty();
 
     public SWTForm(int flag) {
         this.flag = flag;
-    }
-
-    public SWTForm size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
     }
 
     public SWTForm layout(SWTLayout layout) {
@@ -71,7 +65,6 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
                 form.getBody().setLayout(new FillLayout());
             }
             textProperty.manage(form);
-            sizeProperty.manage(form);
         }
         return form;
     }

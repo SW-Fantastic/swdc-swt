@@ -20,8 +20,6 @@ public class SWTList extends SWTWidget<List> {
 
     private ListFactory factory;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTList(int flag) {
         this.flags = flag;
         data = new ArrayList<>();
@@ -57,11 +55,6 @@ public class SWTList extends SWTWidget<List> {
         return null;
     }
 
-    public SWTList size(int width, int height) {
-        sizeProperty.set(width,height);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (list != null) {
@@ -84,7 +77,6 @@ public class SWTList extends SWTWidget<List> {
     protected List getWidget(Composite parent) {
         if (this.list == null && parent != null) {
             list = new List(parent,flags);
-            sizeProperty.manage(list);
         }
         return list;
     }

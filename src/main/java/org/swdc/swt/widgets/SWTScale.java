@@ -13,8 +13,6 @@ public class SWTScale extends SWTWidget<Scale> {
 
     private RangeProperty rangeProperty = new RangeProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTScale(int flags) {
         this.flags = flags;
     }
@@ -34,11 +32,6 @@ public class SWTScale extends SWTWidget<Scale> {
         return this;
     }
 
-    public SWTScale size(int width, int height) {
-        sizeProperty.set(width, height);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (scale != null) {
@@ -50,8 +43,6 @@ public class SWTScale extends SWTWidget<Scale> {
     protected Scale getWidget(Composite parent) {
         if (this.scale == null && parent != null) {
             scale = new Scale(parent,this.flags);
-
-            sizeProperty.manage(scale);
             rangeProperty.manage(scale);
         }
         return scale;

@@ -6,21 +6,21 @@ import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
 
-public class SWTToolItem extends SWTWidget<ToolItem> {
+public class SWTCoolItem extends SWTWidget<CoolItem> {
 
-    private ToolItem item;
+    private CoolItem item;
     private int flag;
 
     private TextProperty text = new TextProperty();
 
     private SWTWidget widget;
 
-
-    public SWTToolItem(int flag) {
+    public SWTCoolItem(int flag) {
         this.flag = flag;
     }
 
-    public SWTToolItem text(String text){
+
+    public SWTCoolItem text(String text){
         this.text.set(text);
         return this;
     }
@@ -32,12 +32,11 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
             this.widget.initStage(stage);
             this.widget.ready(stage);
             item.setControl((Control) widget);
-        } else {
-            item.setText(text.get());
+            item.setPreferredSize(this.widget.getSize());
         }
     }
 
-    public SWTToolItem control(SWTWidget widget) {
+    public SWTCoolItem control(SWTWidget widget) {
         if (widget.getFirst() != widget.getLast()) {
             throw new RuntimeException("ToolItem内部只能有一个组件。");
         }
@@ -45,7 +44,7 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
         return this;
     }
 
-    public SWTToolItem control(Closure<SWTWidget> widget) {
+    public SWTCoolItem control(Closure<SWTWidget> widget) {
         SWTWidget target =  widget.call();
         if (target.getFirst() != target.getLast()) {
             throw new RuntimeException("ToolItem内部只能有一个组件。");
@@ -55,16 +54,17 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
     }
 
     @Override
-    protected ToolItem getWidget(Composite parent) {
-        if (!(parent instanceof ToolBar)) {
+    protected CoolItem getWidget(Composite parent) {
+        if (!(parent instanceof CoolBar)) {
             throw new RuntimeException("ToolItem 必须放置在ToolBar里面");
         }
-        ToolBar toolBar = (ToolBar) parent;
-        if (item == null) {
-            item = new ToolItem(toolBar,flag);
+        CoolBar toolBar = (CoolBar) parent;
+        if (item == null && parent != null) {
+            item = new CoolItem(toolBar,flag);
             this.text.manage(item);
         }
 
         return item;
     }
+
 }

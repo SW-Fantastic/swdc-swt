@@ -11,8 +11,12 @@ import java.lang.reflect.Method;
 public class ColorProperty implements Property<String> {
 
     private Widget widget;
+
     private Method setter;
+    private Method getter;
+
     private Method bgSetter;
+    private Method bgGetter;
 
     private ObservableValue<String> color = new ObservableValue<>("");
     private ObservableValue<String> background = new ObservableValue<>("");
@@ -36,11 +40,51 @@ public class ColorProperty implements Property<String> {
     }
 
     public String getForeground() {
-        return color.isEmpty()? "" : color.get();
+        if (this.getter == null) {
+            return color.isEmpty()? "" : color.get();
+        }
+        try {
+
+            Color realColor = (Color) this.getter.invoke(widget);
+            if (realColor == null) {
+                return color.isEmpty() ? "" : color.get();
+            }
+
+            int r = realColor.getRed();
+            int g = realColor.getGreen();
+            int b = realColor.getBlue();
+
+            this.color.set("rgb(" + r + "," + g + "," + b + ")");
+
+            return this.color.isEmpty() ? "" : color.get();
+
+        } catch (Exception e) {
+            return color.isEmpty()? "" : color.get();
+        }
     }
 
     public String getBackground() {
-        return background.isEmpty()?"":background.get();
+        if (this.bgGetter == null) {
+            return background.isEmpty()? "" : background.get();
+        }
+        try {
+
+            Color realColor = (Color) this.bgGetter.invoke(widget);
+            if (realColor == null) {
+                return background.isEmpty()? "" : background.get();
+            }
+
+            int r = realColor.getRed();
+            int g = realColor.getGreen();
+            int b = realColor.getBlue();
+
+            this.background.set("rgb(" + r + "," + g + "," + b + ")");
+
+            return background.isEmpty()? "" : background.get();
+
+        } catch (Exception e) {
+            return background.isEmpty()? "" : background.get();
+        }
     }
 
     @Override
@@ -52,13 +96,22 @@ public class ColorProperty implements Property<String> {
             color.addListener(this::onForegroundChange);
             this.onForegroundChange(null,null);
         } catch (Exception e) {
+        }
 
+        try {
+            getter = widget.getClass().getMethod("getForeground");
+        } catch (Exception e) {
         }
 
         try {
             bgSetter = widget.getClass().getMethod("setBackground",Color.class);
             color.addListener(this::onBackgroundChange);
             this.onBackgroundChange(null,null);
+        } catch (Exception ex) {
+        }
+
+        try {
+            bgGetter = widget.getClass().getMethod("getBackground");
         } catch (Exception ex) {
         }
     }
@@ -108,6 +161,8 @@ public class ColorProperty implements Property<String> {
             this.background.removeListener(this::onBackgroundChange);
             this.setter = null;
             this.bgSetter = null;
+            this.getter = null;
+            this.bgGetter = null;
         }
     }
 

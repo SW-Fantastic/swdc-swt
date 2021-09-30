@@ -21,7 +21,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
     private TextProperty text = new TextProperty();
 
     private ExpandProperty expandProperty = new ExpandProperty();
-    private SizeProperty sizeProperty = new SizeProperty();
 
     private SWTWidget widget;
 
@@ -52,11 +51,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
         return this;
     }
 
-    public SWTFormExpandPane size(int width, int height) {
-        this.sizeProperty.set(new Point(width,height));
-        return this;
-    }
-
     @Override
     protected ExpandableComposite getWidget(Composite parent) {
         if (parent != null && this.composite == null) {
@@ -72,7 +66,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
             });
             text.manage(composite);
             expandProperty.manage(composite);
-            sizeProperty.manage(composite);
         }
         return composite;
     }

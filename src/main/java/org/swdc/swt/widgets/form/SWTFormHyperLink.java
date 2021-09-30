@@ -25,8 +25,6 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
     private Method actionMethod;
     private String methodName;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private HyperlinkAdapter linkActivated;
 
     private HyperlinkAdapter dispatcher = new HyperlinkAdapter(){
@@ -108,10 +106,6 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
         SWTWidgets.setupLayoutData(this,hyperlink);
     }
 
-    public SWTFormHyperLink size(int width, int height){
-        this.sizeProperty.set(width,height);
-        return this;
-    }
 
     @Override
     protected Hyperlink getWidget(Composite parent) {
@@ -121,7 +115,6 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
             toolkit.paintBordersFor(parent);
             hyperlink.addHyperlinkListener(dispatcher);
             textProperty.manage(hyperlink);
-            sizeProperty.manage(hyperlink);
         }
         return hyperlink;
     }

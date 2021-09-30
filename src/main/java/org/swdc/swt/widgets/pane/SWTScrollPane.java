@@ -39,21 +39,12 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
 
     private int flag;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
-    private SizeProperty fixSizeProperty = new SizeProperty();
-
     private boolean fixWidth;
 
     private boolean fixHeight;
 
     public SWTScrollPane(int flag) {
         this.flag = flag;
-    }
-
-    public SWTScrollPane size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
     }
 
     public SWTScrollPane layout(SWTLayout layout) {
@@ -95,7 +86,6 @@ public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer 
         if (scrolledComposite == null && parent != null) {
             wrapper = new Composite(parent,SWT.NONE);
             wrapper.setLayout(new FillLayout());
-            sizeProperty.manage(wrapper);
             scrolledComposite = new ScrolledComposite(wrapper,flag);
             scrolledComposite.setExpandVertical(true);
             scrolledComposite.setExpandHorizontal(true);

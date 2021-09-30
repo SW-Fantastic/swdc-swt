@@ -20,8 +20,6 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
 
     private SWTTab tabs;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private SWTLayout layout;
 
     public SWTTabPane(int flags) {
@@ -36,10 +34,6 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
         return this;
     }
 
-    public SWTTabPane size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
 
     @Override
     protected TabFolder getWidget(Composite parent) {
@@ -57,9 +51,7 @@ public class SWTTabPane extends SWTWidget<TabFolder> implements SWTContainer {
                     item = (SWTTab) item.getNext();
                 }
             }
-            this.sizeProperty.manage(folder);
         }
-
         return folder;
     }
 

@@ -22,10 +22,7 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
 
     private SWTWidget widget;
 
-    private SizeProperty sizeProperty = new SizeProperty();
     private TextProperty textProperty = new TextProperty();
-
-
 
     private SWTLayout layout;
 
@@ -58,10 +55,6 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
         return this;
     }
 
-    public SWTGroup size(int width, int height) {
-        this.sizeProperty.set(new Point(width,height));
-        return this;
-    }
 
     @Override
     protected Group getWidget(Composite parent) {
@@ -73,7 +66,6 @@ public class SWTGroup extends SWTWidget<Group> implements SWTContainer {
             } else {
                 group.setLayout(new FillLayout());
             }
-            sizeProperty.manage(group);
             textProperty.manage(group);
         }
         return group;

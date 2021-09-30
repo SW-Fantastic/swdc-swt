@@ -14,8 +14,6 @@ public class SWTLabel extends SWTWidget<Label> {
     private Label label;
 
     private TextProperty text = new TextProperty();
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private ColorProperty colorProperty = new ColorProperty();
 
     private int flag;
@@ -42,7 +40,6 @@ public class SWTLabel extends SWTWidget<Label> {
                 label =  new Label(parent,flag);
             }
             this.text.manage(label);
-            this.sizeProperty.manage(label);
             this.colorProperty.manage(label);
         }
         return label;
@@ -63,9 +60,12 @@ public class SWTLabel extends SWTWidget<Label> {
         return this;
     }
 
-    public SWTLabel size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
+    public String color() {
+        return colorProperty.getForeground();
+    }
+
+    public String backgroundColor() {
+        return colorProperty.getBackground();
     }
 
     public String text() {

@@ -24,9 +24,6 @@ public class SWTViewForm extends SWTWidget<ViewForm> implements SWTContainer {
     private SWTWidget center;
     private SWTWidget bottom;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
-
     private SWTViewForm(int flag) {
         this.flag = flag;
     }
@@ -63,10 +60,6 @@ public class SWTViewForm extends SWTWidget<ViewForm> implements SWTContainer {
         SWTWidgets.setupLayoutData(this,viewForm);
     }
 
-    public SWTViewForm size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
 
     public SWTViewForm left(SWTWidget left) {
         if (left.getFirst() != left.getLast()) {
@@ -132,7 +125,6 @@ public class SWTViewForm extends SWTWidget<ViewForm> implements SWTContainer {
     public ViewForm getWidget(Composite parent) {
         if (viewForm == null && parent != null) {
             viewForm = new ViewForm(parent,flag);
-            sizeProperty.manage(viewForm);
         }
         return viewForm;
     }

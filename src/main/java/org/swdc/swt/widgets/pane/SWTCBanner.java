@@ -23,8 +23,6 @@ public class SWTCBanner extends SWTWidget<CBanner> implements SWTContainer {
     private SWTWidget right;
     private SWTWidget bottom;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTCBanner(int flag) {
         this.flag = flag;
     }
@@ -57,10 +55,6 @@ public class SWTCBanner extends SWTWidget<CBanner> implements SWTContainer {
         SWTWidgets.setupLayoutData(this,banner);
     }
 
-    public SWTCBanner size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
 
     public SWTCBanner left(SWTWidget left) {
         if (left.getFirst() != left.getLast()) {
@@ -117,7 +111,6 @@ public class SWTCBanner extends SWTWidget<CBanner> implements SWTContainer {
             if (this.getLayoutData() != null) {
                 banner.setLayoutData(getLayoutData().get());
             }
-            sizeProperty.manage(banner);
         }
         return banner;
     }

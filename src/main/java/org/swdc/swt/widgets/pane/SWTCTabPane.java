@@ -2,6 +2,7 @@ package org.swdc.swt.widgets.pane;
 
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
+import org.swdc.swt.beans.SelectProperty;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
@@ -20,9 +21,9 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
 
     private SWTCTab tabs;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private SWTLayout layout;
+
+    private SelectProperty selectProperty = new SelectProperty();
 
     public SWTCTabPane(int flag) {
         this.flags = flag;
@@ -33,11 +34,6 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
         if (this.folder != null) {
             this.folder.setLayout(layout.getLayout());
         }
-        return this;
-    }
-
-    public SWTCTabPane size(int width, int height) {
-        this.sizeProperty.set(width,height);
         return this;
     }
 
@@ -57,7 +53,7 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
                     item = (SWTCTab) item.getNext();
                 }
             }
-            this.sizeProperty.manage(folder);
+            this.selectProperty.manage(folder);
         }
 
         return folder;
@@ -78,6 +74,17 @@ public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
             SWTWidgets.setupLayoutData(this,folder);
         }
     }
+
+    public void select(int idx) {
+        if (this.folder == null) {
+            return;
+        }
+        if (folder.getChildren().length < idx) {
+            return;
+        }
+        selectProperty.set(idx);
+    }
+
 
     @Override
     public void children(SWTWidget widget) {

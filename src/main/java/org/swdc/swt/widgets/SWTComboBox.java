@@ -13,24 +13,16 @@ public class SWTComboBox extends SWTWidget<Combo> {
 
     private TextProperty text = new TextProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private Combo combo;
 
     public SWTComboBox(int flag) {
         this.flag = flag;
     }
 
-    public SWTComboBox size(int width, int height) {
-        sizeProperty.set(width,height);
-        return this;
-    }
-
     public SWTComboBox text(String text) {
         this.text.set(text);
         return this;
     }
-
 
     @Override
     public void ready(Stage stage) {
@@ -44,7 +36,6 @@ public class SWTComboBox extends SWTWidget<Combo> {
         if (this.combo == null && parent != null) {
             this.combo = new Combo(parent,this.flag);
 
-            this.sizeProperty.manage(combo);
             this.text.manage(combo);
         }
         return combo;

@@ -35,6 +35,8 @@ public class TestController implements Initialize {
             label.size(120,SWT.DEFAULT);
         }
         flag = !flag;
+        System.err.println(label.color());
+        System.err.println(label.size());
     }
 
     public void change() {

@@ -36,12 +36,6 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
 
     private boolean showHeader = true;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
-    private int width;
-
-    private int height;
-
     private boolean lines;
 
     private List<Object> items = new ArrayList<>();
@@ -58,7 +52,6 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
         }
 
         this.table.setHeaderVisible(showHeader);
-        this.table.setSize(width,height);
         this.table.setLinesVisible(lines);
         if (this.columns != null) {
             SWTWidget item = columns.getFirst();
@@ -138,8 +131,6 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
                 table.setLayoutData(this.getLayoutData().get());
             }
 
-            this.sizeProperty.manage(table);
-
         }
         return this;
     }
@@ -161,11 +152,6 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
         if (table != null) {
             this.table.setLinesVisible(lines);
         }
-        return this;
-    }
-
-    public SWTTable size(int width, int height) {
-        this.sizeProperty.set(width,height);
         return this;
     }
 

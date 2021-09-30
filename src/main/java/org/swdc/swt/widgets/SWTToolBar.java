@@ -2,6 +2,7 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
+import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.SizeProperty;
 
@@ -12,29 +13,15 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
 
     private SWTToolItem widget;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
-    private ObservableValue<String> background = new ObservableValue<>();
+    private ColorProperty colorProperty = new ColorProperty();
 
     public SWTToolBar(int flag) {
         this.flag = flag;
-        background.addListener((oldVal, newVal) -> {
-            if (toolBar != null && !background.isEmpty()) {
-                SWTColor swtColor = SWTWidgets.color(background.get());
-                if (swtColor != null && swtColor.getColor() != null) {
-                    toolBar.setBackground(swtColor.getColor());
-                }
-            }
-        });
+
     }
 
     public SWTToolBar backgroundColor(String color) {
-        this.background.set(color);
-        return this;
-    }
-
-    public SWTToolBar size(int width , int height) {
-        this.sizeProperty.set(width,height);
+        this.colorProperty.setBackground(color);
         return this;
     }
 
@@ -43,13 +30,7 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
     protected ToolBar getWidget(Composite parent) {
         if (toolBar == null && parent != null) {
             toolBar = new ToolBar(parent,flag);
-            if (!this.background.isEmpty()) {
-                SWTColor swtColor = SWTWidgets.color(background.get());
-                if (swtColor != null && swtColor.getColor() != null) {
-                    toolBar.setBackground(swtColor.getColor());
-                }
-            }
-            this.sizeProperty.manage(toolBar);
+            this.colorProperty.manage(toolBar);
         }
         return toolBar;
     }
@@ -62,7 +43,7 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
         if (this.widget != null) {
             SWTToolItem item = this.widget;
             while (item != null) {
-                item.getWidget(this.toolBar);
+                item.create(toolBar,this);
                 item.initStage(stage);
                 item.ready(stage);
                 item = (SWTToolItem) item.getNext();

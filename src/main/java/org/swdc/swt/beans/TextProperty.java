@@ -8,6 +8,7 @@ public class TextProperty implements Property<String> {
 
     private Widget widget;
     private Method setter;
+    private Method getter;
 
     private ObservableValue<String> value = new ObservableValue<>("");
 
@@ -18,7 +19,19 @@ public class TextProperty implements Property<String> {
 
     @Override
     public String get() {
-        return value.isEmpty() ? "" : value.get();
+
+        try {
+            if (getter != null) {
+                return value.isEmpty() ? "" : value.get();
+            }
+            String data = (String) getter.invoke(widget);
+            if (data != null) {
+                value.set(data);
+            }
+            return value.isEmpty() ? "" : value.get();
+        } catch (Exception e) {
+            return value.isEmpty() ? "" : value.get();
+        }
     }
 
     @Override
@@ -31,6 +44,12 @@ public class TextProperty implements Property<String> {
             this.onTextChange(null,null);
         } catch (Exception e) {
         }
+
+        try {
+            getter = widget.getClass().getMethod("getText");
+        } catch (Exception e) {
+        }
+
     }
 
     private void onTextChange(String oldVal, String newVal) {
@@ -56,6 +75,7 @@ public class TextProperty implements Property<String> {
         if (this.widget != null) {
             this.value.removeListener(this::onTextChange);
             this.setter = null;
+            this.getter = null;
         }
     }
 

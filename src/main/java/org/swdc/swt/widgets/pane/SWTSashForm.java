@@ -21,7 +21,6 @@ public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
     private SWTWidget widget;
 
     private ObservableValue<Integer> spec = new ObservableValue<>(2);
-    private SizeProperty sizeProperty = new SizeProperty();
 
     private ObservableValue<int[]> percentage = new ObservableValue<>(){
         @Override
@@ -34,11 +33,6 @@ public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
         this.flag = flag;
         spec.addListener(this::onSpecChange);
         percentage.addListener(this::onPercentageChange);
-    }
-
-    public SWTSashForm size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
     }
 
     private void onPercentageChange(int[] oldArr, int[] newArr) {
@@ -83,7 +77,6 @@ public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
         if (this.form == null && parent != null) {
             this.form = new SashForm(parent,this.flag);
             form.SASH_WIDTH = spec.get();
-            this.sizeProperty.manage(form);
         }
         return form;
     }

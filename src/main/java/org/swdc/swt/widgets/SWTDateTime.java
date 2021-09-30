@@ -12,15 +12,8 @@ public class SWTDateTime extends SWTWidget<DateTime> {
 
     private DateTime dateTime;
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTDateTime(int flag) {
         this.flag = flag;
-    }
-
-    public SWTDateTime size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
     }
 
     @Override
@@ -37,7 +30,6 @@ public class SWTDateTime extends SWTWidget<DateTime> {
             if (this.getLayoutData() != null ) {
                 dateTime.setLayoutData(getLayoutData().get());
             }
-            sizeProperty.manage(dateTime);
         }
         return dateTime;
     }

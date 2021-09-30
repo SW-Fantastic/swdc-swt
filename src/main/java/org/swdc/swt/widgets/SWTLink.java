@@ -13,8 +13,6 @@ public class SWTLink extends SWTWidget<Link> {
 
     private TextProperty text = new TextProperty();
 
-    private SizeProperty sizeProperty = new SizeProperty();
-
     public SWTLink(int flag) {
         this.flags = flag;
     }
@@ -28,11 +26,6 @@ public class SWTLink extends SWTWidget<Link> {
         return new SWTLink(flags);
     }
 
-    public SWTLink size(int width, int height) {
-        this.sizeProperty.set(width,height);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (this.link != null) {
@@ -44,7 +37,6 @@ public class SWTLink extends SWTWidget<Link> {
     protected Link getWidget(Composite parent) {
         if (link == null && parent != null) {
             link = new Link(parent,this.flags);
-            sizeProperty.manage(link);
             text.manage(link);
         }
         return link;

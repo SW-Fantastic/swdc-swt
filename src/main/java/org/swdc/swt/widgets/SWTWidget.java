@@ -1,8 +1,10 @@
 package org.swdc.swt.widgets;
 
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
+import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.LayoutData;
 
 import java.lang.reflect.Field;
@@ -43,6 +45,8 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
      */
     private T widget;
 
+    private SizeProperty sizeProperty = new SizeProperty();
+
     private SWTContainer parent;
 
     public SWTWidget rightShift(SWTWidget item) {
@@ -63,6 +67,16 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
             this.prev.leftShift(item);
         }
         return this;
+    }
+
+
+    public <R extends SWTWidget> R size(int width,int height) {
+        this.sizeProperty.set(width,height);
+        return (R) this;
+    }
+
+    public Point size() {
+        return sizeProperty.get();
     }
 
     public Stage getStage() {
@@ -128,6 +142,8 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
     public T create(Composite parent,SWTContainer parentWidget) {
         this.parent = parentWidget;
         this.widget = getWidget(parent);
+        // 通用属性
+        this.sizeProperty.manage(widget);
         return widget;
     }
 
@@ -166,6 +182,10 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         }
 
         return this.parent != null ? doFindWidget(id,parent) : null;
+    }
+
+    public Point getSize() {
+        return sizeProperty.get();
     }
 
     private <R extends Widget> R  doFindWidget(String id, SWTContainer parent) {

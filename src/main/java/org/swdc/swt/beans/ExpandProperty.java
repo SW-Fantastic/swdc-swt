@@ -12,6 +12,7 @@ public class ExpandProperty implements Property<Boolean>{
     private ObservableValue<Boolean> expand = new ObservableValue<>();
 
     private Method expandSetter = null;
+    private Method expandGetter = null;
 
     private Widget widget;
 
@@ -22,18 +23,34 @@ public class ExpandProperty implements Property<Boolean>{
 
     @Override
     public Boolean get() {
-        return !this.expand.isEmpty() && this.expand.get();
+        if (this.expandGetter == null) {
+            return !this.expand.isEmpty() && this.expand.get();
+        }
+        try {
+            Boolean expand = (Boolean) expandGetter.invoke(widget);
+            if (expand == null) {
+                return !this.expand.isEmpty() && this.expand.get();
+            }
+            this.expand.set(expand);
+            return !this.expand.isEmpty() && this.expand.get();
+        } catch (Exception e) {
+            return !this.expand.isEmpty() && this.expand.get();
+        }
     }
 
     @Override
     public void manage(Widget widget) {
         this.unlink();
         this.widget = widget;
-        MethodHandles.Lookup lookup = MethodHandles.lookup();
         try {
             expandSetter = widget.getClass().getMethod("setExpanded",new Class[]{ boolean.class });
             this.onExpandChange(null,null);
             expand.addListener(this::onExpandChange);
+        } catch (Exception e) {
+        }
+
+        try {
+            expandGetter = widget.getClass().getMethod("isExpanded");
         } catch (Exception e) {
         }
     }

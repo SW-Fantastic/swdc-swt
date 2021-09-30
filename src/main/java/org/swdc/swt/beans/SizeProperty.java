@@ -10,9 +10,16 @@ public class SizeProperty implements Property<Point> {
 
     private ObservableValue<Point> size = new ObservableValue<>(new Point(SWT.DEFAULT,SWT.DEFAULT));
     private Widget widget;
+
     private Method setter;
+    private Method getter;
+
     private Method widthSetter;
+    private Method widthGetter;
+
     private Method heightSetter;
+    private Method heightGetter;
+
     private Method layoutMethod;
 
     public SizeProperty() {
@@ -35,6 +42,12 @@ public class SizeProperty implements Property<Point> {
             setter = widget.getClass().getMethod("setSize", Point.class);
         } catch (Exception e) {
         }
+
+        try {
+            getter = widget.getClass().getMethod("getSize");
+        } catch (Exception e) {
+        }
+
         try {
             widthSetter = widget.getClass().getMethod("setWidth", int.class);
         } catch (Exception e) {
@@ -91,7 +104,25 @@ public class SizeProperty implements Property<Point> {
 
     @Override
     public Point get() {
-        return size.isEmpty() ? new Point(SWT.DEFAULT,SWT.DEFAULT) : size.get();
+        if (this.getter == null) {
+            return size.isEmpty() ? new Point(SWT.DEFAULT,SWT.DEFAULT) : size.get();
+        }
+        try {
+            Point val = (Point) this.getter.invoke(widget);
+            if (val == null) {
+                return size.isEmpty() ? new Point(SWT.DEFAULT,SWT.DEFAULT) : size.get();
+            }
+            this.size.set(val);
+            if (this.widthSetter != null) {
+                this.widthSetter.invoke(widget,val.x);
+            }
+            if (this.heightSetter != null) {
+                this.heightSetter.invoke(widget,val.y);
+            }
+            return size.isEmpty() ? new Point(SWT.DEFAULT,SWT.DEFAULT) : size.get();
+        } catch (Exception e) {
+            return size.isEmpty() ? new Point(SWT.DEFAULT,SWT.DEFAULT) : size.get();
+        }
     }
 
     public void width(int width) {
