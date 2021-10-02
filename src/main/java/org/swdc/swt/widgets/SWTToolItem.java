@@ -2,38 +2,40 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.*;
-import org.swdc.swt.beans.ObservableValue;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
+import org.swdc.swt.beans.SelectionProperty;
+import org.swdc.swt.widgets.base.SWTLabelWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
-public class SWTToolItem extends SWTWidget<ToolItem> {
+import java.util.Collections;
+import java.util.List;
+
+public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionable,SWTContainer {
 
     private ToolItem item;
     private int flag;
 
-    private TextProperty text = new TextProperty();
-
     private SWTWidget widget;
 
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTToolItem(int flag) {
         this.flag = flag;
     }
 
-    public SWTToolItem text(String text){
-        this.text.set(text);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (this.widget != null && item != null) {
-            Widget widget = this.widget.getWidget(item.getParent());
+            Widget widget = this.widget.create(item.getParent(),this);
             this.widget.initStage(stage);
             this.widget.ready(stage);
             item.setControl((Control) widget);
-        } else {
-            item.setText(text.get());
+
+
+            // 接管本组件的SelectionEvent
+            selectionProperty.manage(this);
+            // 添加本Section的Listener到button。
+            item.addSelectionListener(selectionProperty.dispatcher());
+
         }
     }
 
@@ -62,9 +64,23 @@ public class SWTToolItem extends SWTWidget<ToolItem> {
         ToolBar toolBar = (ToolBar) parent;
         if (item == null) {
             item = new ToolItem(toolBar,flag);
-            this.text.manage(item);
         }
 
         return item;
+    }
+
+    @Override
+    public void onAction(String methodName) {
+        this.selectionProperty.set(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+       selectionProperty.closure(closure);
+    }
+
+    @Override
+    public List<SWTWidget> children() {
+        return Collections.singletonList(this.widget);
     }
 }

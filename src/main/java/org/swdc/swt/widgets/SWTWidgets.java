@@ -1,19 +1,30 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.GroovyClassLoader;
+import org.codehaus.groovy.tools.GroovyClass;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.ViewRequire;
 import org.swdc.swt.layouts.LayoutData;
 import org.swdc.swt.layouts.SWTFormData;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class SWTWidgets {
 
     private static final Display display = new Display();
     private static final FormToolkit toolkit = new FormToolkit(SWTWidgets.getDisplay());
+    private static final GroovyClassLoader loader = new GroovyClassLoader();
 
+    private static final ConcurrentHashMap<String,Class> loadedViews = new ConcurrentHashMap<>();
 
     public static FormToolkit factory() {
         return toolkit;
@@ -96,6 +107,12 @@ public class SWTWidgets {
         return null;
     }
 
+    /**
+     * 初始化view的layout，在ready调用
+     * 本方法即可。
+     * @param widget 组件
+     * @param target SWT的组件。
+     */
     public static void setupLayoutData(SWTWidget widget, Control target) {
         // LayoutData
         if (widget.getLayoutData() != null) {
@@ -109,5 +126,90 @@ public class SWTWidgets {
         }
     }
 
+    /**
+     * 按照类名创建窗口Stage。
+     * @param name 类名 java.lang.Class#getSimpleName
+     * @param <T> Stage的继承类。
+     * @return Stage对象。
+     */
+    public static <T extends Stage> T createStage(String name) {
+        Class stageClass = loadedViews.get(name);
+        if (stageClass == null) {
+            throw new RuntimeException(new ClassNotFoundException());
+        }
+        if (!Stage.class.isAssignableFrom(stageClass)) {
+            throw new RuntimeException(new ClassCastException());
+        }
+        try {
+            return (T) stageClass
+                    .getConstructor()
+                    .newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void loadViewsByAnnotation(Object object) {
+        ViewRequire require = object.getClass().getAnnotation(ViewRequire.class);
+        if (require == null) {
+            return;
+        }
+        String[] loadingViews = require.value();
+        for (String location: loadingViews) {
+            try {
+                SWTWidgets.loadFormResource(object.getClass().getModule(),location);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * 根据类名创建view，创建的view可以
+     * 放入任一groovy的组件中。
+     *
+     * @param name 类名Class#getSimpleName
+     * @return SWTWidget组件
+     */
+    public static SWTWidget create(String name) {
+        Class viewClazz = loadedViews.get(name);
+        if (viewClazz == null) {
+            throw new RuntimeException(new ClassNotFoundException());
+        }
+        try {
+            return (SWTWidget) viewClazz
+                    .getConstructor()
+                    .newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 从Resources文件夹加载view。
+     * @param mod JPMS的Module
+     * @param path View在resources文件夹中的路径
+     * @return 加载到的ViewClass
+     * @throws Exception 创建失败
+     */
+    public static Class<SWTWidget> loadFormResource(Module mod,String path) throws Exception {
+        Module self = SWTWidgets.class.getModule();
+
+        if (!self.canRead(mod)) {
+            throw new Exception("can not read resource");
+        }
+
+        InputStream in = mod.getResourceAsStream(path + ".groovy");
+        Class viewClass = loader.parseClass(new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8)),path);
+
+        if (!SWTWidget.class.isAssignableFrom(viewClass)) {
+            throw new Exception(path + " is not a groovy view");
+        }
+
+        loadedViews.put(viewClass.getSimpleName(),viewClass);
+
+        return viewClass;
+    }
 
 }

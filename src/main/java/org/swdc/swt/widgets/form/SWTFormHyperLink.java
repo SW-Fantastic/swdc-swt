@@ -12,14 +12,13 @@ import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
 import java.lang.reflect.Method;
 
-public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
+public class SWTFormHyperLink extends SWTLabelControlWidget<Hyperlink> {
 
     private int flag;
-
-    private TextProperty textProperty = new TextProperty();
 
     private Hyperlink hyperlink;
     private Method actionMethod;
@@ -40,12 +39,7 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
         this.flag = flag;
     }
 
-    public SWTFormHyperLink text(String text) {
-        this.textProperty.set(text);
-        return this;
-    }
-
-    public SWTFormHyperLink action(Closure closure) {
+    public SWTFormHyperLink onAction(Closure closure) {
         this.linkActivated = new HyperlinkAdapter() {
             @Override
             public void linkActivated(HyperlinkEvent e) {
@@ -55,7 +49,7 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
         return this;
     }
 
-    public SWTFormHyperLink action(String name) {
+    public SWTFormHyperLink onAction(String name) {
         this.methodName = name;
         this.linkActivated = new HyperlinkAdapter() {
             @Override
@@ -114,7 +108,6 @@ public class SWTFormHyperLink extends SWTWidget<Hyperlink> {
             hyperlink = toolkit.createHyperlink(parent,"",flag);
             toolkit.paintBordersFor(parent);
             hyperlink.addHyperlinkListener(dispatcher);
-            textProperty.manage(hyperlink);
         }
         return hyperlink;
     }

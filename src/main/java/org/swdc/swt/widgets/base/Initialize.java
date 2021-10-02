@@ -1,4 +1,4 @@
-package org.swdc.swt.widgets;
+package org.swdc.swt.widgets.base;
 
 public interface Initialize {
 

@@ -2,16 +2,12 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
-import org.swdc.swt.layouts.LayoutData;
-import org.swdc.swt.layouts.SWTFormData;
+import org.swdc.swt.widgets.base.Controlable;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTComboBox extends SWTWidget<Combo> {
+public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Controlable {
 
     private int flag;
-
-    private TextProperty text = new TextProperty();
 
     private Combo combo;
 
@@ -20,14 +16,13 @@ public class SWTComboBox extends SWTWidget<Combo> {
     }
 
     public SWTComboBox text(String text) {
-        this.text.set(text);
         return this;
     }
 
     @Override
     public void ready(Stage stage) {
         if (combo != null) {
-           SWTWidgets.setupLayoutData(this,this.combo);
+            SWTWidgets.setupLayoutData(this,this.combo);
         }
     }
 
@@ -35,11 +30,10 @@ public class SWTComboBox extends SWTWidget<Combo> {
     protected Combo getWidget(Composite parent) {
         if (this.combo == null && parent != null) {
             this.combo = new Combo(parent,this.flag);
-
-            this.text.manage(combo);
         }
         return combo;
     }
+
 
     public static SWTComboBox comboBox(int flag) {
         return new SWTComboBox(flag);

@@ -4,8 +4,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Slider;
 import org.swdc.swt.beans.RangeProperty;
 import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTSlider extends SWTWidget<Slider> {
+public class SWTSlider extends SWTControlWidget<Slider> {
 
     private int flags;
 

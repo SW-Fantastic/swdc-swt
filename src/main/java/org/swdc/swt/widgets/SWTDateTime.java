@@ -2,11 +2,10 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.layouts.LayoutData;
-import org.swdc.swt.layouts.SWTFormData;
+import org.swdc.swt.widgets.base.Controlable;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTDateTime extends SWTWidget<DateTime> {
+public class SWTDateTime extends SWTControlWidget<DateTime> implements Controlable {
 
     private int flag;
 

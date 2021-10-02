@@ -14,8 +14,10 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
+import org.swdc.swt.widgets.base.SWTLabelWidget;
 
-public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
+public class SWTFormSection extends SWTLabelControlWidget<Section> implements SWTContainer {
 
     private Section section;
 
@@ -23,7 +25,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
 
     private SWTWidget widget;
 
-    private TextProperty textProperty = new TextProperty();
     private ExpandProperty expandProperty = new ExpandProperty();
 
     public SWTFormSection(int flags) {
@@ -32,11 +33,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
 
     public SWTFormSection expand(boolean expand) {
         this.expandProperty.set(expand);
-        return this;
-    }
-
-    public SWTFormSection text(String text) {
-        this.textProperty.set(text);
         return this;
     }
 
@@ -61,7 +57,6 @@ public class SWTFormSection extends SWTWidget<Section> implements SWTContainer {
             SWTWidgets.factory().paintBordersFor(section);
 
             this.expandProperty.manage(section);
-            this.textProperty.manage(section);
 
             section.addExpansionListener(new ExpansionAdapter() {
                 @Override

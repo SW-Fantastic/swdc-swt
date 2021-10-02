@@ -1,28 +1,23 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
+import org.swdc.swt.beans.ControlProperty;
+import org.swdc.swt.widgets.base.Controlable;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTText extends SWTWidget<Text> {
+public class SWTText extends SWTLabelControlWidget<Text> implements Controlable {
 
     private int flags;
 
-    private TextProperty textProperty = new TextProperty();
-
     private Text textField;
+
 
     public SWTText(int flag, String text) {
         this.flags = flag;
-        this.textProperty.set(text);
-    }
-
-
-    public SWTText text(String text) {
-        this.textProperty.set(text);
-        return this;
+        this.text(text);
     }
 
 
@@ -44,8 +39,6 @@ public class SWTText extends SWTWidget<Text> {
             } else {
                 textField = new Text(parent,this.flags);
             }
-
-            textProperty.manage(textField);
         }
         return textField;
     }

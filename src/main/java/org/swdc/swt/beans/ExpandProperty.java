@@ -53,6 +53,14 @@ public class ExpandProperty implements Property<Boolean>{
             expandGetter = widget.getClass().getMethod("isExpanded");
         } catch (Exception e) {
         }
+
+        if (expandGetter == null) {
+            try {
+                expandGetter = widget.getClass().getMethod("getExpanded");
+            } catch (Exception e) {
+            }
+        }
+
     }
 
     private void onExpandChange(Boolean oldVal, Boolean newval) {

@@ -3,8 +3,9 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.swdc.swt.beans.ProgressProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTProgressBar extends SWTWidget<ProgressBar> {
+public class SWTProgressBar extends SWTControlWidget<ProgressBar> {
 
     private int flag;
 

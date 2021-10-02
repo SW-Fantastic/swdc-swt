@@ -9,11 +9,12 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SWTCTabPane extends SWTWidget<CTabFolder> implements SWTContainer {
+public class SWTCTabPane extends SWTControlWidget<CTabFolder> implements SWTContainer {
 
     private int flags;
 

@@ -3,10 +3,9 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
+import org.swdc.swt.widgets.base.SWTLabelWidget;
 
-public class SWTTableColumn extends SWTWidget<TableColumn> {
+public class SWTTableColumn extends SWTLabelWidget<TableColumn> {
 
     interface ColumnFactory<T> {
         String getValue(T item);
@@ -14,26 +13,16 @@ public class SWTTableColumn extends SWTWidget<TableColumn> {
 
     private int flags;
 
-    private TextProperty text = new TextProperty();
-
-    private SizeProperty sizeProperty = new SizeProperty();
-
     private TableColumn tableColumn;
 
     private ColumnFactory factory;
 
-    public SWTTableColumn(int flags, String text) {
-        this.text.set(text);
+    public SWTTableColumn(int flags) {
         this.flags = flags;
     }
 
-    public SWTTableColumn text(String text) {
-        this.text.set(text);
-        return this;
-    }
-
     public SWTTableColumn width(int width) {
-        this.sizeProperty.width(width);
+        this.sizeProperty().width(width);
         return this;
     }
 
@@ -55,14 +44,12 @@ public class SWTTableColumn extends SWTWidget<TableColumn> {
             }
 
             tableColumn = new TableColumn((Table)parent,this.flags);
-            this.text.manage(tableColumn);
-            this.sizeProperty.manage(tableColumn);
         }
         return tableColumn;
     }
 
-    public static SWTTableColumn tableColumn(int flags, String text) {
-        return new SWTTableColumn(flags,text);
+    public static SWTTableColumn tableColumn(int flags) {
+        return new SWTTableColumn(flags);
     }
 
 }

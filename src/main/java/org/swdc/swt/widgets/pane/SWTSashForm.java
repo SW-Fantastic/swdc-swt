@@ -8,11 +8,12 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SWTSashForm extends SWTWidget<SashForm> implements SWTContainer {
+public class SWTSashForm extends SWTControlWidget<SashForm> implements SWTContainer {
 
     private int flag;
 

@@ -2,12 +2,18 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
+import org.swdc.swt.ViewRequire;
+import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.layouts.LayoutData;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidget<T>> {
@@ -47,6 +53,8 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
 
     private SizeProperty sizeProperty = new SizeProperty();
 
+    private ColorProperty colorProperty = new ColorProperty();
+
     private SWTContainer parent;
 
     public SWTWidget rightShift(SWTWidget item) {
@@ -69,11 +77,29 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return this;
     }
 
+    public <R extends SWTWidget> R color(String color) {
+        this.colorProperty.setForeground(color);
+        return (R) this;
+    }
+
+    public <R extends SWTWidget> R background(String color) {
+        this.colorProperty.setBackground(color);
+        return (R)this;
+    }
+
+    public String color() {
+        return colorProperty.get();
+    }
+
+    public String background() {
+        return colorProperty.getBackground();
+    }
 
     public <R extends SWTWidget> R size(int width,int height) {
         this.sizeProperty.set(width,height);
         return (R) this;
     }
+
 
     public Point size() {
         return sizeProperty.get();
@@ -144,6 +170,7 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         this.widget = getWidget(parent);
         // 通用属性
         this.sizeProperty.manage(widget);
+        this.colorProperty.manage(widget);
         return widget;
     }
 
@@ -210,6 +237,35 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
             }
         }
         return null;
+    }
+
+    public SizeProperty sizeProperty() {
+        return this.sizeProperty;
+    }
+
+    /**
+     * 在Resources中定义的Groovy的View
+     * 它们被注入到Controller将会表现为SWTWidget的对象，
+     * 在这种状态下，它们独有的方法将会被隐藏。
+     *
+     * 因此如果需要调用此对象的具体的方法，使用本方法进行调用。
+     *
+     * @param methodName groovy的view的方法名
+     * @param param groovy的view的方法参数
+     * @param <T> 返回类型
+     * @return
+     */
+    public <T> T call(String methodName, Object ...param) {
+        List<Class> paramList = new ArrayList<>();
+        for (Object item: param) {
+            paramList.add(item.getClass());
+        }
+        try {
+            Method method = this.getClass().getMethod(methodName,paramList.toArray(Class[]::new));
+            return (T) method.invoke(this,param);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public SWTContainer getParent() {

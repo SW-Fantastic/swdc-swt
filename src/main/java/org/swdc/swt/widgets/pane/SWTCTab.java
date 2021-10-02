@@ -9,29 +9,21 @@ import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTLabelWidget;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
+public class SWTCTab extends SWTLabelWidget<CTabItem> implements SWTContainer {
 
     private CTabItem item;
 
     private int flag;
 
-    private TextProperty text = new TextProperty();
-
     private SWTWidget widget;
-
 
     public SWTCTab(int flag) {
         this.flag = flag;
-    }
-
-
-    public SWTCTab text(String  text) {
-        this.text.set(text);
-        return this;
     }
 
     @Override
@@ -48,7 +40,6 @@ public class SWTCTab extends SWTWidget<CTabItem> implements SWTContainer {
         if (item == null) {
             item = new CTabItem(tabFolder,this.flag);
         }
-        this.text.manage(item);
         return item;
     }
 

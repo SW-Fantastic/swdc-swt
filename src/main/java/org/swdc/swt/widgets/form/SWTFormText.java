@@ -9,12 +9,12 @@ import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTFormText extends SWTWidget<FormText> {
+public class SWTFormText extends SWTLabelControlWidget<FormText> {
 
     private int flag;
 
-    private TextProperty text = new TextProperty();
     private ObservableValue<Boolean> parseTags = new ObservableValue<>(true);
 
     private FormText formText;
@@ -36,17 +36,11 @@ public class SWTFormText extends SWTWidget<FormText> {
         SWTWidgets.setupLayoutData(this,this.formText);
     }
 
-    public SWTFormText text(String text) {
-        this.text.set(text);
-        return this;
-    }
-
     @Override
     protected FormText getWidget(Composite parent) {
         if (this.formText == null && parent != null) {
             FormToolkit toolkit = SWTWidgets.factory();
             this.formText = toolkit.createFormText(parent,false);
-            this.text.manage(formText);
         }
         return formText;
     }

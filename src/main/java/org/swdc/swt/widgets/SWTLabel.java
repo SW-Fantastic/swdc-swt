@@ -3,24 +3,17 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.ColorProperty;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
-import org.swdc.swt.layouts.LayoutData;
-import org.swdc.swt.layouts.SWTFormData;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTLabel extends SWTWidget<Label> {
+public class SWTLabel extends SWTLabelControlWidget<Label> {
 
     private Label label;
-
-    private TextProperty text = new TextProperty();
-    private ColorProperty colorProperty = new ColorProperty();
 
     private int flag;
 
     public SWTLabel(int flag, String text) {
-        this.text.set(text);
         this.flag = flag;
+        this.text(text);
     }
 
     @Override
@@ -39,38 +32,10 @@ public class SWTLabel extends SWTWidget<Label> {
             }  else {
                 label =  new Label(parent,flag);
             }
-            this.text.manage(label);
-            this.colorProperty.manage(label);
         }
         return label;
     }
 
-    public SWTLabel text(String text) {
-        this.text.set(text);
-        return this;
-    }
-
-    public SWTLabel color(String color) {
-        this.colorProperty.setForeground(color);
-        return this;
-    }
-
-    public SWTLabel backgroundColor(String color) {
-        colorProperty.setBackground(color);
-        return this;
-    }
-
-    public String color() {
-        return colorProperty.getForeground();
-    }
-
-    public String backgroundColor() {
-        return colorProperty.getBackground();
-    }
-
-    public String text() {
-        return text.get();
-    }
 
     public static SWTLabel label(int flag, String text) {
         return new SWTLabel(flag,text);

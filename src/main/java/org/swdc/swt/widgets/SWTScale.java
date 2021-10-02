@@ -4,8 +4,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scale;
 import org.swdc.swt.beans.RangeProperty;
 import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTScale extends SWTWidget<Scale> {
+public class SWTScale extends SWTControlWidget<Scale> {
 
     private int flags;
 

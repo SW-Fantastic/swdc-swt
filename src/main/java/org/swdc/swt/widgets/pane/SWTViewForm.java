@@ -10,11 +10,12 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class SWTViewForm extends SWTWidget<ViewForm> implements SWTContainer {
+public class SWTViewForm extends SWTControlWidget<ViewForm> implements SWTContainer {
 
     private int flag;
     private ViewForm viewForm;

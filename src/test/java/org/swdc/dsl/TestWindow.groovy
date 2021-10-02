@@ -2,9 +2,11 @@ import org.eclipse.jface.dialogs.MessageDialog
 import org.eclipse.swt.SWT
 import org.eclipse.swt.widgets.CoolBar
 import org.eclipse.swt.widgets.Display
+import org.eclipse.swt.widgets.Widget
 import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
+import org.swdc.swt.ViewRequire
 import org.swdc.swt.layouts.SWTBorderLayout
 import org.swdc.swt.layouts.SWTFillLayout
 import org.swdc.swt.layouts.SWTFormData
@@ -13,6 +15,8 @@ import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTRowLayout
 import org.swdc.swt.layouts.SWTStackLayout
 import org.swdc.swt.widgets.SWTButton
+import org.swdc.swt.widgets.SWTCComboBox
+import org.swdc.swt.widgets.SWTCLabel
 import org.swdc.swt.widgets.SWTCanvas
 import org.swdc.swt.widgets.SWTComboBox
 import org.swdc.swt.widgets.SWTCoolBar
@@ -22,9 +26,11 @@ import org.swdc.swt.widgets.SWTLabel
 import org.swdc.swt.widgets.SWTLink
 import org.swdc.swt.widgets.SWTList
 import org.swdc.swt.widgets.SWTProgressBar
+import org.swdc.swt.widgets.SWTStyledText
 import org.swdc.swt.widgets.SWTToolBar
 import org.swdc.swt.widgets.SWTToolItem
 import org.swdc.swt.widgets.SWTTree
+import org.swdc.swt.widgets.SWTWidget
 import org.swdc.swt.widgets.SWTWidgets
 import org.swdc.swt.widgets.form.SWTForm
 import org.swdc.swt.widgets.form.SWTFormExpandPane
@@ -33,6 +39,8 @@ import org.swdc.swt.widgets.form.SWTFormText
 import org.swdc.swt.widgets.pane.SWTCBanner
 import org.swdc.swt.widgets.pane.SWTCTab
 import org.swdc.swt.widgets.pane.SWTCTabPane
+import org.swdc.swt.widgets.pane.SWTExpandBar
+import org.swdc.swt.widgets.pane.SWTExpandItem
 import org.swdc.swt.widgets.pane.SWTGroup
 import org.swdc.swt.widgets.pane.SWTPane
 import org.swdc.swt.widgets.SWTScale
@@ -49,6 +57,7 @@ import org.swdc.swt.widgets.Stage
 import org.swdc.swt.widgets.form.SWTFormSection
 import org.swdc.swt.widgets.pane.SWTViewForm
 
+@ViewRequire(value = "MountDemo")
 class TestWindow extends Stage {
 
     private demoTable() {
@@ -69,12 +78,14 @@ class TestWindow extends Stage {
                 columnAlignment SWT.CENTER
             }
             children widget {
-                SWTTableColumn.tableColumn(SWT.CANCEL, "Test Col").define {
+                SWTTableColumn.tableColumn(SWT.CANCEL).define {
+                    text  "Test Col"
                     width 120
                     factory (TestCell obj) -> obj.getName()
                 }
             } >> widget {
-                SWTTableColumn.tableColumn(SWT.CANCEL, "Col").define {
+                SWTTableColumn.tableColumn(SWT.CANCEL).define {
+                    text "Col"
                     width 120
                     factory (TestCell obj) -> obj.getProp()
                 }
@@ -82,7 +93,7 @@ class TestWindow extends Stage {
         }
     }
 
-    void create() {
+    void createContent() {
 
         controller new TestController()
         text "hello"
@@ -96,7 +107,7 @@ class TestWindow extends Stage {
             SWTLabel.label(SWT.NORMAL,"Test Label").define {
                 text "change"
                 color "#66CCFF"
-                backgroundColor "#E6E6E6"
+                background "#E6E6E6"
                 id "lblTest"
                 layout SWTGridLayout.cell().define {
                     colSpan 2
@@ -115,12 +126,14 @@ class TestWindow extends Stage {
                 }
             }
         } >> widget {
-            SWTButton.button(SWT.NONE, "Test Button").define {
-                action "hello"
+            SWTButton.button(SWT.NONE).define {
+                text "Test Button"
+                onAction "hello"
             }
         } >> widget {
-            SWTButton.button(SWT.NORMAL, "Test Dialog").define {
-                action {
+            SWTButton.button(SWT.NORMAL).define {
+                text "Test Dialog"
+                onAction {
                     MessageDialog.openInformation(this.getShell(),"标题","窗口显示的内容。")
                 }
             }
@@ -154,8 +167,9 @@ class TestWindow extends Stage {
                            layout SWTRowLayout.rowLayout(SWT.VERTICAL)
                            children new SWTCoolBar(SWT.FLAT).define {
                                children new SWTCoolItem(SWT.NONE).define {
-                                   control SWTButton.button(SWT.FLAT,"Cool item")
+                                   control SWTButton.button(SWT.FLAT)
                                             .define {
+                                                text "Cool item"
                                                 size 80,24
                                             }
                                }
@@ -168,12 +182,14 @@ class TestWindow extends Stage {
                             id "stack"
                             layout new SWTStackLayout()
                             children widget {
-                                SWTButton.button(SWT.FLAT,"Test A").define {
+                                SWTButton.button(SWT.FLAT).define {
                                     id "btnA"
+                                    text "Test A"
                                 }
                             } >> widget {
-                                SWTButton.button(SWT.FLAT, "Test B").define {
+                                SWTButton.button(SWT.FLAT).define {
                                     id "btnB"
+                                    text "Test B"
                                 }
                             }
                         }
@@ -182,7 +198,9 @@ class TestWindow extends Stage {
                 } >> widget {
                     SWTTab.tab(SWT.NORMAL,"Tab 0").define {
                         children widget {
-                            SWTButton.button(SWT.NORMAL,"Test Tab")
+                            SWTButton.button(SWT.NORMAL).define{
+                                text "Test Tab"
+                            }
                         }
                     }
                 } >> widget {
@@ -195,7 +213,7 @@ class TestWindow extends Stage {
                                 layout SWTBorderLayout.borderLayout()
                                 children widget {
                                     new SWTToolBar(SWT.FLAT|SWT.HORIZONTAL).define {
-                                        backgroundColor "#CECECE"
+                                        background "#CECECE"
                                         layout SWTBorderLayout.top(32)
                                         children widget {
                                             new SWTToolItem(SWT.PUSH).define {
@@ -204,12 +222,15 @@ class TestWindow extends Stage {
                                         } >> widget {
                                             new SWTToolItem(SWT.SEPARATOR).define {
                                                 size 120,SWT.DEFAULT
-                                                control SWTButton.button(SWT.PUSH,"Test")
+                                                control SWTButton.button(SWT.PUSH).define {
+                                                    text "Test"
+                                                }
                                             }
                                         }
                                     }
                                 } >> widget {
-                                    SWTButton.button(SWT.NORMAL, "BD 1").define {
+                                    SWTButton.button(SWT.NORMAL).define {
+                                        text "BD 1"
                                         layout SWTBorderLayout.bottom(60)
                                     }
                                 }
@@ -264,6 +285,20 @@ class TestWindow extends Stage {
                                 new SWTProgressBar(SWT.FILL)
                             } >> widget {
                                 new SWTCanvas(SWT.FLAT|SWT.BORDER)
+                            } >> widget {
+                                SWTWidgets.create("MountDemo").define {
+                                    id "demo"
+                                }
+                            } >> widget {
+                                new SWTCLabel(SWT.DEFAULT).define {
+                                    text "Test CLabel"
+                                }
+                            } >> widget {
+                                new SWTCComboBox(SWT.FLAT).define {
+                                    text "ccombo"
+                                }
+                            }>> widget {
+                                new SWTStyledText(SWT.BORDER)
                             }
                         }
                     }
@@ -303,15 +338,16 @@ class TestWindow extends Stage {
                                         children widget {
                                             SWTLabel.label(SWT.NORMAL, "Test Sec")
                                         } >> widget {
-                                            SWTButton.button(SWT.NORMAL,"Frm Button").define {
-                                                action {
+                                            SWTButton.button(SWT.NORMAL).define {
+                                                text "Frm Button"
+                                                onAction {
                                                     MessageDialog.openInformation(this.getShell(),"Frm Button","clicked")
                                                 }
                                             }
                                         } >> widget{
                                             SWTFormHyperLink.hyperLink(SWT.NORMAL).define {
                                                 text "Hyper Link"
-                                                action {
+                                                onAction {
                                                     MessageDialog.openInformation(this.getShell(),"HyperLink","HyperLink 被激活。。")
                                                 }
                                             }
@@ -368,7 +404,9 @@ class TestWindow extends Stage {
                             new SWTGroup(SWT.FLAT).define {
                                 text "GroupTest"
                                 children widget {
-                                    SWTButton.button(SWT.FLAT, "Grouped Button")
+                                    SWTButton.button(SWT.FLAT).define {
+                                        text "Grouped Button"
+                                    }
                                 }
                             }
                         }
@@ -379,9 +417,13 @@ class TestWindow extends Stage {
                             spacing 2
                             percentage 1,2
                             children widget {
-                                SWTButton.button(SWT.FLAT,"Test A")
+                                SWTButton.button(SWT.FLAT).define {
+                                    text "Test A"
+                                }
                             } >> widget {
-                                SWTButton.button(SWT.FLAT,"Test B")
+                                SWTButton.button(SWT.FLAT).define {
+                                    text "Test B"
+                                }
                             }
                         }
                     }
@@ -403,7 +445,9 @@ class TestWindow extends Stage {
                     new SWTCTab(SWT.NORMAL).define {
                         text "CTabTest"
                         children widget {
-                            SWTButton.button(SWT.FLAT,"Test Content")
+                            SWTButton.button(SWT.FLAT).define {
+                                text "Test Content"
+                            }
                         }
                     }
                 } >> widget {
@@ -411,10 +455,18 @@ class TestWindow extends Stage {
                         text "ViewForm"
                         children widget {
                             new SWTViewForm(SWT.NORMAL).define {
-                                left SWTButton.button(SWT.FLAT,"TestLeft")
-                                right SWTButton.button(SWT.FLAT,"TestRight")
-                                center SWTButton.button(SWT.FLAT,"TestCenter")
-                                bottom SWTButton.button(SWT.FLAT,"TestBottom")
+                                left SWTButton.button(SWT.FLAT).define{
+                                    text "TestLeft"
+                                }
+                                right SWTButton.button(SWT.FLAT).define {
+                                    text "TestRight"
+                                }
+                                center SWTButton.button(SWT.FLAT).define {
+                                    text "TestCenter"
+                                }
+                                bottom SWTButton.button(SWT.FLAT).define {
+                                    text "TestBottom"
+                                }
                             }
                         }
                     }
@@ -423,11 +475,38 @@ class TestWindow extends Stage {
                         text "cbanner"
                         children widget {
                             new SWTCBanner(SWT.FLAT).define {
-                                left SWTButton.button(SWT.FLAT,"TestLeft")
-                                right SWTButton.button(SWT.FLAT,"TestRight").define {
+                                left SWTButton.button(SWT.FLAT).define {
+                                    text "TestLeft"
+                                }
+                                right SWTButton.button(SWT.FLAT).define {
+                                    text "TestRight"
                                     size 420,SWT.DEFAULT
                                 }
-                                bottom SWTButton.button(SWT.FLAT,"TestBottom")
+                                bottom SWTButton.button(SWT.FLAT).define {
+                                    text "TestBottom"
+                                }
+                            }
+                        }
+                    }
+                } >> widget{
+                    new SWTCTab(SWT.NORMAL).define {
+                        text "expandable"
+                        children widget {
+                            new SWTExpandBar(SWT.FLAT).define {
+                                children widget {
+                                    new SWTExpandItem(SWT.DEFAULT).define {
+                                        text "expand demo"
+                                        size SWT.DEFAULT,80
+                                        children SWTPane.pane(SWT.NORMAL).define {
+                                            layout SWTRowLayout.rowLayout(SWT.VERTICAL)
+                                            children widget {
+                                                SWTButton.button(SWT.FLAT).define {
+                                                    text "Text Expand"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -444,7 +523,8 @@ class TestWindow extends Stage {
                                         id "tlb"
                                     }
                                 } >> widget {
-                                    SWTButton.button(SWT.FLAT,"Test Form").define {
+                                    SWTButton.button(SWT.FLAT).define {
+                                        text "Test Form"
                                         layout new SWTFormData().define {
                                             right().id("tlb")
                                                     .offset(400)
@@ -473,8 +553,8 @@ class TestWindow extends Stage {
     static void main(String[] args) {
         Display display = SWTWidgets.getDisplay();
 
-        TestWindow window = new TestWindow()
-        window.create()
+        TestWindow window = new TestWindow().create();
+        window.createContent()
         window.show()
 
         while(!window.isDisposed()){

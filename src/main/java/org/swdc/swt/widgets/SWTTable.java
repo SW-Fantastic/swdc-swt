@@ -1,5 +1,6 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -9,12 +10,14 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.beans.ControlProperty;
+import org.swdc.swt.widgets.base.Controlable;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SWTTable extends SWTWidget<Table> implements SWTContainer {
+public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
 
     private ControlListener autoColumnSizeListener = new ControlAdapter() {
         @Override
@@ -56,7 +59,7 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
         if (this.columns != null) {
             SWTWidget item = columns.getFirst();
             while (item != null) {
-                item.getWidget(this.table);
+                item.create(this.table,this);
                 item.initStage(stage);
                 item.ready(stage);
                 item = item.getNext();
@@ -166,4 +169,5 @@ public class SWTTable extends SWTWidget<Table> implements SWTContainer {
     public static SWTTable table(int flags) {
         return new SWTTable(flags);
     }
+
 }

@@ -8,17 +8,15 @@ import java.lang.reflect.Method;
 
 public class SizeProperty implements Property<Point> {
 
-    private ObservableValue<Point> size = new ObservableValue<>(new Point(SWT.DEFAULT,SWT.DEFAULT));
+    private ObservableValue<Point> size = new ObservableSizeValue(new Point(SWT.DEFAULT,SWT.DEFAULT));
     private Widget widget;
 
     private Method setter;
     private Method getter;
 
     private Method widthSetter;
-    private Method widthGetter;
 
     private Method heightSetter;
-    private Method heightGetter;
 
     private Method layoutMethod;
 

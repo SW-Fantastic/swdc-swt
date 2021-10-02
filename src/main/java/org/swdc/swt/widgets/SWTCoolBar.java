@@ -2,10 +2,9 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.swdc.swt.beans.ColorProperty;
-import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTCoolBar extends SWTWidget<CoolBar> implements SWTContainer{
+public class SWTCoolBar extends SWTControlWidget<CoolBar> implements SWTContainer{
 
     private int flag;
 
@@ -13,29 +12,16 @@ public class SWTCoolBar extends SWTWidget<CoolBar> implements SWTContainer{
 
     private SWTCoolItem items;
 
-    private ColorProperty colorProperty = new ColorProperty();
-
     public SWTCoolBar(int flag) {
         this.flag = flag;
-    }
-
-    public SWTCoolBar backgroundColor(String color) {
-        this.colorProperty.setBackground(color);
-        return this;
-    }
-
-    public SWTCoolBar color(String color) {
-        this.colorProperty.setForeground(color);
-        return this;
     }
 
     @Override
     protected CoolBar getWidget(Composite parent) {
         if (coolBar == null && parent != null) {
             this.coolBar = new CoolBar(parent,this.flag);
-            colorProperty.manage(coolBar);
         }
-        return null;
+        return coolBar;
     }
 
     @Override
@@ -62,5 +48,6 @@ public class SWTCoolBar extends SWTWidget<CoolBar> implements SWTContainer{
         }
         this.items =(SWTCoolItem) widget;
     }
+
 
 }

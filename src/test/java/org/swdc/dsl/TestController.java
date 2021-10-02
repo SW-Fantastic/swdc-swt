@@ -4,9 +4,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTStackLayout;
-import org.swdc.swt.widgets.Initialize;
+import org.swdc.swt.widgets.base.Initialize;
 import org.swdc.swt.widgets.SWTButton;
 import org.swdc.swt.widgets.SWTLabel;
+import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.pane.SWTPane;
 
 public class TestController implements Initialize {
@@ -23,6 +24,9 @@ public class TestController implements Initialize {
     @Widget("btnB")
     private SWTButton btnB;
 
+    @Widget("demo")
+    private SWTWidget demo;
+
     private boolean flag = false;
 
     public void hello(SelectionEvent event) {
@@ -35,8 +39,8 @@ public class TestController implements Initialize {
             label.size(120,SWT.DEFAULT);
         }
         flag = !flag;
-        System.err.println(label.color());
-        System.err.println(label.size());
+
+        demo.call("test");
     }
 
     public void change() {
@@ -54,7 +58,7 @@ public class TestController implements Initialize {
     public void initialize() {
         SWTStackLayout stackLayout = (SWTStackLayout) stackPane.getLayout();
         stackLayout.top(btnA);
-        btnA.action("change");
-        btnB.action("change");
+        btnA.onAction("change");
+        btnB.onAction("change");
     }
 }

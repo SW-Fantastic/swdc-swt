@@ -15,6 +15,7 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  * GridLayout则直接使用GridData的heightHint和widthHint，即SWTGridData的width和height。
  *
  */
-public class SWTScrollPane extends SWTWidget<Composite> implements SWTContainer {
+public class SWTScrollPane extends SWTControlWidget<Composite> implements SWTContainer {
 
     private ScrolledComposite scrolledComposite;
     private Composite wrapper;

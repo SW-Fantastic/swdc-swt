@@ -2,8 +2,9 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTCanvas extends SWTWidget<Canvas> {
+public class SWTCanvas extends SWTControlWidget<Canvas> {
 
     private int flag;
 

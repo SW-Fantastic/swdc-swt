@@ -3,10 +3,11 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.ArrayList;
 
-public class SWTList extends SWTWidget<List> {
+public class SWTList extends SWTControlWidget<List> {
 
     public  interface ListFactory<T> {
         String getValue(T obj);

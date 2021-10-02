@@ -3,34 +3,23 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
 import org.swdc.swt.beans.ColorProperty;
-import org.swdc.swt.beans.ObservableValue;
-import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
+public class SWTToolBar extends SWTControlWidget<ToolBar> implements SWTContainer {
 
     private int flag;
     private ToolBar toolBar;
 
     private SWTToolItem widget;
 
-    private ColorProperty colorProperty = new ColorProperty();
-
     public SWTToolBar(int flag) {
         this.flag = flag;
-
     }
-
-    public SWTToolBar backgroundColor(String color) {
-        this.colorProperty.setBackground(color);
-        return this;
-    }
-
 
     @Override
     protected ToolBar getWidget(Composite parent) {
         if (toolBar == null && parent != null) {
             toolBar = new ToolBar(parent,flag);
-            this.colorProperty.manage(toolBar);
         }
         return toolBar;
     }
@@ -49,6 +38,7 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
                 item = (SWTToolItem) item.getNext();
             }
         }
+
         SWTWidgets.setupLayoutData(this,toolBar);
     }
 
@@ -59,4 +49,5 @@ public class SWTToolBar extends SWTWidget<ToolBar> implements SWTContainer {
         }
         this.widget =(SWTToolItem) widget;
     }
+
 }

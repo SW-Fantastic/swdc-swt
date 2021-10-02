@@ -1,5 +1,6 @@
 package org.swdc.swt.beans;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.swdc.swt.widgets.SWTWidget;
@@ -14,11 +15,17 @@ public class SelectionProperty implements SWTProperty<String> {
     private SWTWidget widget;
     private Method actionMethod;
 
+    private Closure closure;
+
     private SelectionAdapter dispatcher = new SelectionAdapter() {
         @Override
         public void widgetSelected(SelectionEvent selectionEvent) {
             SelectionProperty self = SelectionProperty.this;
-            self.call(selectionEvent);
+            if (self.actionMethod != null) {
+                self.call(selectionEvent);
+            } else if (closure != null){
+                closure.call(selectionEvent);
+            }
         }
     };
 
@@ -89,7 +96,7 @@ public class SelectionProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         this.widget = widget;
         Stage stage = widget.getStage();
-        if (!methodName.isEmpty() || stage != null && stage.getController() != null) {
+        if (!methodName.isEmpty() && stage != null && stage.getController() != null) {
             this.onNameChange(null,null);
         }
         methodName.addListener(this::onNameChange);
@@ -99,10 +106,15 @@ public class SelectionProperty implements SWTProperty<String> {
         return dispatcher;
     }
 
+    public SelectionAdapter closure(Closure closure) {
+        this.closure = closure;
+        return dispatcher;
+    }
+
     @Override
     public void unlink() {
+        this.methodName.removeListener(this::onNameChange);
         this.widget = null;
         this.actionMethod = null;
-
     }
 }

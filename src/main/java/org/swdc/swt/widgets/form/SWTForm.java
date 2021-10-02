@@ -11,8 +11,10 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTControlWidget;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTForm extends SWTWidget<Form> implements SWTContainer {
+public class SWTForm extends SWTLabelControlWidget<Form> implements SWTContainer {
 
     private int flag;
     private Form form;
@@ -20,8 +22,6 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
     private SWTWidget widget;
 
     private SWTLayout layout;
-
-    private TextProperty textProperty = new TextProperty();
 
     public SWTForm(int flag) {
         this.flag = flag;
@@ -32,10 +32,6 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
         return this;
     }
 
-    public SWTForm text(String text) {
-        this.textProperty.set(text);
-        return this;
-    }
 
     @Override
     public void ready(Stage stage) {
@@ -64,7 +60,6 @@ public class SWTForm extends SWTWidget<Form> implements SWTContainer {
             } else {
                 form.getBody().setLayout(new FillLayout());
             }
-            textProperty.manage(form);
         }
         return form;
     }

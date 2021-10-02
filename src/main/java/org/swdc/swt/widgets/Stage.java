@@ -1,13 +1,15 @@
 package org.swdc.swt.widgets;
 
 
-import groovy.lang.Closure;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
+import org.swdc.swt.Window;
 import org.swdc.swt.layouts.SWTLayout;
+import org.swdc.swt.widgets.base.Initialize;
 
 import java.util.*;
 
-public class Stage implements SWTContainer  {
+public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
 
     private Shell shell = new Shell();
 
@@ -19,7 +21,6 @@ public class Stage implements SWTContainer  {
 
     private boolean initialized;
 
-    private Map<String, SWTWidget> widgetMap = new HashMap<>();
 
     public Stage controller(Object controller) {
         this.controller = controller;
@@ -29,7 +30,6 @@ public class Stage implements SWTContainer  {
     public Object getController() {
         return controller;
     }
-
 
     public Stage text(String text) {
         shell.setText(text);
@@ -53,33 +53,28 @@ public class Stage implements SWTContainer  {
 
     @Override
     public void children(SWTWidget widget) {
+        SWTWidgets.loadViewsByAnnotation(this);
         this.widget = widget;
     }
 
-    /**
-     * 在窗口中创建组件。
-     * @param closure
-     * @return
-     */
     @Override
-    public SWTWidget widget(Closure<SWTWidget> closure) {
-        Object result = closure.call();
-        if (!(result instanceof SWTWidget)) {
-            throw new RuntimeException("ui定义中，widget必须为SWTWidget的类型或者其子类");
-        }
-        SWTWidget target = closure.call();
-        target.create(this.shell,this);
-        target.initStage(this);
-        target.ready(this);
-        if (target.getId() != null) {
-            widgetMap.put(target.getId(),target);
+    public void ready(Stage stage) {
+
+        SWTWidget swtWidget = widget;
+        while (swtWidget != null) {
+            swtWidget.create(shell,this);
+            swtWidget.initStage(stage);
+            swtWidget.ready(stage);
+            swtWidget = swtWidget.getNext();
         }
 
-        return target;
+        SWTWidgets.setupLayoutData(this,shell);
     }
 
-    public Stage show() {
+
+    public void show() {
         if (!initialized) {
+            this.ready(this);
             if (this.controller != null && this.controller instanceof Initialize) {
                 Initialize initialize = (Initialize) controller;
                 initialize.initialize();
@@ -87,7 +82,6 @@ public class Stage implements SWTContainer  {
             initialized = true;
         }
         shell.open();
-        return this;
     }
 
     public Boolean isDisposed() {
@@ -100,6 +94,11 @@ public class Stage implements SWTContainer  {
 
     @Override
     public List<SWTWidget> children() {
-        return new ArrayList<>(widgetMap.values());
+        return Collections.singletonList(widget);
+    }
+
+    @Override
+    protected Shell getWidget(Composite parent) {
+        return shell;
     }
 }

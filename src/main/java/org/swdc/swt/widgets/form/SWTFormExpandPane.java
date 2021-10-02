@@ -14,12 +14,11 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements SWTContainer {
+public class SWTFormExpandPane extends SWTLabelControlWidget<ExpandableComposite> implements SWTContainer {
 
     private int flag;
-    private TextProperty text = new TextProperty();
-
     private ExpandProperty expandProperty = new ExpandProperty();
 
     private SWTWidget widget;
@@ -41,11 +40,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
         }
     }
 
-    public SWTFormExpandPane text(String text) {
-        this.text.set(text);
-        return this;
-    }
-
     public SWTFormExpandPane expand(boolean expand) {
         this.expandProperty.set(expand);
         return this;
@@ -64,7 +58,6 @@ public class SWTFormExpandPane extends SWTWidget<ExpandableComposite> implements
                     expandProperty.setDirectly(composite.isExpanded());
                 }
             });
-            text.manage(composite);
             expandProperty.manage(composite);
         }
         return composite;

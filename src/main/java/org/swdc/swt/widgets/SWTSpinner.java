@@ -3,9 +3,9 @@ package org.swdc.swt.widgets;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Spinner;
 import org.swdc.swt.beans.RangeProperty;
-import org.swdc.swt.beans.SizeProperty;
+import org.swdc.swt.widgets.base.SWTControlWidget;
 
-public class SWTSpinner extends SWTWidget<Spinner> {
+public class SWTSpinner extends SWTControlWidget<Spinner> {
 
     private Spinner spinner;
 

@@ -1,17 +1,17 @@
 package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.*;
-import org.swdc.swt.beans.ObservableValue;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
+import org.swdc.swt.widgets.base.SWTLabelWidget;
 
-public class SWTCoolItem extends SWTWidget<CoolItem> {
+import java.util.Collections;
+import java.util.List;
+
+public class SWTCoolItem extends SWTLabelWidget<CoolItem> implements SWTContainer {
 
     private CoolItem item;
     private int flag;
-
-    private TextProperty text = new TextProperty();
 
     private SWTWidget widget;
 
@@ -20,19 +20,25 @@ public class SWTCoolItem extends SWTWidget<CoolItem> {
     }
 
 
-    public SWTCoolItem text(String text){
-        this.text.set(text);
-        return this;
-    }
-
     @Override
     public void ready(Stage stage) {
         if (this.widget != null && item != null) {
-            Widget widget = this.widget.getWidget(item.getParent());
+            Widget widget = this.widget.create(item.getParent(),this);
             this.widget.initStage(stage);
             this.widget.ready(stage);
+
+            Point size = this.widget.size();
+
+            item.setSize(size.x,size.y);
             item.setControl((Control) widget);
-            item.setPreferredSize(this.widget.getSize());
+            item.setPreferredSize(size);
+
+            this.sizeProperty().valueSize().addListener((oldVal, newVal) -> {
+                Point sizeChange = this.getSize();
+                item.setSize(sizeChange.x,sizeChange.y);
+                item.setPreferredSize(sizeChange.x,sizeChange.y);
+            });
+
         }
     }
 
@@ -61,10 +67,13 @@ public class SWTCoolItem extends SWTWidget<CoolItem> {
         CoolBar toolBar = (CoolBar) parent;
         if (item == null && parent != null) {
             item = new CoolItem(toolBar,flag);
-            this.text.manage(item);
         }
 
         return item;
     }
 
+    @Override
+    public List<SWTWidget> children() {
+        return Collections.singletonList(widget);
+    }
 }
