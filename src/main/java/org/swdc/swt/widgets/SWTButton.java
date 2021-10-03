@@ -4,7 +4,7 @@ import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.*;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
@@ -53,7 +53,7 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
     }
 
     public void onAction(String methodName) {
-        this.selectionProperty.set(methodName);
+        this.selectionProperty.setSelectionMethod(methodName);
     }
 
     public static SWTButton button(int flags) {

@@ -2,7 +2,7 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.*;
-import org.swdc.swt.beans.SelectionProperty;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.widgets.base.SWTLabelWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -71,7 +71,7 @@ public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionab
 
     @Override
     public void onAction(String methodName) {
-        this.selectionProperty.set(methodName);
+        this.selectionProperty.setSelectionMethod(methodName);
     }
 
     @Override

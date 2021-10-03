@@ -1,10 +1,8 @@
 package org.swdc.swt.widgets;
 
-import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.ControlProperty;
 import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 

@@ -98,6 +98,9 @@ class TestWindow extends Stage {
         controller new TestController()
         text "hello"
         size 800,600
+
+
+
         layout SWTGridLayout.gridLayout().define {
             margin 6,6
             spacing 8,8

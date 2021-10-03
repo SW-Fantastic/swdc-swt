@@ -13,10 +13,6 @@ import org.swdc.swt.widgets.SWTWidget;
  */
 public interface SWTProperty<T> {
 
-    void set(T t);
-
-    T get();
-
     /**
      * 管理此Widget组件的相应属性。
      * @param widget

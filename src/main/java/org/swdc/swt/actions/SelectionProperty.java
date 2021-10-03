@@ -1,9 +1,12 @@
-package org.swdc.swt.beans;
+package org.swdc.swt.actions;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SWTProperty;
 import org.swdc.swt.widgets.SWTWidget;
+import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
@@ -29,13 +32,11 @@ public class SelectionProperty implements SWTProperty<String> {
         }
     };
 
-    @Override
-    public void set(String s) {
+    public void setSelectionMethod(String s) {
         methodName.set(s);
     }
 
-    @Override
-    public String get() {
+    public String getSelectionMethod() {
         return methodName.get();
     }
 
@@ -48,22 +49,14 @@ public class SelectionProperty implements SWTProperty<String> {
             return;
         }
 
-        Object controller = stage.getController();
-        String name = methodName.get();
-        if (controller != null && methodName != null) {
-            Class controllerClazz = controller.getClass();
-            if (actionMethod == null) {
-                try {
-                    actionMethod = controllerClazz.getMethod(name);
-                } catch (Exception e) {
-                    try {
-                        actionMethod = controllerClazz.getMethod(name, SelectionEvent.class);
-                    } catch (Exception ex) {
-                        throw new RuntimeException("找不到可用的方法：" + name);
-                    }
-                }
-            }
-        }
+        SWTWidgets.setupMethod(
+                this,
+                methodName,
+                widget,
+                prop -> prop.actionMethod,
+                (Method method) -> this.actionMethod = method
+        );
+
     }
 
     public void call(SelectionEvent selectionEvent) {
@@ -94,6 +87,7 @@ public class SelectionProperty implements SWTProperty<String> {
 
     @Override
     public void manage(SWTWidget widget) {
+        unlink();
         this.widget = widget;
         Stage stage = widget.getStage();
         if (!methodName.isEmpty() && stage != null && stage.getController() != null) {

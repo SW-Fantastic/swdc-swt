@@ -2,20 +2,26 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.GroovyClassLoader;
 import org.codehaus.groovy.tools.GroovyClass;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.ViewRequire;
+import org.swdc.swt.beans.ObservableValue;
+import org.swdc.swt.beans.SWTProperty;
 import org.swdc.swt.layouts.LayoutData;
 import org.swdc.swt.layouts.SWTFormData;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 
 public class SWTWidgets {
@@ -211,5 +217,49 @@ public class SWTWidgets {
 
         return viewClass;
     }
+
+
+    /**
+     * 在SWTProperty的methodName改变后，重新接入其在Controller中的
+     * 对应的方法（Method）
+     *
+     * @param property 调用此方法的SWTProperty的实例本身
+     * @param nameProperty 发生修改的MethodName的ObservableValue
+     * @param widget 需要重新对接方法的Widget
+     * @param methodGetter 一个函数，返回调用方内的现有的Method，这个method是之前的methodName指定的method。
+     * @param methodSetter 一个函数，用于修改调用放的Method，修改为新的methodName所对应的method（由Customer参数传入）。
+     * @param <R> Property类型、
+     */
+    public static  <R extends SWTProperty> void setupMethod(R property,
+                                                     ObservableValue<String> nameProperty,
+                                                     SWTWidget widget,
+                                                     Function<R, Method> methodGetter,
+                                                     Consumer<Method> methodSetter) {
+        if (nameProperty.isEmpty() || widget == null || widget.getStage() == null) {
+            return;
+        }
+        Stage stage = widget.getStage();
+        if (stage.getController() == null) {
+            return;
+        }
+
+        Object controller = stage.getController();
+        String name = nameProperty.get();
+        if (controller != null && nameProperty != null) {
+            Class controllerClazz = controller.getClass();
+            if (methodGetter.apply(property) == null) {
+                try {
+                    methodSetter.accept(controllerClazz.getMethod(name));
+                } catch (Exception e) {
+                    try {
+                        methodSetter.accept(controllerClazz.getMethod(name, SelectionEvent.class));
+                    } catch (Exception ex) {
+                        throw new RuntimeException("找不到可用的方法：" + name);
+                    }
+                }
+            }
+        }
+    }
+
 
 }
