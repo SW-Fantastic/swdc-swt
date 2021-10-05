@@ -29,27 +29,22 @@ public class SWTCBanner extends SWTControlWidget<CBanner> implements SWTContaine
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.banner == null) {
             return;
         }
         if (this.right != null) {
             Control widget = (Control) right.create(this.banner,this);
-            right.initStage(stage);
-            right.ready(stage);
             banner.setRight(widget);
             banner.setRightWidth(widget.getSize().x);
         }
         if (this.left != null) {
             Widget widget = left.create(this.banner,this);
-            left.initStage(stage);
-            left.ready(stage);
             banner.setLeft((Control) widget);
         }
         if (this.bottom != null) {
             Widget widget = bottom.create(this.banner,this);
-            bottom.initStage(stage);
-            bottom.ready(stage);
             banner.setBottom((Control) widget);
         }
 

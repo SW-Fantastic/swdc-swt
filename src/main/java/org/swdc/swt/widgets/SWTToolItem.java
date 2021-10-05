@@ -23,13 +23,11 @@ public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionab
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.widget != null && item != null) {
             Widget widget = this.widget.create(item.getParent(),this);
-            this.widget.initStage(stage);
-            this.widget.ready(stage);
             item.setControl((Control) widget);
-
 
             // 接管本组件的SelectionEvent
             selectionProperty.manage(this);
@@ -76,7 +74,9 @@ public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionab
 
     @Override
     public void onAction(Closure closure) {
-       selectionProperty.closure(closure);
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        selectionProperty.closure(closure);
     }
 
     @Override

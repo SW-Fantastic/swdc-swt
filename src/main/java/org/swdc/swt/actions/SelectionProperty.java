@@ -41,11 +41,10 @@ public class SelectionProperty implements SWTProperty<String> {
     }
 
     private void onNameChange(String oldName, String newName) {
-        if (methodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
 
@@ -54,17 +53,17 @@ public class SelectionProperty implements SWTProperty<String> {
                 methodName,
                 widget,
                 prop -> prop.actionMethod,
-                (Method method) -> this.actionMethod = method
+                (Method method) -> this.actionMethod = method,
+                SelectionEvent.class
         );
 
     }
 
     public void call(SelectionEvent selectionEvent) {
-        if (widget == null || widget.getStage() == null) {
+        if (methodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         if (controller == null) {
             return;
         }
@@ -89,8 +88,7 @@ public class SelectionProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
-        if (!methodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!methodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onNameChange(null,null);
         }
         methodName.addListener(this::onNameChange);

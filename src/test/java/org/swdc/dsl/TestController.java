@@ -1,6 +1,8 @@
 package org.swdc.dsl;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTStackLayout;
@@ -52,6 +54,26 @@ public class TestController implements Initialize {
             stackLayout.top(btnB);
         }
         flag = !flag;
+    }
+
+    public void keyPress(KeyEvent event){
+        System.err.println("pressed : " + event.character);
+    }
+
+    public void mouseMove(MouseEvent event) {
+        System.err.println("moved");
+    }
+
+    public void dBClick() {
+        System.err.println("dbClick");
+    }
+
+    public void mouseTrack() {
+        System.err.println("track");
+    }
+
+    public void resize() {
+        System.err.println("resized");
     }
 
     @Override

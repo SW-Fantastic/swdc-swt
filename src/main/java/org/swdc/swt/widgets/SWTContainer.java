@@ -2,6 +2,7 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Layout;
+import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.layouts.SWTLayout;
 
 import java.util.ArrayList;
@@ -47,6 +48,14 @@ public interface SWTContainer {
     }
 
     default SWTLayout getLayout(){
+        return null;
+    }
+
+    default <T> T getController() {
+        return null;
+    }
+
+    default SWTViewLoader getLoader() {
         return null;
     }
 

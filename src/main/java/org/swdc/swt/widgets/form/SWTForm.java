@@ -34,14 +34,13 @@ public class SWTForm extends SWTLabelControlWidget<Form> implements SWTContainer
 
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.form != null) {
             Composite parent = form.getBody();
             SWTWidget swtWidget = widget;
             while (swtWidget != null) {
                 swtWidget.create(parent,this);
-                swtWidget.initStage(stage);
-                swtWidget.ready(stage);
                 swtWidget = swtWidget.getNext();
             }
             SWTWidgets.setupLayoutData(this,form);

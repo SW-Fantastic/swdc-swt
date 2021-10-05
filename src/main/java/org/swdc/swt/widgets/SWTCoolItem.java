@@ -21,12 +21,10 @@ public class SWTCoolItem extends SWTLabelWidget<CoolItem> implements SWTContaine
 
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.widget != null && item != null) {
             Widget widget = this.widget.create(item.getParent(),this);
-            this.widget.initStage(stage);
-            this.widget.ready(stage);
-
             Point size = this.widget.size();
 
             item.setSize(size.x,size.y);

@@ -37,15 +37,14 @@ public class SWTGroup extends SWTControlWidget<Group> implements SWTContainer {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (group == null) {
             return;
         }
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
             swtWidget.create(group,this);
-            swtWidget.initStage(stage);
-            swtWidget.ready(stage);
             swtWidget = swtWidget.getNext();
         }
         SWTWidgets.setupLayoutData(this,group);

@@ -30,32 +30,25 @@ public class SWTViewForm extends SWTControlWidget<ViewForm> implements SWTContai
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (viewForm == null) {
             return;
         }
         if (this.right != null) {
             Widget widget = right.create(this.viewForm,this);
-            right.initStage(stage);
-            right.ready(stage);
             viewForm.setTopRight((Control) widget);
         }
         if (this.left != null) {
             Widget widget = left.create(this.viewForm,this);
-            left.initStage(stage);
-            left.ready(stage);
             viewForm.setTopLeft((Control) widget);
         }
         if (this.center != null) {
             Widget widget = center.create(this.viewForm,this);
-            center.initStage(stage);
-            center.ready(stage);
             viewForm.setTopCenter((Control) widget);
         }
         if (this.bottom != null) {
             Widget widget = bottom.create(this.viewForm,this);
-            bottom.initStage(stage);
-            bottom.ready(stage);
             viewForm.setContent((Control) widget);
         }
         SWTWidgets.setupLayoutData(this,viewForm);

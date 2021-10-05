@@ -5,6 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
+import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.ViewRequire;
 import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.SizeProperty;
@@ -15,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidget<T>> {
 
@@ -33,10 +35,6 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
      */
     private String id;
 
-    /**
-     * 窗口
-     */
-    private Stage stage;
 
     /**
      * 本组件的layoutData。
@@ -51,11 +49,19 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
      */
     private T widget;
 
+    protected SWTViewLoader loader;
+
     private SizeProperty sizeProperty = new SizeProperty();
 
     private ColorProperty colorProperty = new ColorProperty();
 
     private SWTContainer parent;
+
+    private String controlId = UUID.randomUUID().toString();
+
+    public String getControlId() {
+        return controlId;
+    }
 
     public SWTWidget rightShift(SWTWidget item) {
         if (this.next == null) {
@@ -106,16 +112,20 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
     }
 
     public Stage getStage() {
-        return stage;
+        if(this instanceof Stage) {
+            return (Stage) this;
+        }
+        SWTWidget item = this;
+        while (item != null) {
+            if (item instanceof Stage) {
+                return (Stage) item;
+            }
+            item = (SWTWidget) item.getParent();
+        }
+        return null;
     }
 
-    /**
-     * 用来传递stage窗口和在它里面的controller
-     * @param stage
-     */
-    public void initStage(Stage stage) {
-        this.stage = stage;
-        Object controller = stage.getController();
+    public void setupController(Object controller) {
         if (controller != null && this.getId() != null){
             Field[] fields = controller.getClass().getDeclaredFields();
             for (Field field : fields) {
@@ -132,6 +142,7 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
             }
         }
     }
+
 
     public SWTWidget getFirst(){
         if (this.prev == null) {
@@ -165,13 +176,36 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return layoutData;
     }
 
-    public T create(Composite parent,SWTContainer parentWidget) {
+    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
+
+        this.loader = loader;
+
         this.parent = parentWidget;
         this.widget = getWidget(parent);
         // 通用属性
         this.sizeProperty.manage(widget);
         this.colorProperty.manage(widget);
+
+        Object controller = loader.getController((SWTWidget) this.getParent());
+        if (controller != null) {
+            this.setupController(controller);
+        }
+
+        this.ready();
+
         return widget;
+    }
+
+    public <S extends SWTWidget & SWTContainer> T create(Composite parent,S parentWidget) {
+        return create(parent,parentWidget,parentWidget.getLoader());
+    }
+
+    public SWTViewLoader getLoader() {
+        return loader;
+    }
+
+    public void setLoader(SWTViewLoader loader) {
+        this.loader = loader;
     }
 
     /**
@@ -181,11 +215,7 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
      */
     protected abstract T getWidget(Composite parent);
 
-    /**
-     * 初始化此组件（SWT组件此时应当已经创建娲完毕）
-     * @param stage
-     */
-    public void ready(Stage stage) {
+    public void ready() {
 
     }
 

@@ -15,7 +15,8 @@ public class SWTTree extends SWTWidget<Tree> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (tree == null) {
             return;
         }

@@ -30,11 +30,10 @@ public class SWTFormExpandPane extends SWTLabelControlWidget<ExpandableComposite
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.composite != null && this.widget != null) {
             Control tartget = (Control) widget.create(composite,this);
-            widget.initStage(stage);
-            widget.ready(stage);
             composite.setClient(tartget);
             SWTWidgets.setupLayoutData(this,composite);
         }

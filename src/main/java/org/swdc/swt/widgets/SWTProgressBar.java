@@ -18,7 +18,8 @@ public class SWTProgressBar extends SWTControlWidget<ProgressBar> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (progressBar == null) {
             return;
         }

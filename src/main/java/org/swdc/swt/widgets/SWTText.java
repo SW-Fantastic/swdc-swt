@@ -20,7 +20,8 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Controlable 
 
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (textField == null) {
             return;
         }

@@ -34,11 +34,10 @@ public class MouseMoveProperty implements SWTProperty<String> {
 
 
     private void onMouseMoveMethodChange(String nameOld, String nameNew) {
-        if (mouseMovedMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (mouseMovedMethodName.isEmpty() || widget == null ) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
 
@@ -47,7 +46,8 @@ public class MouseMoveProperty implements SWTProperty<String> {
                 mouseMovedMethodName,
                 widget,
                 prop -> prop.mouseMovedMethod,
-                method -> mouseMovedMethod = method
+                method -> mouseMovedMethod = method,
+                MouseEvent.class
         );
 
     }
@@ -61,11 +61,10 @@ public class MouseMoveProperty implements SWTProperty<String> {
     }
 
     private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null || widget.getStage() == null) {
+        if (widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         if (controller == null) {
             return;
         }
@@ -97,8 +96,7 @@ public class MouseMoveProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
-        if (!mouseMovedMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!mouseMovedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onMouseMoveMethodChange(null,null);
         }
         this.mouseMovedMethodName.addListener(this::onMouseMoveMethodChange);

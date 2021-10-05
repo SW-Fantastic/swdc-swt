@@ -56,15 +56,14 @@ public class SWTSashForm extends SWTControlWidget<SashForm> implements SWTContai
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (form == null) {
             return;
         }
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
             swtWidget.create(form,this);
-            swtWidget.initStage(stage);
-            swtWidget.ready(stage);
             swtWidget = swtWidget.getNext();
         }
         if (!percentage.isEmpty()) {

@@ -37,14 +37,13 @@ public class SWTFormSection extends SWTLabelControlWidget<Section> implements SW
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (widget != null) {
             if(widget.getFirst() != widget.getLast()) {
                 throw new RuntimeException("Section只能放置一个Widget");
             }
             Widget target = widget.create(section,this);
-            widget.initStage(stage);
-            widget.ready(stage);
             section.setClient((Control) target);
             SWTWidgets.setupLayoutData(this,section);
         }

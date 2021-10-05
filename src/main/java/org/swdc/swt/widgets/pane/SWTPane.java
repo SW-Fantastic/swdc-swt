@@ -36,15 +36,14 @@ public class SWTPane extends SWTControlWidget<Composite> implements SWTContainer
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (composite == null) {
             return;
         }
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
             swtWidget.create(composite,this);
-            swtWidget.initStage(stage);
-            swtWidget.ready(stage);
             swtWidget = swtWidget.getNext();
         }
 
@@ -85,5 +84,10 @@ public class SWTPane extends SWTControlWidget<Composite> implements SWTContainer
     @Override
     public SWTLayout getLayout() {
         return layout;
+    }
+
+    @Override
+    public <T> T getController() {
+        return loader.getController(this);
     }
 }

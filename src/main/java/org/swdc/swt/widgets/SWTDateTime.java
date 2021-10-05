@@ -16,7 +16,8 @@ public class SWTDateTime extends SWTControlWidget<DateTime> implements Controlab
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.dateTime != null) {
             SWTWidgets.setupLayoutData(this,this.dateTime);
         }

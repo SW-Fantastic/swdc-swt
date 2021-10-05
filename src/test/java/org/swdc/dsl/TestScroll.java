@@ -54,9 +54,6 @@ public class TestScroll {
         StageTest test = new StageTest();
         test.children(pane);
 
-        pane.initStage(test);
-        pane.ready(test);
-
         shell.pack();
         shell.open();
         // Set up the event loop.

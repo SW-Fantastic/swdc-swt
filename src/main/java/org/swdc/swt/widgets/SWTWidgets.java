@@ -230,20 +230,19 @@ public class SWTWidgets {
      * @param methodSetter 一个函数，用于修改调用放的Method，修改为新的methodName所对应的method（由Customer参数传入）。
      * @param <R> Property类型、
      */
-    public static  <R extends SWTProperty> void setupMethod(R property,
+    public static  <R extends SWTProperty, E> void setupMethod(R property,
                                                      ObservableValue<String> nameProperty,
                                                      SWTWidget widget,
                                                      Function<R, Method> methodGetter,
-                                                     Consumer<Method> methodSetter) {
-        if (nameProperty.isEmpty() || widget == null || widget.getStage() == null) {
+                                                     Consumer<Method> methodSetter, Class<E> eventType) {
+        if (widget == null ) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
 
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         String name = nameProperty.get();
         if (controller != null && nameProperty != null) {
             Class controllerClazz = controller.getClass();
@@ -252,7 +251,7 @@ public class SWTWidgets {
                     methodSetter.accept(controllerClazz.getMethod(name));
                 } catch (Exception e) {
                     try {
-                        methodSetter.accept(controllerClazz.getMethod(name, SelectionEvent.class));
+                        methodSetter.accept(controllerClazz.getMethod(name, eventType));
                     } catch (Exception ex) {
                         throw new RuntimeException("找不到可用的方法：" + name);
                     }

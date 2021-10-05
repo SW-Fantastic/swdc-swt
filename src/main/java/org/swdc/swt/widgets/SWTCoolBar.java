@@ -25,16 +25,15 @@ public class SWTCoolBar extends SWTControlWidget<CoolBar> implements SWTContaine
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (coolBar == null) {
             return;
         }
         if (this.items != null) {
             SWTCoolItem item = this.items;
             while (item != null) {
-                item.getWidget(this.coolBar);
-                item.initStage(stage);
-                item.ready(stage);
+                item.create(this.coolBar,this);
                 item = (SWTCoolItem) item.getNext();
             }
         }

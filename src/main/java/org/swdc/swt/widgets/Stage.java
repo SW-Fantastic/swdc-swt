@@ -13,22 +13,14 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
 
     private Shell shell = new Shell();
 
-    private Object controller;
-
     private SWTLayout layout;
 
     private SWTWidget widget;
 
     private boolean initialized;
 
-
-    public Stage controller(Object controller) {
-        this.controller = controller;
-        return this;
-    }
-
     public Object getController() {
-        return controller;
+        return loader.getController(this);
     }
 
     public Stage text(String text) {
@@ -58,13 +50,11 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
     }
 
     @Override
-    public void ready(Stage stage) {
-
+    public void ready() {
+        super.ready();
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
             swtWidget.create(shell,this);
-            swtWidget.initStage(stage);
-            swtWidget.ready(stage);
             swtWidget = swtWidget.getNext();
         }
 
@@ -74,8 +64,8 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
 
     public void show() {
         if (!initialized) {
-            this.ready(this);
-            if (this.controller != null && this.controller instanceof Initialize) {
+            Object controller = this.getController();
+            if (controller instanceof Initialize) {
                 Initialize initialize = (Initialize) controller;
                 initialize.initialize();
             }
@@ -99,6 +89,11 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
 
     @Override
     protected Shell getWidget(Composite parent) {
+        return shell;
+    }
+
+    @Override
+    public Shell getWidget() {
         return shell;
     }
 }

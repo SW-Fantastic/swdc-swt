@@ -61,15 +61,14 @@ public class SWTCTabPane extends SWTControlWidget<CTabFolder> implements SWTCont
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (folder == null) {
             return;
         }
         if (this.tabs != null) {
             SWTCTab item = (SWTCTab) tabs.getFirst();
             while (item != null) {
-                item.initStage(stage);
-                item.ready(stage);
                 item = (SWTCTab) item.getNext();
             }
             SWTWidgets.setupLayoutData(this,folder);

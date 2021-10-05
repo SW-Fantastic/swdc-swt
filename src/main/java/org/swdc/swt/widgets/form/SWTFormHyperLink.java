@@ -40,6 +40,10 @@ public class SWTFormHyperLink extends SWTLabelControlWidget<Hyperlink> {
     }
 
     public SWTFormHyperLink onAction(Closure closure) {
+
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_FIRST);
+
         this.linkActivated = new HyperlinkAdapter() {
             @Override
             public void linkActivated(HyperlinkEvent e) {
@@ -79,8 +83,11 @@ public class SWTFormHyperLink extends SWTLabelControlWidget<Hyperlink> {
     }
 
     @Override
-    public void ready(Stage stage) {
-        Object controller = stage.getController();
+    public void ready() {
+        Object controller = this
+                .getLoader()
+                .getController(this);
+
         if (controller == null || methodName == null) {
             return;
         }

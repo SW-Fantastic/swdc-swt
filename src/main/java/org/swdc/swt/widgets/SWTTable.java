@@ -45,7 +45,9 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+
+        super.ready();
 
         if (table == null) {
             return;
@@ -57,8 +59,6 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
             SWTWidget item = columns.getFirst();
             while (item != null) {
                 item.create(this.table,this);
-                item.initStage(stage);
-                item.ready(stage);
                 item = item.getNext();
             }
         }

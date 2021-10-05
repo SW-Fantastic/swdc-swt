@@ -15,7 +15,8 @@ public class SWTCLabel extends SWTLabelControlWidget<CLabel> implements Controla
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.label == null) {
             return;
         }

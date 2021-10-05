@@ -36,7 +36,8 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (button == null) {
             return;
         }
@@ -49,6 +50,8 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
     }
 
     public void onAction(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
         selectionProperty.closure(closure);
     }
 

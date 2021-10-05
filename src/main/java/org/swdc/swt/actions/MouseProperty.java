@@ -60,11 +60,10 @@ public class MouseProperty implements SWTProperty<String> {
     };
 
     private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null || widget.getStage() == null) {
+        if (widget == null ) {
             return;
         }
-        Stage stage = widget.getStage();
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         if (controller == null) {
             return;
         }
@@ -87,11 +86,10 @@ public class MouseProperty implements SWTProperty<String> {
 
 
     private void onMouseDoubleClickMethodChange(String oldName, String newName) {
-        if (mouseDoubleClickMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (mouseDoubleClickMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -99,16 +97,16 @@ public class MouseProperty implements SWTProperty<String> {
                 mouseDoubleClickMethodName,
                 this.widget,
                 swtProperty -> swtProperty.mouseDoubleClickMethod,
-                method -> mouseDoubleClickMethod = method
+                method -> mouseDoubleClickMethod = method,
+                MouseEvent.class
         );
     }
 
     private void onMouseUpMethodChange(String oldName , String newName){
-        if(mouseUpMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if(mouseUpMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -116,16 +114,16 @@ public class MouseProperty implements SWTProperty<String> {
                 mouseUpMethodName,
                 this.widget,
                 prop->prop.mouseUpMethod,
-                method->mouseUpMethod = method
+                method->mouseUpMethod = method,
+                MouseEvent.class
         );
     }
 
     private void onMouseDownMethodChange(String oldName, String newName) {
-        if(mouseDownMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if(mouseDownMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -133,7 +131,8 @@ public class MouseProperty implements SWTProperty<String> {
                 mouseDownMethodName,
                 this.widget,
                 prop->prop.mouseDownMethod,
-                method->mouseDownMethod = method
+                method->mouseDownMethod = method,
+                MouseEvent.class
         );
     }
 
@@ -167,16 +166,15 @@ public class MouseProperty implements SWTProperty<String> {
         unlink();
 
         this.widget = widget;
-        Stage stage = widget.getStage();
-        if (!mouseDoubleClickMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!mouseDoubleClickMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onMouseDoubleClickMethodChange(null,null);
         }
 
-        if (!mouseUpMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!mouseUpMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onMouseUpMethodChange(null,null);
         }
 
-        if (!mouseDownMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!mouseDownMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onMouseDownMethodChange(null,null);
         }
 

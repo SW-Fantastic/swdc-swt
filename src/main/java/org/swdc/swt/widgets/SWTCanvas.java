@@ -15,7 +15,8 @@ public class SWTCanvas extends SWTControlWidget<Canvas> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (canvas == null) {
             return;
         }

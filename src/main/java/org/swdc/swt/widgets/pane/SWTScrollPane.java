@@ -54,14 +54,13 @@ public class SWTScrollPane extends SWTControlWidget<Composite> implements SWTCon
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (wrapper == null) {
             return;
         }
         if (this.widget != null) {
             Widget composite = this.widget.create(scrolledComposite,this);
-            this.widget.initStage(stage);
-            this.widget.ready(stage);
             Control control = (Control) composite;
             scrolledComposite.setContent(control);
             control.requestLayout();

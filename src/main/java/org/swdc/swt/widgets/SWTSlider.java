@@ -34,7 +34,8 @@ public class SWTSlider extends SWTControlWidget<Slider> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.slider != null) {
             SWTWidgets.setupLayoutData(this,this.slider);
         }

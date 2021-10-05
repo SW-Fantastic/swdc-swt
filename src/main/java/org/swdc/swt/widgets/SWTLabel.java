@@ -17,7 +17,8 @@ public class SWTLabel extends SWTLabelControlWidget<Label> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.label != null) {
             SWTWidgets.setupLayoutData(this,label);
         }

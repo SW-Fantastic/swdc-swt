@@ -42,14 +42,13 @@ public class SWTTab extends SWTLabelWidget<TabItem> implements SWTContainer {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (widget == null) {
             return;
         }
         Widget view = widget.create(this.item.getParent(),this);
         Control target = (Control) view;
-        widget.initStage(stage);
-        widget.ready(stage);
         if (target instanceof ScrolledComposite) {
             target = target.getParent();
         }

@@ -21,7 +21,8 @@ public class SWTLink extends SWTLabelControlWidget<Link> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.link != null) {
             SWTWidgets.setupLayoutData(this,this.link);
         }

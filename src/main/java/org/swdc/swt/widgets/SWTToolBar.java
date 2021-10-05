@@ -25,7 +25,8 @@ public class SWTToolBar extends SWTControlWidget<ToolBar> implements SWTContaine
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (toolBar == null) {
             return;
         }
@@ -33,8 +34,6 @@ public class SWTToolBar extends SWTControlWidget<ToolBar> implements SWTContaine
             SWTToolItem item = this.widget;
             while (item != null) {
                 item.create(toolBar,this);
-                item.initStage(stage);
-                item.ready(stage);
                 item = (SWTToolItem) item.getNext();
             }
         }

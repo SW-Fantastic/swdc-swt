@@ -33,7 +33,8 @@ public class SWTSpinner extends SWTControlWidget<Spinner> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.spinner != null) {
             SWTWidgets.setupLayoutData(this,spinner);
         }

@@ -15,7 +15,8 @@ public class SWTCComboBox extends SWTLabelControlWidget<CCombo> implements Contr
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (cCombo == null){
             return;
         }

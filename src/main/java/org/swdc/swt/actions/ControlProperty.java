@@ -47,11 +47,10 @@ public class ControlProperty implements SWTProperty<String> {
     };
 
     private void call(ControlEvent event, Method finalMethod) {
-        if (widget == null || widget.getStage() == null) {
+        if (widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         if (controller == null) {
             return;
         }
@@ -88,31 +87,29 @@ public class ControlProperty implements SWTProperty<String> {
     }
 
     private void onResizeMethodChange(String oldName, String newName) {
-        if (resizedMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (resizedMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
-
 
         SWTWidgets.setupMethod(
                 this,
                 resizedMethodName,
                 widget,
                 prop -> prop.resizeMethod,
-                method -> resizeMethod = method
+                method -> resizeMethod = method,
+                ControlEvent.class
         );
 
     }
 
     private void onMoveMethodChange(String oldName, String newName) {
-        if (moveMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (moveMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
 
@@ -121,7 +118,8 @@ public class ControlProperty implements SWTProperty<String> {
                 moveMethodName,
                 widget,
                 prop -> prop.moveMethod,
-                method -> moveMethod = method
+                method -> moveMethod = method,
+                ControlEvent.class
         );
 
     }
@@ -130,12 +128,11 @@ public class ControlProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
-        if (!resizedMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!resizedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onResizeMethodChange(null,null);
         }
 
-        if (!moveMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!moveMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onMoveMethodChange(null,null);
         }
 

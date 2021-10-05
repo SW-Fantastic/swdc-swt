@@ -31,12 +31,11 @@ public class SWTExpandItem extends SWTLabelWidget<ExpandItem> implements SWTCont
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (widget != null){
             SWTExpandBar bar = (SWTExpandBar)this.getParent();
             Widget widget = this.widget.create(bar.getWidget(),this);
-            this.widget.initStage(stage);
-            this.widget.ready(stage);
             item.setControl((Control) widget);
             this.expandProperty.manage(item);
         }

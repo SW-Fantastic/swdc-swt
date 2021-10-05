@@ -29,7 +29,8 @@ public class SWTFormText extends SWTLabelControlWidget<FormText> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (this.formText == null) {
             return;
         }

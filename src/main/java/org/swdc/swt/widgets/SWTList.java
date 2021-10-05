@@ -57,7 +57,8 @@ public class SWTList extends SWTControlWidget<List> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (list != null) {
             if (data != null && factory != null) {
                 for (Object item : data) {

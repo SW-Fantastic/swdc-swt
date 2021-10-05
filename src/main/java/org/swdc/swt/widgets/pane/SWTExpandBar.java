@@ -24,7 +24,8 @@ public class SWTExpandBar extends SWTControlWidget<ExpandBar> implements SWTCont
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (expandBar == null) {
             return;
         }
@@ -32,8 +33,6 @@ public class SWTExpandBar extends SWTControlWidget<ExpandBar> implements SWTCont
             SWTExpandItem item = (SWTExpandItem) widget;
             while (item != null){
                 item.create(expandBar,this);
-                item.initStage(stage);
-                item.ready(stage);
                 item = (SWTExpandItem) item.getNext();
             }
          }

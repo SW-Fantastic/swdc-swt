@@ -35,8 +35,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     private Closure keyReleaseClosure;
 
     @Override
-    public void initStage(Stage stage) {
-        super.initStage(stage);
+    public void ready() {
+        super.ready();
         T widget = this.getWidget();
         if (widget != null) {
 
@@ -74,6 +74,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onMove(Closure closure) {
         this.moveClosure = closure;
+        this.moveClosure.setDelegate(this);
+        this.moveClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.controlProperty.closure(sizeClosure,moveClosure);
     }
 
@@ -90,6 +92,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onMouseUp(Closure closure) {
         this.mouseUpClosure = closure;
+        this.mouseUpClosure.setDelegate(this);
+        this.mouseUpClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         mouseProperty.closure(this.mouseUpClosure,this.mouseDownClosure,this.mouseDBClickClosure);
     }
 
@@ -101,6 +105,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onMouseDown(Closure closure) {
         this.mouseDownClosure = closure;
+        this.mouseDownClosure.setDelegate(this);
+        this.mouseDownClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         mouseProperty.closure(this.mouseUpClosure,this.mouseDownClosure,this.mouseDBClickClosure);
     }
 
@@ -111,7 +117,11 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
 
     @Override
     public void onMouseDBClick(Closure closure) {
+
         this.mouseDBClickClosure = closure;
+        this.mouseDBClickClosure.setDelegate(this);
+        this.mouseDBClickClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
+
         mouseProperty.closure(this.mouseUpClosure,this.mouseDownClosure,this.mouseDBClickClosure);
     }
 
@@ -122,7 +132,11 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
 
     @Override
     public void onMouseEnter(Closure closure) {
+
         this.mouseEnterClosure = closure;
+        this.mouseEnterClosure.setDelegate(this);
+        this.mouseEnterClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
+
         this.trackProperty.closure(this.mouseEnterClosure,this.mouseExitClosure,this.mouseHoverClosure);
     }
 
@@ -134,6 +148,10 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onMouseExit(Closure closure) {
         this.mouseExitClosure = closure;
+
+        this.mouseExitClosure.setDelegate(this);
+        this.mouseExitClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
+
         this.trackProperty.closure(this.mouseEnterClosure,this.mouseExitClosure,this.mouseHoverClosure);
     }
 
@@ -145,6 +163,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onMouseHover(Closure closure) {
         this.mouseHoverClosure = closure;
+        this.mouseHoverClosure.setDelegate(this);
+        this.mouseHoverClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.trackProperty.closure(this.mouseEnterClosure,this.mouseExitClosure,this.mouseHoverClosure);
     }
 
@@ -155,6 +175,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
 
     @Override
     public void onMouseMove(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.mouseMoveProperty.closure(closure);
     }
 
@@ -165,6 +187,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
 
     @Override
     public void onMouseWheel(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
         wheelProperty.closure(closure);
     }
 
@@ -176,6 +200,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onKeyRelease(Closure closure) {
         this.keyReleaseClosure = closure;
+        this.keyReleaseClosure.setDelegate(this);
+        this.keyReleaseClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.keyProperty.closure(this.keyPressClosure, this.keyReleaseClosure);
     }
 
@@ -187,6 +213,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     @Override
     public void onKeyPressed(Closure closure) {
         this.keyPressClosure = closure;
+        this.keyPressClosure.setDelegate(this);
+        this.keyPressClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.keyProperty.closure(this.keyPressClosure, this.keyReleaseClosure);
     }
 }

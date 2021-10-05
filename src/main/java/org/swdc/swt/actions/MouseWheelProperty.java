@@ -32,11 +32,10 @@ public class MouseWheelProperty implements SWTProperty<String> {
     };
 
     private void onWhellMethodChange(String oldVal,String newVal) {
-        if (mouseWheelMethodName.isEmpty() || widget == null || widget.getStage() == null) {
+        if (mouseWheelMethodName.isEmpty() || widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        if (stage.getController() == null) {
+        if (widget.getLoader().getController(widget) == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -44,16 +43,16 @@ public class MouseWheelProperty implements SWTProperty<String> {
                 mouseWheelMethodName,
                 widget,
                 prop -> prop.mouseWheelMethod,
-                (Method method) -> this.mouseWheelMethod = method
+                (Method method) -> this.mouseWheelMethod = method,
+                MouseEvent.class
         );
     }
 
     private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null || widget.getStage() == null) {
+        if (widget == null) {
             return;
         }
-        Stage stage = widget.getStage();
-        Object controller = stage.getController();
+        Object controller = widget.getLoader().getController(widget);
         if (controller == null) {
             return;
         }
@@ -85,8 +84,7 @@ public class MouseWheelProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
-        if (!mouseWheelMethodName.isEmpty() && stage != null && stage.getController() != null) {
+        if (!mouseWheelMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
             this.onWhellMethodChange(null,null);
         }
         mouseWheelMethodName.addListener(this::onWhellMethodChange);

@@ -34,7 +34,8 @@ public class SWTScale extends SWTControlWidget<Scale> {
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (scale != null) {
             SWTWidgets.setupLayoutData(this,scale);
         }

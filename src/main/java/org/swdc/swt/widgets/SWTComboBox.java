@@ -20,7 +20,8 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Control
     }
 
     @Override
-    public void ready(Stage stage) {
+    public void ready() {
+        super.ready();
         if (combo != null) {
             SWTWidgets.setupLayoutData(this,this.combo);
         }
