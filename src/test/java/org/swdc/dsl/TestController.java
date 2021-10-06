@@ -6,6 +6,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTStackLayout;
+import org.swdc.swt.widgets.SWTComboBox;
 import org.swdc.swt.widgets.base.Initialize;
 import org.swdc.swt.widgets.SWTButton;
 import org.swdc.swt.widgets.SWTLabel;
@@ -28,6 +29,9 @@ public class TestController implements Initialize {
 
     @Widget("demo")
     private SWTWidget demo;
+
+    @Widget("comb")
+    private SWTComboBox comboBox;
 
     private boolean flag = false;
 

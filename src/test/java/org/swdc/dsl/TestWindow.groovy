@@ -39,6 +39,8 @@ import org.swdc.swt.widgets.form.SWTForm
 import org.swdc.swt.widgets.form.SWTFormExpandPane
 import org.swdc.swt.widgets.form.SWTFormHyperLink
 import org.swdc.swt.widgets.form.SWTFormText
+import org.swdc.swt.widgets.menu.SWTMenu
+import org.swdc.swt.widgets.menu.SWTMenuItem
 import org.swdc.swt.widgets.pane.SWTCBanner
 import org.swdc.swt.widgets.pane.SWTCTab
 import org.swdc.swt.widgets.pane.SWTCTabPane
@@ -81,17 +83,32 @@ class TestWindow extends Stage {
                         spacing 8,8
                         columns 6
                     }
+
                     size 800,600
+                    icons SWTWidgets.loadIcons(null,null)
+
+                    menu new SWTMenu(SWT.BAR)
+                            .item(new SWTMenuItem(SWT.CASCADE).define{
+                                text "Menu  A"
+                                subMenu new SWTMenu(SWT.CASCADE)
+                                        .item(new SWTMenuItem(SWT.PUSH).define {
+                                            text "Item A"
+                                        })
+                                        .item(new SWTMenuItem(SWT.PUSH).define {
+                                            text "Item B"
+                                        }).item(new SWTMenuItem(SWT.PUSH).define {
+                                           text "Item C"
+                                        })
+                            })
+                            .item(new SWTMenuItem(SWT.CASCADE).define {
+                                text "Menu  B"
+                            })
+
                 }, SWTView.class.getModule())
         Stage window = (Stage)loader.loadView()
 
         window.show()
         mount.show()
-
-
-        /*  TestWindow window = new TestWindow().create();
-          window.createContent()
-          window.show()*/
 
         while(!window.isDisposed()){
             if(!display.readAndDispatch()){

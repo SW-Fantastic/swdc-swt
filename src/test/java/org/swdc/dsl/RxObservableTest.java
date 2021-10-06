@@ -1,11 +1,24 @@
 package org.swdc.dsl;
 
+import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.beans.ObservableValue;
 
 
 public class RxObservableTest {
 
     public static void main(String[] args) {
+
+
+        ObservableArrayList<String> listA = new ObservableArrayList<>();
+        ObservableArrayList<String> listB = new ObservableArrayList<>();
+
+        listA.bind(listB);
+
+        listB.add("Test");
+        listB.add("Test A");
+
+        System.err.println(listA);
+
 
         ObservableValue<String> s1 = new ObservableValue<>();
         ObservableValue<String> s2 = new ObservableValue<>();

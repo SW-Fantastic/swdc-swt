@@ -24,8 +24,6 @@ public class ObservableValue<T> {
 
     private Disposable disposable;
 
-    private Predicate<T> condition;
-
     private Observer<T> observer = new Observer<>() {
         @Override
         public void onSubscribe(@NonNull Disposable d) {

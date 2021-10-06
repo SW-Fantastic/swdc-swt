@@ -2,10 +2,11 @@ package org.swdc.swt.widgets.base;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.Decorations;
+import org.eclipse.swt.widgets.Menu;
 import org.swdc.swt.actions.*;
 import org.swdc.swt.widgets.SWTWidget;
-import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.menu.SWTMenu;
 
 public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
         implements Controlable,MouseAcceptable,MouseTrackable,
@@ -34,6 +35,8 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     private Closure keyPressClosure;
     private Closure keyReleaseClosure;
 
+    private SWTMenu menu;
+
     @Override
     public void ready() {
         super.ready();
@@ -57,6 +60,20 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
 
             widget.addKeyListener(keyProperty.dispatcher());
             keyProperty.manage(this);
+
+            if (this.menu != null) {
+                if (widget instanceof Decorations) {
+                    Decorations decorations = (Decorations) widget;
+                    Menu swtMenu = menu.getMenu(decorations);
+                    try {
+                        decorations.setMenuBar(swtMenu);
+                    } catch (Exception e) {
+                        decorations.setMenu(swtMenu);
+                    }
+                } else {
+                    widget.setMenu(menu.getMenu(widget));
+                }
+            }
         }
     }
 
@@ -217,4 +234,14 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
         this.keyPressClosure.setResolveStrategy(Closure.DELEGATE_ONLY);
         this.keyProperty.closure(this.keyPressClosure, this.keyReleaseClosure);
     }
+
+
+    public void menu(SWTMenu menu) {
+        this.menu = menu;
+    }
+
+    public SWTMenu menu() {
+        return menu;
+    }
+
 }

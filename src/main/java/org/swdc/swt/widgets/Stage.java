@@ -1,15 +1,19 @@
 package org.swdc.swt.widgets;
 
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.swdc.swt.Window;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.base.Initialize;
+import org.swdc.swt.widgets.base.SWTControlWidget;
+import org.swdc.swt.widgets.menu.SWTMenu;
 
 import java.util.*;
 
-public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
+public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Window {
 
     private Shell shell = new Shell();
 
@@ -18,6 +22,8 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
     private SWTWidget widget;
 
     private boolean initialized;
+
+    private Image[] icons;
 
     public Object getController() {
         return loader.getController(this);
@@ -49,28 +55,39 @@ public class Stage extends SWTWidget<Shell> implements SWTContainer, Window {
         this.widget = widget;
     }
 
+    public void icons(Image[] icons) {
+        this.icons = icons;
+        this.shell.setImages(icons);
+    }
+
     @Override
     public void ready() {
         super.ready();
-        SWTWidget swtWidget = widget;
-        while (swtWidget != null) {
-            swtWidget.create(shell,this);
-            swtWidget = swtWidget.getNext();
+
+        SWTMenu menu = this.menu();
+        if (menu != null) {
+            Menu swtMenu = menu.getMenu(shell);
+            shell.setMenuBar(swtMenu);
         }
 
-        SWTWidgets.setupLayoutData(this,shell);
-    }
+        Image[] icons = this.icons;
+        if (icons != null){
+            this.shell.setImages(icons);
+        }
 
-
-    public void show() {
         if (!initialized) {
             Object controller = this.getController();
             if (controller instanceof Initialize) {
                 Initialize initialize = (Initialize) controller;
                 initialize.initialize();
             }
-            initialized = true;
         }
+        initialized = true;
+
+    }
+
+
+    public void show() {
         shell.open();
     }
 

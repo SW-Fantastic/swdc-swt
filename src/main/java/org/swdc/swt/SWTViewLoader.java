@@ -4,6 +4,8 @@ import groovy.lang.GroovyClassLoader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Widget;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.swdc.swt.layouts.SWTRowLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
@@ -20,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SWTViewLoader {
+
+    private Logger logger = LoggerFactory.getLogger(SWTViewLoader.class);
 
     public static class DefaultControllerFactory implements ControllerFactory {
 
@@ -90,6 +94,7 @@ public class SWTViewLoader {
             Module self = SWTWidgets.class.getModule();
 
             if (!self.canRead(module)) {
+                logger.error("can not read resource from " + module.getName());
                 throw new Exception("can not read resource");
             }
 
@@ -97,10 +102,13 @@ public class SWTViewLoader {
             Class viewClass = loader.parseClass(new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8)),path);
 
             if (!SWTWidget.class.isAssignableFrom(viewClass)) {
+                logger.error("the class : " + viewClass.getName() + " is not a groovy view");
                 throw new Exception(path + " is not a groovy view");
             }
 
             loadedViewClasses.put(viewClass.getSimpleName(),viewClass);
+            logger.info("the class : " + viewClass.getName() + " loaded");
+
             return viewClass.getName();
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -110,7 +118,7 @@ public class SWTViewLoader {
     private SWTWidget load(String path){
         String className = loadClass(path);
 
-        System.err.println("create " + path);
+        logger.info("loading view : " + path);
 
         try {
 
@@ -159,6 +167,11 @@ public class SWTViewLoader {
                 widget.create((Composite) parent.getWidget(),(SWTContainer) parent,this);
                 widget = widget.getNext();
             }
+
+            // 调用ready，因为parent内部创建了新的组件。
+            parent.ready();
+
+            logger.info(" view : " + path + " was loaded");
 
             return parent;
         } catch (Exception e) {

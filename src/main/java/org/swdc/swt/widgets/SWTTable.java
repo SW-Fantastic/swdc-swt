@@ -9,9 +9,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
@@ -38,7 +41,7 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
 
     private boolean lines;
 
-    private List<Object> items = new ArrayList<>();
+    private ObservableArrayList<Object> items = new ObservableArrayList<>();
 
     public SWTTable(int flags) {
         this.flags = flags;
@@ -64,7 +67,8 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
         }
 
         if (this.items != null && this.items.size() > 0 ) {
-            this.data(this.items);
+            List<Object> copied = new ArrayList<>(this.items);
+            this.data(copied);
         }
 
         if (fixColumnWidth) {
@@ -103,7 +107,8 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
     }
 
     public SWTTable data(List<Object> data) {
-        this.items = data;
+        this.items.clear();
+        this.items.addAll(data);
         if (this.table != null) {
             for (TableItem obj: table.getItems()){
                 obj.dispose();
@@ -161,6 +166,15 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
             table.setHeaderVisible(show);
         }
         return this;
+    }
+
+    public ObservableArrayList<Object> getItems() {
+        return items;
+    }
+
+    public void setItems(ObservableArrayList<Object> items) {
+        this.items = items;
+        this.items = items;
     }
 
     public static SWTTable table(int flags) {

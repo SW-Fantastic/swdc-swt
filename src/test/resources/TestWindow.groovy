@@ -41,6 +41,8 @@ import org.swdc.swt.widgets.form.SWTFormExpandPane
 import org.swdc.swt.widgets.form.SWTFormHyperLink
 import org.swdc.swt.widgets.form.SWTFormSection
 import org.swdc.swt.widgets.form.SWTFormText
+import org.swdc.swt.widgets.menu.SWTMenu
+import org.swdc.swt.widgets.menu.SWTMenuItem
 import org.swdc.swt.widgets.pane.SWTCBanner
 import org.swdc.swt.widgets.pane.SWTCTab
 import org.swdc.swt.widgets.pane.SWTCTabPane
@@ -144,11 +146,21 @@ class SWTWindow extends SWTView {
             demoTable()
         } >> widget {
             SWTComboBox.comboBox(SWT.NORMAL).define {
+
+                id "comb"
+
+                data Arrays.asList("Test OptionA", "Test OptionB")
+
+                factory (Object obj) -> obj.toString()
+
                 layout SWTGridLayout.cell().define {
                     colSpan 6
                     fillWidth true
                     rowAlignment SWT.FILL
                 }
+
+                select "Test OptionA"
+
             }
         } >> widget {
             SWTTabPane.tabPane(SWT.NORMAL).define {
@@ -163,6 +175,11 @@ class SWTWindow extends SWTView {
                     width 120
                     height 120
                 }
+
+
+                menu new SWTMenu(SWT.POP_UP).item(new SWTMenuItem(SWT.PUSH).define {
+                    text "test"
+                })
 
                 children widget {
                     SWTTab.tab(SWT.FLAT, "coolbar").define {

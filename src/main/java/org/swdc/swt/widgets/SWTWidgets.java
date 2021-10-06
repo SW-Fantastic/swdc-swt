@@ -1,12 +1,10 @@
 package org.swdc.swt.widgets;
 
 import groovy.lang.GroovyClassLoader;
-import org.codehaus.groovy.tools.GroovyClass;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.ViewRequire;
 import org.swdc.swt.beans.ObservableValue;
@@ -257,6 +255,39 @@ public class SWTWidgets {
                     }
                 }
             }
+        }
+    }
+
+
+    public static Image[] loadIcons(String path,String prefix) {
+
+        Module mod = null;
+
+        if (path == null || path.isEmpty()) {
+            prefix = "java";
+            path = "icons-d";
+            mod = SWTWidgets.class.getModule();
+
+        } else {
+
+            StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+            Module self = SWTWidgets.class.getModule();
+            Module caller = walker.getCallerClass().getModule();
+            if(!self.canRead(caller)) {
+                throw new RuntimeException("can not read module :" + caller.getName());
+            }
+            mod = caller;
+        }
+
+
+        try {
+            return new Image[]{
+                    new Image(display,mod.getResourceAsStream(path + "/" + prefix + "_128.png")),
+                    new Image(display,mod.getResourceAsStream(path + "/" + prefix + "_64.png"))
+            };
+
+        } catch (Exception e) {
+            return null;
         }
     }
 

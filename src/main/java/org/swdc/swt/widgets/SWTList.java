@@ -2,6 +2,7 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
@@ -17,17 +18,17 @@ public class SWTList extends SWTControlWidget<List> {
 
     private int flags;
 
-    private java.util.List<Object> data;
+    private ObservableArrayList<Object> data = new ObservableArrayList<>();
 
     private ListFactory factory;
 
     public SWTList(int flag) {
         this.flags = flag;
-        data = new ArrayList<>();
     }
 
     public SWTList data(java.util.List<Object> data)  {
-        this.data = data;
+        this.data.clear();
+        this.data.addAll(data);
         if (this.list != null) {
             this.list.removeAll();
             if (this.factory != null) {

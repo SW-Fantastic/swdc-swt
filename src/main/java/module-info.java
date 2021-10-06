@@ -8,5 +8,6 @@ module application.swt {
 
     requires swdc.application.dependency;
     requires swdc.application.configs;
+    requires org.slf4j;
 
 }
