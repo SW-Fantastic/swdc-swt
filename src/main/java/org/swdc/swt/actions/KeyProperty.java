@@ -51,7 +51,7 @@ public class KeyProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -75,7 +75,7 @@ public class KeyProperty implements SWTProperty<String> {
         if (keyPressedMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -92,7 +92,7 @@ public class KeyProperty implements SWTProperty<String> {
         if (keyReleaseMethodName.isEmpty() || widget == null ) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -110,10 +110,10 @@ public class KeyProperty implements SWTProperty<String> {
         unlink();
         this.widget = widget;
         Stage stage = widget.getStage();
-        if (!keyPressedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!keyPressedMethodName.isEmpty() && widget.getController() != null) {
             this.onKeyPressMethodChange(null,null);
         }
-        if (!keyReleaseMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!keyReleaseMethodName.isEmpty() && widget.getController() != null) {
             this.onKeyReleaseMethodChange(null,null);
         }
         keyPressedMethodName.addListener(this::onKeyPressMethodChange);

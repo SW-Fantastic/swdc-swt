@@ -64,16 +64,17 @@ import org.swdc.swt.widgets.pane.SWTViewForm
 
 class TestWindow extends Stage {
 
-
-    void createContent() {
-
-
-    }
-
     static void main(String[] args) {
         Display display = SWTWidgets.getDisplay();
 
-        SWTViewLoader mLoader = new SWTViewLoader("MountDemo")
+        SWTViewLoader mLoader = new SWTViewLoader("MountDemo",new Stage().define {
+            icons SWTWidgets.loadIcons(null,null)
+            layout SWTGridLayout.gridLayout().define {
+                margin 6,6
+                spacing 8,8
+                columns 6
+            }
+        })
         Stage mount = mLoader.loadView()
 
         SWTViewLoader loader = new SWTViewLoader("TestWindow",

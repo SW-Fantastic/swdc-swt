@@ -5,6 +5,7 @@ module application.swt {
     requires io.reactivex.rxjava3;
 
     requires java.desktop;
+    requires jakarta.inject;
 
     requires swdc.application.dependency;
     requires swdc.application.configs;

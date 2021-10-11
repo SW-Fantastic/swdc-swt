@@ -50,7 +50,7 @@ public class ControlProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -90,7 +90,7 @@ public class ControlProperty implements SWTProperty<String> {
         if (resizedMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -109,7 +109,7 @@ public class ControlProperty implements SWTProperty<String> {
         if (moveMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -128,11 +128,11 @@ public class ControlProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        if (!resizedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!resizedMethodName.isEmpty() && widget.getController() != null) {
             this.onResizeMethodChange(null,null);
         }
 
-        if (!moveMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!moveMethodName.isEmpty() && widget.getController() != null) {
             this.onMoveMethodChange(null,null);
         }
 

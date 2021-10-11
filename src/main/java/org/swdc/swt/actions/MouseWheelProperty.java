@@ -35,7 +35,7 @@ public class MouseWheelProperty implements SWTProperty<String> {
         if (mouseWheelMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -52,7 +52,7 @@ public class MouseWheelProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -84,7 +84,7 @@ public class MouseWheelProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        if (!mouseWheelMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseWheelMethodName.isEmpty() && widget.getController() != null) {
             this.onWhellMethodChange(null,null);
         }
         mouseWheelMethodName.addListener(this::onWhellMethodChange);

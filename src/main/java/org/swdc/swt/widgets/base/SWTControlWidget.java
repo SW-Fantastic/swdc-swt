@@ -1,16 +1,19 @@
 package org.swdc.swt.widgets.base;
 
 import groovy.lang.Closure;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Decorations;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.*;
+import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.actions.*;
+import org.swdc.swt.beans.EnableProperty;
+import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.menu.SWTMenu;
 
 public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
         implements Controlable,MouseAcceptable,MouseTrackable,
                    MouseMovable,MouseWheelable,KeyListeneable {
+
+    // ===================event properties================
 
     private ControlProperty controlProperty = new ControlProperty();
     private Closure sizeClosure;
@@ -36,6 +39,19 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     private Closure keyReleaseClosure;
 
     private SWTMenu menu;
+
+    // ===============widget properties===============
+
+    private EnableProperty enableProperty = new EnableProperty();
+
+    @Override
+    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
+        T widget = super.create(parent, parentWidget, loader);
+        if (widget != null) {
+            enableProperty.manage(widget);
+        }
+        return widget;
+    }
 
     @Override
     public void ready() {
@@ -235,6 +251,33 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
         this.keyProperty.closure(this.keyPressClosure, this.keyReleaseClosure);
     }
 
+    public void moveAbove(){
+        getWidget().moveAbove(null);
+    }
+
+    public void moveAbove(SWTWidget widget) {
+        Widget swtWidget = widget.getWidget();
+        if (swtWidget instanceof Control) {
+            Control control = (Control) swtWidget;
+            getWidget().moveAbove(control);
+        }
+    }
+
+    public void moveBelow() {
+        getWidget().moveBelow(null);
+    }
+
+    public void moveBelow(SWTWidget widget) {
+        Widget swtWidget = widget.getWidget();
+        if (swtWidget instanceof Control) {
+            Control control = (Control) swtWidget;
+            getWidget().moveBelow(control);
+        }
+    }
+
+    public void focus() {
+        getWidget().setFocus();
+    }
 
     public void menu(SWTMenu menu) {
         this.menu = menu;

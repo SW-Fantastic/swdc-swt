@@ -67,7 +67,7 @@ public class MouseTrackProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -138,7 +138,7 @@ public class MouseTrackProperty implements SWTProperty<String> {
         if (mouseEnterMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -157,7 +157,7 @@ public class MouseTrackProperty implements SWTProperty<String> {
         if (mouseHoverMethodName.isEmpty() || widget == null ) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -177,15 +177,15 @@ public class MouseTrackProperty implements SWTProperty<String> {
         unlink();
         this.widget = widget;
         Stage stage = widget.getStage();
-        if (!mouseHoverMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseHoverMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseHoverChanged(null,null);
         }
 
-        if (!mouseEnterMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseEnterMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseEnterChanged(null,null);
         }
 
-        if (!mouseExitedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseExitedMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseExitChanged(null,null);
         }
 

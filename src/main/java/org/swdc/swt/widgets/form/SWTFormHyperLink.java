@@ -84,9 +84,7 @@ public class SWTFormHyperLink extends SWTLabelControlWidget<Hyperlink> {
 
     @Override
     public void ready() {
-        Object controller = this
-                .getLoader()
-                .getController(this);
+        Object controller = this.getController();
 
         if (controller == null || methodName == null) {
             return;

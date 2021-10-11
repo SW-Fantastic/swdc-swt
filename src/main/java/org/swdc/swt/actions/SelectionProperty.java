@@ -44,7 +44,7 @@ public class SelectionProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -63,7 +63,7 @@ public class SelectionProperty implements SWTProperty<String> {
         if (methodName.isEmpty() || widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -88,7 +88,7 @@ public class SelectionProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        if (!methodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!methodName.isEmpty() && widget.getController() != null) {
             this.onNameChange(null,null);
         }
         methodName.addListener(this::onNameChange);

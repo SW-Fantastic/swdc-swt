@@ -240,7 +240,7 @@ public class SWTWidgets {
             return;
         }
 
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         String name = nameProperty.get();
         if (controller != null && nameProperty != null) {
             Class controllerClazz = controller.getClass();

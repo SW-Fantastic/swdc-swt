@@ -7,6 +7,12 @@ public interface Window {
 
     void show();
 
+    void close();
+
+    void open();
+
+    void exit();
+
     default <R extends SWTWidget> R create() {
         SWTWidgets.loadViewsByAnnotation(this);
         return (R) this;

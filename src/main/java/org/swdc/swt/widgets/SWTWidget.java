@@ -63,6 +63,13 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return controlId;
     }
 
+    public <T> T getController() {
+        if (loader == null ) {
+            return null;
+        }
+        return loader.getController(this);
+    }
+
     public SWTWidget rightShift(SWTWidget item) {
         if (this.next == null) {
             this.next = item;
@@ -296,6 +303,10 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void chain(SWTWidget widget) {
+        this.rightShift(widget);
     }
 
     public SWTContainer getParent() {

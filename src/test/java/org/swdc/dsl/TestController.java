@@ -1,16 +1,12 @@
 package org.swdc.dsl;
 
+import jakarta.inject.Inject;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.*;
 import org.swdc.swt.Widget;
 import org.swdc.swt.layouts.SWTStackLayout;
-import org.swdc.swt.widgets.SWTComboBox;
+import org.swdc.swt.widgets.*;
 import org.swdc.swt.widgets.base.Initialize;
-import org.swdc.swt.widgets.SWTButton;
-import org.swdc.swt.widgets.SWTLabel;
-import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.pane.SWTPane;
 
 public class TestController implements Initialize {
@@ -33,6 +29,9 @@ public class TestController implements Initialize {
     @Widget("comb")
     private SWTComboBox comboBox;
 
+    @Inject
+    private TestMountView mountView;
+
     private boolean flag = false;
 
     public void hello(SelectionEvent event) {
@@ -46,6 +45,7 @@ public class TestController implements Initialize {
         }
         flag = !flag;
 
+        mountView.getStage().show();
         demo.call("test");
     }
 

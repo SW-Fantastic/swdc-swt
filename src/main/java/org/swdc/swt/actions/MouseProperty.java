@@ -63,7 +63,7 @@ public class MouseProperty implements SWTProperty<String> {
         if (widget == null ) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -89,7 +89,7 @@ public class MouseProperty implements SWTProperty<String> {
         if (mouseDoubleClickMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -106,7 +106,7 @@ public class MouseProperty implements SWTProperty<String> {
         if(mouseUpMethodName.isEmpty() || widget == null) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
         SWTWidgets.setupMethod(
@@ -166,15 +166,15 @@ public class MouseProperty implements SWTProperty<String> {
         unlink();
 
         this.widget = widget;
-        if (!mouseDoubleClickMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseDoubleClickMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseDoubleClickMethodChange(null,null);
         }
 
-        if (!mouseUpMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseUpMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseUpMethodChange(null,null);
         }
 
-        if (!mouseDownMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseDownMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseDownMethodChange(null,null);
         }
 

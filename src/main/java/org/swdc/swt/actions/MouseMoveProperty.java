@@ -37,7 +37,7 @@ public class MouseMoveProperty implements SWTProperty<String> {
         if (mouseMovedMethodName.isEmpty() || widget == null ) {
             return;
         }
-        if (widget.getLoader().getController(widget) == null) {
+        if (widget.getController() == null) {
             return;
         }
 
@@ -64,7 +64,7 @@ public class MouseMoveProperty implements SWTProperty<String> {
         if (widget == null) {
             return;
         }
-        Object controller = widget.getLoader().getController(widget);
+        Object controller = widget.getController();
         if (controller == null) {
             return;
         }
@@ -96,7 +96,7 @@ public class MouseMoveProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        if (!mouseMovedMethodName.isEmpty() && widget.getLoader().getController(widget) != null) {
+        if (!mouseMovedMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseMoveMethodChange(null,null);
         }
         this.mouseMovedMethodName.addListener(this::onMouseMoveMethodChange);

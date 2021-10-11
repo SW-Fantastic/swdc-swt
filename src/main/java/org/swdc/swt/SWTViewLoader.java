@@ -84,6 +84,10 @@ public class SWTViewLoader {
         this.path = path;
     }
 
+    public void setFactory(ControllerFactory factory) {
+        this.factory = factory;
+    }
+
     public SWTWidget loadView(){
         return this.load(this.path);
     }
@@ -197,9 +201,6 @@ public class SWTViewLoader {
                 }
                 item = (SWTWidget) item.getParent();
             }
-
-
-
         }
         return null;
     }
