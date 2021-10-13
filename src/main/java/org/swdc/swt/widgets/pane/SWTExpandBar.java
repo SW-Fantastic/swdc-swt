@@ -5,14 +5,12 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
-import org.swdc.swt.widgets.base.SWTControlWidget;
-import org.swdc.swt.widgets.base.SWTLabelControlWidget;
+import org.swdc.swt.widgets.base.SWTExpandableControlWidget;
 
 import java.util.Collections;
 import java.util.List;
 
-public class SWTExpandBar extends SWTControlWidget<ExpandBar> implements SWTContainer {
+public class SWTExpandBar extends SWTExpandableControlWidget<ExpandBar> implements SWTContainer {
 
     private int flag;
     private ExpandBar expandBar;

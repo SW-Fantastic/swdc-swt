@@ -2,6 +2,7 @@ package org.swdc.swt.widgets.base;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Scrollable;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.layouts.SWTFillLayout;
@@ -15,11 +16,9 @@ import org.swdc.swt.widgets.pane.SWTPane;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class SWTView extends SWTWidget<Composite> implements SWTContainer {
+public abstract class SWTView<C extends Scrollable> extends SWTWidget<Composite> implements SWTContainer {
 
     private SWTPane widget;
-
-    private SWTLayout layout;
 
     public SWTWidget getView(SWTViewLoader loader) {
         this.loader = loader;
@@ -27,10 +26,6 @@ public abstract class SWTView extends SWTWidget<Composite> implements SWTContain
     }
 
     protected abstract SWTWidget viewPage();
-
-    public void layout(SWTLayout layout) {
-        this.layout = layout;
-    }
 
     @Override
     public void ready() {

@@ -16,7 +16,8 @@ public class SWTTestView extends View {
                 .margin(6,6)
                 .spacing(8,8)
                 .columns(6))
-                .size(800,600);
+                .size(800,600)
+                .text("swt demo");
 
     }
 

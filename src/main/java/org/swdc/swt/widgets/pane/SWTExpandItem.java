@@ -7,12 +7,13 @@ import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTExpandableWidget;
 import org.swdc.swt.widgets.base.SWTLabelWidget;
 
 import java.util.Collections;
 import java.util.List;
 
-public class SWTExpandItem extends SWTLabelWidget<ExpandItem> implements SWTContainer {
+public class SWTExpandItem extends SWTExpandableWidget<ExpandItem> implements SWTContainer {
 
     private int flag;
     private ExpandItem item;
@@ -23,11 +24,6 @@ public class SWTExpandItem extends SWTLabelWidget<ExpandItem> implements SWTCont
 
     public SWTExpandItem(int flag) {
         this.flag = flag;
-    }
-
-    public SWTExpandItem expand(boolean expand) {
-        this.expandProperty.set(expand);
-        return this;
     }
 
     @Override

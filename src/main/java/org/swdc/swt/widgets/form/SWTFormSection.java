@@ -14,10 +14,12 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTCollapseControlWidget;
+import org.swdc.swt.widgets.base.SWTExpansationControlWidget;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.SWTLabelWidget;
 
-public class SWTFormSection extends SWTLabelControlWidget<Section> implements SWTContainer {
+public class SWTFormSection extends SWTExpansationControlWidget<Section> implements SWTContainer {
 
     private Section section;
 
@@ -25,15 +27,8 @@ public class SWTFormSection extends SWTLabelControlWidget<Section> implements SW
 
     private SWTWidget widget;
 
-    private ExpandProperty expandProperty = new ExpandProperty();
-
     public SWTFormSection(int flags) {
         this.flags = flags;
-    }
-
-    public SWTFormSection expand(boolean expand) {
-        this.expandProperty.set(expand);
-        return this;
     }
 
     @Override
@@ -55,12 +50,10 @@ public class SWTFormSection extends SWTLabelControlWidget<Section> implements SW
             section = SWTWidgets.factory().createSection(parent,this.flags);
             SWTWidgets.factory().paintBordersFor(section);
 
-            this.expandProperty.manage(section);
-
             section.addExpansionListener(new ExpansionAdapter() {
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    expandProperty.setDirectly(section.isExpanded());
+                    expand(section.isExpanded());
                 }
             });
         }

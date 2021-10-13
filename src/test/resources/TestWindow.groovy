@@ -3,6 +3,7 @@ import org.eclipse.swt.SWT
 import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
+
 import org.swdc.swt.ViewController
 import org.swdc.swt.ViewRequire
 import org.swdc.swt.layouts.SWTBorderLayout
@@ -34,7 +35,6 @@ import org.swdc.swt.widgets.SWTToolBar
 import org.swdc.swt.widgets.SWTToolItem
 import org.swdc.swt.widgets.SWTTree
 import org.swdc.swt.widgets.SWTWidget
-import org.swdc.swt.widgets.Stage
 import org.swdc.swt.widgets.base.SWTView
 import org.swdc.swt.widgets.form.SWTForm
 import org.swdc.swt.widgets.form.SWTFormExpandPane
@@ -350,6 +350,9 @@ class SWTWindow extends SWTView {
                             SWTFormSection.section(Section.TITLE_BAR|Section.TWISTIE).define {
                                 text "Title"
                                 expand true
+                                onExpand {
+                                    System.err.println("expand form")
+                                }
                                 children widget {
                                     SWTPane.pane(SWT.NORMAL).define {
                                         layout SWTGridLayout.gridLayout().define {
@@ -521,6 +524,9 @@ class SWTWindow extends SWTView {
                         text "expandable"
                         children widget {
                             new SWTExpandBar(SWT.FLAT).define {
+                                onExpand{
+                                    System.out.println("expand")
+                                }
                                 children widget {
                                     new SWTExpandItem(SWT.DEFAULT).define {
                                         text "expand demo"

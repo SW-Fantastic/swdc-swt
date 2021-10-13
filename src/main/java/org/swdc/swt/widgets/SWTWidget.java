@@ -7,6 +7,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
 import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.ViewRequire;
+import org.swdc.swt.actions.DisposeProperty;
 import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
@@ -54,6 +55,8 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
     private SizeProperty sizeProperty = new SizeProperty();
 
     private ColorProperty colorProperty = new ColorProperty();
+
+    private DisposeProperty disposeProperty = new DisposeProperty();
 
     private SWTContainer parent;
 
@@ -192,8 +195,10 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         // 通用属性
         this.sizeProperty.manage(widget);
         this.colorProperty.manage(widget);
+        this.disposeProperty.manage(this);
 
-        Object controller = loader.getController((SWTWidget) this.getParent());
+        Object controller =  loader.getController((SWTWidget) this.getParent());
+
         if (controller != null) {
             this.setupController(controller);
         }
@@ -201,6 +206,15 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         this.ready();
 
         return widget;
+    }
+
+    public <R extends SWTWidget<T>> R onDispose(String method) {
+        disposeProperty.setDisposeMethod(method);
+        return (R)this;
+    }
+
+    public String getDisposeMethod() {
+        return disposeProperty.getDisposeMethod();
     }
 
     public <S extends SWTWidget & SWTContainer> T create(Composite parent,S parentWidget) {

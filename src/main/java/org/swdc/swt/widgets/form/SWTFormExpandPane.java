@@ -14,12 +14,13 @@ import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
 import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.base.SWTCollapseControlWidget;
+import org.swdc.swt.widgets.base.SWTExpansationControlWidget;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
-public class SWTFormExpandPane extends SWTLabelControlWidget<ExpandableComposite> implements SWTContainer {
+public class SWTFormExpandPane extends SWTExpansationControlWidget<ExpandableComposite> implements SWTContainer {
 
     private int flag;
-    private ExpandProperty expandProperty = new ExpandProperty();
 
     private SWTWidget widget;
 
@@ -39,10 +40,6 @@ public class SWTFormExpandPane extends SWTLabelControlWidget<ExpandableComposite
         }
     }
 
-    public SWTFormExpandPane expand(boolean expand) {
-        this.expandProperty.set(expand);
-        return this;
-    }
 
     @Override
     protected ExpandableComposite getWidget(Composite parent) {
@@ -50,14 +47,12 @@ public class SWTFormExpandPane extends SWTLabelControlWidget<ExpandableComposite
             FormToolkit toolkit = SWTWidgets.factory();
             composite = toolkit.createExpandableComposite(parent,this.flag);
             toolkit.paintBordersFor(parent);
-
             composite.addExpansionListener(new ExpansionAdapter(){
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-                    expandProperty.setDirectly(composite.isExpanded());
+                    expand(composite.isExpanded());
                 }
             });
-            expandProperty.manage(composite);
         }
         return composite;
     }

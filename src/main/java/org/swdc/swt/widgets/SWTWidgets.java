@@ -1,6 +1,8 @@
 package org.swdc.swt.widgets;
 
 import groovy.lang.GroovyClassLoader;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -13,10 +15,15 @@ import org.swdc.swt.layouts.LayoutData;
 import org.swdc.swt.layouts.SWTFormData;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -27,6 +34,9 @@ public class SWTWidgets {
     private static final Display display = new Display();
     private static final FormToolkit toolkit = new FormToolkit(SWTWidgets.getDisplay());
     private static final GroovyClassLoader loader = new GroovyClassLoader();
+
+    private static List<String> loadedFonts = new ArrayList<>();
+    private static Map<String, Image> loadedImage = new HashMap<>();
 
     private static final ConcurrentHashMap<String,Class> loadedViews = new ConcurrentHashMap<>();
 
@@ -291,5 +301,72 @@ public class SWTWidgets {
         }
     }
 
+    public static boolean loadFont(File file) {
+        if (!file.exists()) {
+            return false;
+        }
+        if(loadedFonts.contains(file.getAbsolutePath())) {
+            return true;
+        }
+        boolean loaded = display.loadFont(file.getAbsolutePath());
+        if (loaded) {
+            loadedFonts.add(file.getAbsolutePath());
+        }
+        return loaded;
+    }
+
+    public static Font getFont(String family, int size) {
+        return new Font(display,family,size, SWT.NONE);
+    }
+
+    public Image imageByFile(File file) {
+        if (!file.exists()) {
+            return null;
+        }
+        if (loadedImage.containsKey(file.getAbsolutePath())) {
+            return loadedImage.get(file.getAbsolutePath());
+        }
+        Image image = new Image(display,file.getAbsolutePath());
+        loadedImage.put(file.getAbsolutePath(),image);
+        return image;
+    }
+
+    public static Image imageByStream(InputStream inputStream) {
+        return new Image(display,inputStream);
+    }
+
+    public static Image imageByResource(String path) {
+
+        if (loadedImage.containsKey(path)) {
+            return loadedImage.get(path);
+        }
+
+        StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+        Class caller = walker.getCallerClass();
+
+        Module self = SWTWidgets.class.getModule();
+        Module callerModule = caller.getModule();
+
+        try {
+            if (self.canRead(callerModule)) {
+                InputStream stream = callerModule.getResourceAsStream(path);
+                if (stream != null) {
+                    Image image = imageByStream(stream);
+                    loadedImage.put(path,image);
+                }
+            } else {
+                InputStream inputStream = self.getResourceAsStream(path);
+                if (inputStream != null) {
+                    Image image = imageByStream(inputStream);
+                    loadedImage.put(path,image);
+                }
+            }
+
+            return null;
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

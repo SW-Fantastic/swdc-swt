@@ -32,6 +32,9 @@ public class TestController implements Initialize {
     @Inject
     private TestMountView mountView;
 
+    @Inject
+    private SWTTestView viewSelf;
+
     private boolean flag = false;
 
     public void hello(SelectionEvent event) {
@@ -86,5 +89,6 @@ public class TestController implements Initialize {
         stackLayout.top(btnA);
         btnA.onAction("change");
         btnB.onAction("change");
+
     }
 }

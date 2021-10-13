@@ -3,16 +3,12 @@ package org.swdc.swt;
 import groovy.lang.GroovyClassLoader;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swt.widgets.Scrollable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.swdc.swt.layouts.SWTRowLayout;
-import org.swdc.swt.widgets.SWTContainer;
-import org.swdc.swt.widgets.SWTWidget;
-import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
+import org.swdc.swt.widgets.*;
 import org.swdc.swt.widgets.base.SWTView;
-import org.swdc.swt.widgets.pane.SWTPane;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -51,9 +47,11 @@ public class SWTViewLoader {
 
     private Map<String,Class> loadedViewClasses = new HashMap<>();
 
+    private Map<String,String> loadedPathNameMap = new HashMap<>();
+
     private ControllerFactory factory = new DefaultControllerFactory();
 
-    private SWTView root;
+    private SWTView<Scrollable> root;
 
     private GroovyClassLoader loader = new GroovyClassLoader();
 
@@ -102,6 +100,10 @@ public class SWTViewLoader {
                 throw new Exception("can not read resource");
             }
 
+            if (loadedPathNameMap.containsKey(path)) {
+                return loadedPathNameMap.get(path);
+            }
+
             InputStream in = module.getResourceAsStream(path + ".groovy");
             Class viewClass = loader.parseClass(new BufferedReader(new InputStreamReader(in,StandardCharsets.UTF_8)),path);
 
@@ -111,6 +113,7 @@ public class SWTViewLoader {
             }
 
             loadedViewClasses.put(viewClass.getSimpleName(),viewClass);
+            loadedPathNameMap.put(path,viewClass.getSimpleName());
             logger.info("the class : " + viewClass.getName() + " loaded");
 
             return viewClass.getName();
@@ -139,6 +142,7 @@ public class SWTViewLoader {
             }
 
             Class<SWTView> widgetClass = loadedViewClasses.get(className);
+
             SWTView view = widgetClass
                     .getConstructor()
                     .newInstance();
@@ -179,6 +183,7 @@ public class SWTViewLoader {
 
             return parent;
         } catch (Exception e) {
+            logger.error("failed load view :  " + path + "caused by",e);
             throw new RuntimeException(e);
         }
     }

@@ -176,7 +176,6 @@ public class MouseTrackProperty implements SWTProperty<String> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
         if (!mouseHoverMethodName.isEmpty() && widget.getController() != null) {
             this.onMouseHoverChanged(null,null);
         }

@@ -35,6 +35,14 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
         return button;
     }
 
+    /**
+     * 在CheckBox的时候使用。
+     * @return
+     */
+    public boolean isSelected() {
+        return button.getSelection();
+    }
+
     @Override
     public void ready() {
         super.ready();
