@@ -12,7 +12,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class KeyProperty implements SWTProperty<String> {
+public class KeyProperty implements SWTProperty<String,KeyEvent> {
 
     private SWTWidget widget;
 
@@ -29,7 +29,7 @@ public class KeyProperty implements SWTProperty<String> {
         public void keyPressed(KeyEvent keyEvent) {
             KeyProperty self = KeyProperty.this;
             if (self.keyPressMethod != null) {
-                self.call(keyEvent,keyPressMethod);
+                self.call(widget,keyEvent,keyPressMethod);
             } else if (keyPressClosure != null) {
                 keyPressClosure.call(keyEvent);
             }
@@ -39,37 +39,12 @@ public class KeyProperty implements SWTProperty<String> {
         public void keyReleased(KeyEvent keyEvent) {
             KeyProperty self = KeyProperty.this;
             if (self.keyReleaseMethod != null) {
-                self.call(keyEvent,keyReleaseMethod);
+                self.call(widget,keyEvent,keyReleaseMethod);
             } else if (keyReleaseClosure != null) {
                 keyReleaseClosure.call(keyEvent);
             }
         }
     };
-
-
-    private void call(KeyEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void onKeyPressMethodChange(String valOld, String valNew) {
         if (keyPressedMethodName.isEmpty() || widget == null) {

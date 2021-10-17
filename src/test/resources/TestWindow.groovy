@@ -341,7 +341,9 @@ class SWTWindow extends SWTView {
                 } >> widget {
                     SWTTab.tab(SWT.NORMAL,"Tree").define {
                         children widget{
-                            new SWTTree(SWT.NORMAL)
+                            new SWTTree(SWT.BORDER|SWT.FULL_SELECTION).define {
+                                id "tree"
+                            }
                         }
                     }
                 } >> widget {

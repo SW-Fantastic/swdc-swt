@@ -12,7 +12,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class ControlProperty implements SWTProperty<String> {
+public class ControlProperty implements SWTProperty<String,ControlEvent> {
 
     private ObservableValue<String> moveMethodName = new ObservableValue<>();
     private ObservableValue<String> resizedMethodName = new ObservableValue<>();
@@ -29,7 +29,7 @@ public class ControlProperty implements SWTProperty<String> {
         public void controlMoved(ControlEvent controlEvent) {
            ControlProperty self = ControlProperty.this;
            if (moveMethod != null) {
-               self.call(controlEvent,moveMethod);
+               self.call(widget,controlEvent,moveMethod);
            } else if (moveClosure != null) {
                self.moveClosure.call(controlEvent);
            }
@@ -39,36 +39,12 @@ public class ControlProperty implements SWTProperty<String> {
         public void controlResized(ControlEvent controlEvent) {
             ControlProperty self = ControlProperty.this;
             if (resizeMethod != null) {
-                self.call(controlEvent,resizeMethod);
+                self.call(widget,controlEvent,resizeMethod);
             } else if (resizeClosure != null) {
                 resizeClosure.call(controlEvent);
             }
         }
     };
-
-    private void call(ControlEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void setMoveMethod(String name) {
         this.moveMethodName.set(name);

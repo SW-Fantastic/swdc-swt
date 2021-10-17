@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class MouseProperty implements SWTProperty<String> {
+public class MouseProperty implements SWTProperty<String,MouseEvent> {
 
     private SWTWidget widget;
 
@@ -32,7 +32,7 @@ public class MouseProperty implements SWTProperty<String> {
         public void mouseDoubleClick(MouseEvent mouseEvent) {
             MouseProperty self = MouseProperty.this;
             if (self.mouseDoubleClickMethod != null) {
-                self.call(mouseEvent,mouseDoubleClickMethod);
+                self.call(widget,mouseEvent,mouseDoubleClickMethod);
             } else if (closureMouseDoubleClick != null) {
                 closureMouseDoubleClick.call(mouseEvent);
             }
@@ -42,7 +42,7 @@ public class MouseProperty implements SWTProperty<String> {
         public void mouseDown(MouseEvent mouseEvent) {
             MouseProperty self = MouseProperty.this;
             if (self.mouseDownMethod != null) {
-                self.call(mouseEvent, mouseDownMethod);
+                self.call(widget,mouseEvent, mouseDownMethod);
             } else if (closureMouseDown != null) {
                 closureMouseDown.call(mouseEvent);
             }
@@ -52,36 +52,12 @@ public class MouseProperty implements SWTProperty<String> {
         public void mouseUp(MouseEvent mouseEvent) {
             MouseProperty self = MouseProperty.this;
             if (self.mouseUpMethod != null) {
-                self.call(mouseEvent,mouseUpMethod);
+                self.call(widget,mouseEvent,mouseUpMethod);
             } else if (closureMouseUp != null) {
                 closureMouseUp.call(mouseEvent);
             }
         }
     };
-
-    private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null ) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
 
 

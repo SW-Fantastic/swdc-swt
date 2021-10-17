@@ -9,6 +9,8 @@ import org.swdc.swt.widgets.*;
 import org.swdc.swt.widgets.base.Initialize;
 import org.swdc.swt.widgets.pane.SWTPane;
 
+import java.util.List;
+
 public class TestController implements Initialize {
 
     @Widget("lblTest")
@@ -34,6 +36,9 @@ public class TestController implements Initialize {
 
     @Inject
     private SWTTestView viewSelf;
+
+    @Widget("tree")
+    private SWTTree tree;
 
     private boolean flag = false;
 
@@ -89,6 +94,21 @@ public class TestController implements Initialize {
         stackLayout.top(btnA);
         btnA.onAction("change");
         btnB.onAction("change");
+
+        try {
+            SWTreeNode<String> data = new SWTreeNode<>(tree,SWT.NONE,"Root");
+            SWTreeNode<String> childA = new SWTreeNode<>(data,SWT.NONE,"ChiA");
+            SWTreeNode<String> childB = new SWTreeNode<>(data,SWT.NONE,"ChiB");
+
+            List<SWTreeNode<String>> child = data.getChildren();
+            child.add(childA);
+            child.add(childB);
+
+            tree.setRoot(data);
+
+        } catch (Exception e) {
+        }
+
 
     }
 }

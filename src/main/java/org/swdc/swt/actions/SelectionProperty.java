@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class SelectionProperty implements SWTProperty<String> {
+public class SelectionProperty implements SWTProperty<String,SelectionEvent> {
     
     private ObservableValue<String> methodName = new ObservableValue<>();
 
@@ -25,7 +25,7 @@ public class SelectionProperty implements SWTProperty<String> {
         public void widgetSelected(SelectionEvent selectionEvent) {
             SelectionProperty self = SelectionProperty.this;
             if (self.actionMethod != null) {
-                self.call(selectionEvent);
+                self.call(widget,selectionEvent,actionMethod);
             } else if (closure != null){
                 closure.call(selectionEvent);
             }
@@ -59,30 +59,6 @@ public class SelectionProperty implements SWTProperty<String> {
 
     }
 
-    public void call(SelectionEvent selectionEvent) {
-        if (methodName.isEmpty() || widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        Method finalMethod = actionMethod;
-        if (actionMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,selectionEvent);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @Override
     public void manage(SWTWidget widget) {

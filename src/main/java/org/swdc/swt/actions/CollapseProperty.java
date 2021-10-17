@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.SWTWidgets;
 
 import java.lang.reflect.Method;
 
-public class CollapseProperty implements SWTProperty<String> {
+public class CollapseProperty implements SWTProperty<String,ExpandEvent> {
 
     private SWTWidget widget;
 
@@ -27,7 +27,7 @@ public class CollapseProperty implements SWTProperty<String> {
         @Override
         public void itemCollapsed(ExpandEvent expandEvent) {
             if (collapseMethod != null) {
-                call(expandEvent,collapseMethod);
+                call(widget,expandEvent,collapseMethod);
             } else if (collapseClosure != null) {
                 collapseClosure.call(expandEvent);
             }
@@ -36,36 +36,12 @@ public class CollapseProperty implements SWTProperty<String> {
         @Override
         public void itemExpanded(ExpandEvent expandEvent) {
             if (expandMethod != null) {
-                call(expandEvent,expandMethod);
+                call(widget,expandEvent,expandMethod);
             } else if (expandClosure != null) {
                 expandClosure.call(expandEvent);
             }
         }
     };
-
-    private void call(ExpandEvent event, Method finalMethod) {
-        if (widget == null ) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void onCollapseChanged(String oldMethod, String newMethod) {
         if (widget == null || collapseName.isEmpty() || widget.getController() == null) {

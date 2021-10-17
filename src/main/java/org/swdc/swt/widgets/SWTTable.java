@@ -1,5 +1,6 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -9,15 +10,17 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.widgets.base.SWTControlWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
+public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, Selectionable {
 
     private ControlListener autoColumnSizeListener = new ControlAdapter() {
         @Override
@@ -42,6 +45,8 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
     private boolean lines;
 
     private ObservableArrayList<Object> items = new ObservableArrayList<>();
+
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTTable(int flags) {
         this.flags = flags;
@@ -74,6 +79,9 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
         if (fixColumnWidth) {
             this.table.addControlListener(autoColumnSizeListener);
         }
+
+        selectionProperty.manage(this);
+        this.table.addSelectionListener(selectionProperty.dispatcher());
 
         SWTWidgets.setupLayoutData(this,this.table);
 
@@ -175,6 +183,18 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer {
     public void setItems(ObservableArrayList<Object> items) {
         this.items = items;
         this.items = items;
+    }
+
+    @Override
+    public void onAction(String methodName) {
+        this.selectionProperty.setSelectionMethod(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        selectionProperty.closure(closure);
     }
 
     public static SWTTable table(int flags) {

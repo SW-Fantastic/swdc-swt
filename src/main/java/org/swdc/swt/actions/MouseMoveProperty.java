@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class MouseMoveProperty implements SWTProperty<String> {
+public class MouseMoveProperty implements SWTProperty<String,MouseEvent> {
 
     private ObservableValue<String> mouseMovedMethodName = new ObservableValue<>();
     private Method mouseMovedMethod;
@@ -25,7 +25,7 @@ public class MouseMoveProperty implements SWTProperty<String> {
         public void mouseMove(MouseEvent mouseEvent) {
             MouseMoveProperty self = MouseMoveProperty.this;
             if (self.mouseMovedMethod != null) {
-                self.call(mouseEvent,mouseMovedMethod);
+                self.call(widget,mouseEvent,mouseMovedMethod);
             } else if (self.mouseMovedClosure != null) {
                 self.mouseMovedClosure.call(mouseEvent);
             }
@@ -58,30 +58,6 @@ public class MouseMoveProperty implements SWTProperty<String> {
 
     public void setMouseMovedMethod(String method) {
         this.mouseMovedMethodName.set(method);
-    }
-
-    private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void closure(Closure move) {

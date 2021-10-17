@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class MouseWheelProperty implements SWTProperty<String> {
+public class MouseWheelProperty implements SWTProperty<String,MouseEvent> {
 
     private SWTWidget widget;
 
@@ -24,7 +24,7 @@ public class MouseWheelProperty implements SWTProperty<String> {
         public void mouseScrolled(MouseEvent mouseEvent) {
             MouseWheelProperty self = MouseWheelProperty.this;
             if (self.mouseWheelMethod != null) {
-                self.call(mouseEvent,self.mouseWheelMethod);
+                self.call(widget,mouseEvent,self.mouseWheelMethod);
             } else if (self.mouseWheelClosure != null){
                 self.mouseWheelClosure.call(mouseEvent);
             }
@@ -46,30 +46,6 @@ public class MouseWheelProperty implements SWTProperty<String> {
                 (Method method) -> this.mouseWheelMethod = method,
                 MouseEvent.class
         );
-    }
-
-    private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public String getWheelMethodName() {

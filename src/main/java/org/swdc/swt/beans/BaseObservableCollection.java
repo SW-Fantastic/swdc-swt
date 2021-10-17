@@ -17,7 +17,7 @@ public abstract class BaseObservableCollection<T> implements Collection<T>,Obser
 
     protected ObservableEmitter<CollectionChanged<T>> emitter;
 
-    protected enum CollectionAction {
+    public enum CollectionAction {
         Add,
         Remove,
         Retain,

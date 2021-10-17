@@ -10,7 +10,7 @@ import org.swdc.swt.widgets.SWTWidgets;
 
 import java.lang.reflect.Method;
 
-public class DisposeProperty implements SWTProperty<String> {
+public class DisposeProperty implements SWTProperty<String,DisposeEvent> {
 
     private ObservableValue<String> disposeName = new ObservableValue<>();
     private Method disposeMethod;
@@ -20,7 +20,7 @@ public class DisposeProperty implements SWTProperty<String> {
         @Override
         public void widgetDisposed(DisposeEvent disposeEvent) {
             if (disposeMethod != null) {
-                call(disposeEvent,disposeMethod);
+                call(widget,disposeEvent,disposeMethod);
             }
         }
     };
@@ -33,29 +33,6 @@ public class DisposeProperty implements SWTProperty<String> {
         disposeName.set(method);
     }
 
-    private void call(DisposeEvent event, Method finalMethod) {
-        if (widget == null ) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void onDisposeChange(String oldMethod, String newMethod) {
         if (disposeName.isEmpty() || widget == null || widget.getController() == null) {

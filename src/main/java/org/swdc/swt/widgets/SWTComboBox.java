@@ -1,18 +1,21 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.TextSelectionProperty;
 import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
 import java.util.*;
 import java.util.function.Function;
 
-public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Controlable {
+public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Selectionable {
 
     private int flag;
 
@@ -26,6 +29,8 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Control
     private ObservableValue<String> selected = new ObservableValue<>();
 
     private TextSelectionProperty textSelectionProperty = new TextSelectionProperty();
+
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTComboBox(int flag) {
         this.flag = flag;
@@ -111,6 +116,8 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Control
 
             this.textSelectionProperty.manage(combo);
 
+            selectionProperty.manage(this);
+            combo.addSelectionListener(selectionProperty.dispatcher());
         }
     }
 
@@ -136,4 +143,15 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Control
         return new SWTComboBox(flag);
     }
 
+    @Override
+    public void onAction(String methodName) {
+        selectionProperty.setSelectionMethod(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        closure.setDelegate(this);
+        selectionProperty.closure(closure);
+    }
 }

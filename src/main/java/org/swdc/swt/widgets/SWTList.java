@@ -1,18 +1,23 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
 import java.util.ArrayList;
 
-public class SWTList extends SWTControlWidget<List> {
+public class SWTList extends SWTControlWidget<List> implements Selectionable {
 
     public  interface ListFactory<T> {
         String getValue(T obj);
     }
+
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     private List list;
 
@@ -70,11 +75,25 @@ public class SWTList extends SWTControlWidget<List> {
                     list.add(val);
                 }
             }
+            selectionProperty.manage(this);
+            list.addSelectionListener(selectionProperty.dispatcher());
             SWTWidgets.setupLayoutData(this,list);
         }
 
     }
 
+
+    @Override
+    public void onAction(String methodName) {
+        selectionProperty.setSelectionMethod(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        selectionProperty.closure(closure);
+    }
 
     @Override
     protected List getWidget(Composite parent) {

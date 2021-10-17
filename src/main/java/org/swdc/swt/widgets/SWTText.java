@@ -1,23 +1,26 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
-public class SWTText extends SWTLabelControlWidget<Text> implements Controlable {
+public class SWTText extends SWTLabelControlWidget<Text> implements Selectionable {
 
     private int flags;
 
     private Text textField;
 
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTText(int flag, String text) {
         this.flags = flag;
         this.text(text);
     }
-
 
     @Override
     public void ready() {
@@ -25,6 +28,9 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Controlable 
         if (textField == null) {
             return;
         }
+        selectionProperty.manage(this);
+        textField.addSelectionListener(selectionProperty.dispatcher());
+
         SWTWidgets.setupLayoutData(this,this.textField);
     }
 
@@ -41,6 +47,19 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Controlable 
         }
         return textField;
     }
+
+    @Override
+    public void onAction(String methodName) {
+        this.selectionProperty.setSelectionMethod(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        selectionProperty.closure(closure);
+    }
+
     public static SWTText textView(int flags, String text)  {
         return new SWTText(flags,text);
     }

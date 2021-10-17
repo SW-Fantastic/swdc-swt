@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.Stage;
 
 import java.lang.reflect.Method;
 
-public class MouseTrackProperty implements SWTProperty<String> {
+public class MouseTrackProperty implements SWTProperty<String,MouseEvent> {
 
     private SWTWidget widget;
 
@@ -34,7 +34,7 @@ public class MouseTrackProperty implements SWTProperty<String> {
         public void mouseEnter(MouseEvent mouseEvent) {
             MouseTrackProperty self = MouseTrackProperty.this;
             if (self.mouseEnterMethod != null) {
-                self.call(mouseEvent,self.mouseEnterMethod);
+                self.call(widget,mouseEvent,self.mouseEnterMethod);
             } else if (self.closureEnter != null) {
                 self.closureEnter.call(mouseEvent);
             }
@@ -44,7 +44,7 @@ public class MouseTrackProperty implements SWTProperty<String> {
         public void mouseExit(MouseEvent mouseEvent) {
             MouseTrackProperty self = MouseTrackProperty.this;
             if (self.mouseExitedMethod != null) {
-                self.call(mouseEvent,self.mouseExitedMethod);
+                self.call(widget,mouseEvent,self.mouseExitedMethod);
             } else if (self.closureExit != null) {
                 self.closureExit.call(mouseEvent);
             }
@@ -54,38 +54,13 @@ public class MouseTrackProperty implements SWTProperty<String> {
         public void mouseHover(MouseEvent mouseEvent) {
             MouseTrackProperty self = MouseTrackProperty.this;
             if (self.mouseHoverMethod != null) {
-                self.call(mouseEvent,self.mouseHoverMethod);
+                self.call(widget,mouseEvent,self.mouseHoverMethod);
             } else if (self.closureHover != null) {
                 self.closureHover.call(mouseEvent);
             }
         }
     };
 
-
-
-    private void call(MouseEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public MouseTrackAdapter dispatcher() {
         return dispatcher;

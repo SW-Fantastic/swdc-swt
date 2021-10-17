@@ -10,7 +10,7 @@ import org.swdc.swt.widgets.SWTWidgets;
 
 import java.lang.reflect.Method;
 
-public class ShellProperty implements SWTProperty<String> {
+public class ShellProperty implements SWTProperty<String,ShellEvent> {
 
     private ObservableValue<String> activeName = new ObservableValue<>();
     private Method activeMethod;
@@ -37,35 +37,35 @@ public class ShellProperty implements SWTProperty<String> {
         @Override
         public void shellActivated(ShellEvent shellEvent) {
             if (activeMethod != null){
-                call(shellEvent, activeMethod);
+                call(widget,shellEvent, activeMethod);
             }
         }
 
         @Override
         public void shellClosed(ShellEvent shellEvent) {
             if (closeMethod != null) {
-                call(shellEvent,closeMethod);
+                call(widget,shellEvent,closeMethod);
             }
         }
 
         @Override
         public void shellDeactivated(ShellEvent shellEvent) {
             if (deActiveMethod != null) {
-                call(shellEvent,deActiveMethod);
+                call(widget,shellEvent,deActiveMethod);
             }
         }
 
         @Override
         public void shellDeiconified(ShellEvent shellEvent) {
             if (deIconifiedMethod != null) {
-                call(shellEvent,deIconifiedMethod);
+                call(widget,shellEvent,deIconifiedMethod);
             }
         }
 
         @Override
         public void shellIconified(ShellEvent shellEvent) {
             if (iconifiedMethod != null) {
-                call(shellEvent,iconifiedMethod);
+                call(widget,shellEvent,iconifiedMethod);
             }
         }
 
@@ -219,30 +219,6 @@ public class ShellProperty implements SWTProperty<String> {
                 (Method method) -> this.deIconifiedMethod = method,
                 MouseEvent.class
         );
-    }
-
-    private void call(ShellEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @Override

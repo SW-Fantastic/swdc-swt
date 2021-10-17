@@ -11,7 +11,7 @@ import org.swdc.swt.widgets.SWTWidgets;
 
 import java.lang.reflect.Method;
 
-public class ExpansionProperty implements SWTProperty<String> {
+public class ExpansionProperty implements SWTProperty<String,ExpansionEvent> {
 
     private ObservableValue<String> value = new ObservableValue<>();
     private Method method;
@@ -24,36 +24,12 @@ public class ExpansionProperty implements SWTProperty<String> {
         @Override
         public void expansionStateChanged(ExpansionEvent e) {
             if (method != null) {
-                call(e,method);
+                call(widget,e,method);
             } else if (closure != null) {
                 closure.call(e);
             }
         }
     };
-
-    private void call(ExpansionEvent event, Method finalMethod) {
-        if (widget == null) {
-            return;
-        }
-        Object controller = widget.getController();
-        if (controller == null) {
-            return;
-        }
-
-        if (finalMethod == null) {
-            return;
-        }
-
-        try {
-            if (finalMethod.getParameterCount() > 0) {
-                finalMethod.invoke(controller,event);
-            } else {
-                finalMethod.invoke(controller);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void onExpansionChange(String oldVal, String newVal) {
         if (this.widget == null || widget.getController() == null || value.isEmpty()) {

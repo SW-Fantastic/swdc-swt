@@ -1,18 +1,23 @@
 package org.swdc.swt.widgets;
 
+import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scale;
+import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.RangeProperty;
 import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
+import org.swdc.swt.widgets.base.Selectionable;
 
-public class SWTScale extends SWTControlWidget<Scale> {
+public class SWTScale extends SWTControlWidget<Scale> implements Selectionable {
 
     private int flags;
 
     private Scale scale;
 
     private RangeProperty rangeProperty = new RangeProperty();
+
+    private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTScale(int flags) {
         this.flags = flags;
@@ -37,6 +42,8 @@ public class SWTScale extends SWTControlWidget<Scale> {
     public void ready() {
         super.ready();
         if (scale != null) {
+            selectionProperty.manage(this);
+            scale.addSelectionListener(selectionProperty.dispatcher());
             SWTWidgets.setupLayoutData(this,scale);
         }
     }
@@ -54,4 +61,15 @@ public class SWTScale extends SWTControlWidget<Scale> {
         return new SWTScale(flags);
     }
 
+    @Override
+    public void onAction(String methodName) {
+        this.selectionProperty.setSelectionMethod(methodName);
+    }
+
+    @Override
+    public void onAction(Closure closure) {
+        closure.setDelegate(this);
+        closure.setResolveStrategy(Closure.DELEGATE_ONLY);
+        selectionProperty.closure(closure);
+    }
 }
