@@ -7,6 +7,7 @@ import org.swdc.dependency.AnnotationLoader;
 import org.swdc.dependency.DependencyContext;
 import org.swdc.dependency.EnvironmentLoader;
 import org.swdc.dependency.LoggerProvider;
+import org.swdc.dependency.application.AbstractApplication;
 import org.swdc.dependency.application.SWApplication;
 import org.swdc.dependency.utils.AnnotationDescription;
 import org.swdc.dependency.utils.AnnotationUtil;
@@ -27,7 +28,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class SWTApplication implements SWApplication {
+public class SWTApplication extends AbstractApplication {
 
     protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -47,6 +48,8 @@ public class SWTApplication implements SWApplication {
             System.out.println(banner);
             bannerInput.close();
             logger.info(" Application initializing..");
+
+            loader.withScope(new ViewManager());
 
             Map<Class, AnnotationDescription> annotations = AnnotationUtil.getAnnotations(this.getClass());
             AnnotationDescription appDesc = AnnotationUtil.findAnnotationIn(annotations,EclipseApplication.class);
@@ -87,7 +90,8 @@ public class SWTApplication implements SWApplication {
             this.doInit(loader);
 
         } catch (Exception e) {
-
+            logger.error("failed to start  application: ",e);
+            System.exit(0);
         }
     }
 
