@@ -13,6 +13,9 @@ import java.util.List;
 
 public class TestController implements Initialize {
 
+    @Widget("tableA")
+    private SWTTable table;
+
     @Widget("lblTest")
     private SWTLabel label;
 
@@ -108,7 +111,9 @@ public class TestController implements Initialize {
 
         } catch (Exception e) {
         }
+    }
 
-
+    public void displayTable() {
+        System.err.println(table.getItems());
     }
 }

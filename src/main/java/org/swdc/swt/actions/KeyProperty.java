@@ -84,7 +84,6 @@ public class KeyProperty implements SWTProperty<String,KeyEvent> {
     public void manage(SWTWidget widget) {
         unlink();
         this.widget = widget;
-        Stage stage = widget.getStage();
         if (!keyPressedMethodName.isEmpty() && widget.getController() != null) {
             this.onKeyPressMethodChange(null,null);
         }

@@ -38,6 +38,12 @@ public class TextProperty implements Property<String> {
     public void manage(Widget widget) {
         unlink();
         this.widget = widget;
+
+        try {
+            getter = widget.getClass().getMethod("getText");
+        } catch (Exception e) {
+        }
+
         try {
             setter = widget.getClass().getMethod("setText",String.class);
             value.addListener(this::onTextChange);
@@ -45,10 +51,6 @@ public class TextProperty implements Property<String> {
         } catch (Exception e) {
         }
 
-        try {
-            getter = widget.getClass().getMethod("getText");
-        } catch (Exception e) {
-        }
 
     }
 
@@ -60,6 +62,10 @@ public class TextProperty implements Property<String> {
             return;
         }
         try {
+            String pref = getter.invoke(widget).toString();
+            if (pref.equals(value.get())) {
+                return;
+            }
             setter.invoke(widget,value.get());
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -61,8 +61,10 @@ import org.swdc.swt.widgets.pane.SWTViewForm
 @ViewController(TestController.class)
 class SWTWindow extends SWTView {
 
-    private demoTable() {
+    private demoTable(String tableId) {
         SWTTable.table(SWT.NORMAL | SWT.FULL_SELECTION).define {
+
+            id tableId
 
             data Arrays.asList(
                     new TestCell("aaa", "bbb"),
@@ -83,8 +85,11 @@ class SWTWindow extends SWTView {
                     text  "Test Col"
                     width 120
                     factory (TestCell obj) -> obj.getName()
-                    editor (TestCell obj) -> SWTButton.button(SWT.FLAT).define {
-                        text obj.getName()
+                    editor (TestCell obj) -> SWTText.textView(SWT.FLAT, obj.getName()).define {
+                        onModify {
+                            obj.setName(text())
+                            this.getController().displayTable()
+                        }
                     }
                 }
             } >> widget {
@@ -147,7 +152,7 @@ class SWTWindow extends SWTView {
                 }
             }
         } >> widget {
-            demoTable()
+            demoTable("tableA")
         } >> widget {
             SWTComboBox.comboBox(SWT.NORMAL).define {
 
@@ -404,7 +409,7 @@ class SWTWindow extends SWTView {
                                                 text "测试文本"
                                             }
                                         } >> widget {
-                                            demoTable()
+                                            demoTable("tableB")
                                         } >> widget {
                                             SWTFormExpandPane.expandPane(Section.TWISTIE).define {
                                                 text "Expand Pane"
