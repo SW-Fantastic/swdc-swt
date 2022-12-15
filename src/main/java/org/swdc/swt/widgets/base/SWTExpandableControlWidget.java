@@ -3,8 +3,6 @@ package org.swdc.swt.widgets.base;
 import groovy.lang.Closure;
 import org.eclipse.swt.events.ExpandListener;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.swdc.swt.actions.CollapseProperty;
 
 import java.lang.reflect.Method;
@@ -17,13 +15,12 @@ public abstract class SWTExpandableControlWidget<T extends Control> extends SWTL
     private Closure collapseClosure;
 
     @Override
-    public void ready() {
-        super.ready();
-        collapseProperty.manage(this);
-        T widget = getWidget();
+    public void initWidget(T created) {
         try {
-            Method adder = widget.getClass().getMethod("addExpandListener", new Class[]{ExpandListener.class});
-            adder.invoke(widget,collapseProperty.dispatcher());
+            super.initWidget(created);
+            collapseProperty.manage(this);
+            Method adder = created.getClass().getMethod("addExpandListener", new Class[]{ExpandListener.class});
+            adder.invoke(created,collapseProperty.dispatcher());
         } catch (Exception ex) {
             ex.printStackTrace();
         }

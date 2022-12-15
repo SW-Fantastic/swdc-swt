@@ -11,12 +11,12 @@ public abstract class SWTCollapseControlWidget<T extends Control> extends SWTExp
     private ExpandProperty expandProperty = new ExpandProperty();
 
     @Override
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-        T widget = super.create(parent, parentWidget, loader);
-        if (widget != null) {
-            expandProperty.manage(widget);
+    public void initWidget(T created) {
+        if (created == null) {
+            return;
         }
-        return widget;
+        super.initWidget(created);
+        expandProperty.manage(created);
     }
 
     public void expand(boolean expand) {

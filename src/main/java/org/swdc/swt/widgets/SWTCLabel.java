@@ -15,17 +15,23 @@ public class SWTCLabel extends SWTLabelControlWidget<CLabel> implements Controla
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(CLabel created) {
         if (this.label == null) {
             return;
         }
+        super.initWidget(label);
     }
 
     @Override
-    protected CLabel getWidget(Composite parent) {
+    public CLabel getWidget() {
+        return label;
+    }
+
+    @Override
+    public CLabel getWidget(Composite parent) {
         if (label == null && parent != null) {
             label = new CLabel(parent,flag);
+            initWidget(label);
         }
         return label;
     }

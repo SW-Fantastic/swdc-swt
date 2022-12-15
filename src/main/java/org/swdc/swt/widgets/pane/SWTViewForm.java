@@ -5,11 +5,9 @@ import org.eclipse.swt.custom.ViewForm;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -30,25 +28,29 @@ public class SWTViewForm extends SWTControlWidget<ViewForm> implements SWTContai
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ViewForm created) {
         if (viewForm == null) {
             return;
         }
+        super.initWidget(viewForm);
         if (this.right != null) {
-            Widget widget = right.create(this.viewForm,this);
+            right.setParent(this);
+            Widget widget = right.getWidget(this.viewForm);
             viewForm.setTopRight((Control) widget);
         }
         if (this.left != null) {
-            Widget widget = left.create(this.viewForm,this);
+            left.setParent(this);
+            Widget widget = left.getWidget(this.viewForm);
             viewForm.setTopLeft((Control) widget);
         }
         if (this.center != null) {
-            Widget widget = center.create(this.viewForm,this);
+            center.setParent(this);
+            Widget widget = center.getWidget(this.viewForm);
             viewForm.setTopCenter((Control) widget);
         }
         if (this.bottom != null) {
-            Widget widget = bottom.create(this.viewForm,this);
+            bottom.setParent(this);
+            Widget widget = bottom.getWidget(this.viewForm);
             viewForm.setContent((Control) widget);
         }
         SWTWidgets.setupLayoutData(this,viewForm);
@@ -119,6 +121,7 @@ public class SWTViewForm extends SWTControlWidget<ViewForm> implements SWTContai
     public ViewForm getWidget(Composite parent) {
         if (viewForm == null && parent != null) {
             viewForm = new ViewForm(parent,flag);
+            initWidget(viewForm);
         }
         return viewForm;
     }

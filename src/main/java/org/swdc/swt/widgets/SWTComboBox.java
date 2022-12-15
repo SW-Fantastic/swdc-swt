@@ -8,7 +8,6 @@ import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.beans.ObservableValue;
 import org.swdc.swt.beans.TextSelectionProperty;
-import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -49,6 +48,11 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Selecti
                 itemsMap.put(text,elem);
             }
         }
+    }
+
+    @Override
+    public Combo getWidget() {
+        return combo;
     }
 
     public <T> T selected() {
@@ -103,9 +107,9 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Selecti
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Combo created) {
         if (combo != null) {
+            super.initWidget(combo);
             SWTWidgets.setupLayoutData(this,this.combo);
             if (this.itemList.size() > 0 ){
                 List<Object> data = new ArrayList<>(itemList);
@@ -127,10 +131,10 @@ public class SWTComboBox extends SWTLabelControlWidget<Combo> implements Selecti
     }
 
     @Override
-    protected Combo getWidget(Composite parent) {
+    public Combo getWidget(Composite parent) {
         if (this.combo == null && parent != null) {
             this.combo = new Combo(parent,this.flag);
-
+            initWidget(combo);
         }
         return combo;
     }

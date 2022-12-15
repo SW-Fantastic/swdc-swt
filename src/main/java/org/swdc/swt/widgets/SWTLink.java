@@ -4,8 +4,6 @@ import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Link;
 import org.swdc.swt.actions.SelectionProperty;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -26,9 +24,9 @@ public class SWTLink extends SWTLabelControlWidget<Link> implements Selectionabl
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Link created) {
         if (this.link != null) {
+            super.initWidget(link);
             selectionProperty.manage(this);
             link.addSelectionListener(selectionProperty.dispatcher());
             SWTWidgets.setupLayoutData(this,this.link);
@@ -36,9 +34,15 @@ public class SWTLink extends SWTLabelControlWidget<Link> implements Selectionabl
     }
 
     @Override
-    protected Link getWidget(Composite parent) {
+    public Link getWidget() {
+        return link;
+    }
+
+    @Override
+    public Link getWidget(Composite parent) {
         if (link == null && parent != null) {
             link = new Link(parent,this.flags);
+            initWidget(link);
         }
         return link;
     }

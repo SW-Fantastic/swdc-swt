@@ -38,21 +38,26 @@ public class SWTSpinner extends SWTControlWidget<Spinner> implements Selectionab
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public Spinner getWidget() {
+        return spinner;
+    }
+
+    @Override
+    public void initWidget(Spinner created) {
         if (this.spinner != null) {
             selectionProperty.manage(this);
+            rangeProperty.manage(spinner);
             spinner.addSelectionListener(selectionProperty.dispatcher());
             SWTWidgets.setupLayoutData(this,spinner);
+            super.initWidget(spinner);
         }
     }
 
     @Override
-    protected Spinner getWidget(Composite parent) {
+    public Spinner getWidget(Composite parent) {
         if (this.spinner == null && parent != null) {
             spinner = new Spinner(parent,this.flag);
-
-            rangeProperty.manage(spinner);
+            initWidget(spinner);
         }
         return spinner;
     }

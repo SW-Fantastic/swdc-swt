@@ -4,7 +4,6 @@ import groovy.lang.Closure;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.swdc.swt.actions.SelectionProperty;
-import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -21,9 +20,14 @@ public class SWTDateTime extends SWTControlWidget<DateTime> implements Selection
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public DateTime getWidget() {
+        return dateTime;
+    }
+
+    @Override
+    public void initWidget(DateTime created) {
         if (this.dateTime != null) {
+            super.initWidget(dateTime);
             SWTWidgets.setupLayoutData(this,this.dateTime);
             selectionProperty.manage(this);
             dateTime.addSelectionListener(selectionProperty.dispatcher());
@@ -31,12 +35,13 @@ public class SWTDateTime extends SWTControlWidget<DateTime> implements Selection
     }
 
     @Override
-    protected DateTime getWidget(Composite parent) {
+    public DateTime getWidget(Composite parent) {
         if (dateTime == null && parent != null) {
             dateTime = new DateTime(parent,this.flag);
             if (this.getLayoutData() != null ) {
                 dateTime.setLayoutData(getLayoutData().get());
             }
+            initWidget(dateTime);
         }
         return dateTime;
     }

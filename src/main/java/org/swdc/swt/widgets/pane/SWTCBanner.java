@@ -5,11 +5,9 @@ import org.eclipse.swt.custom.CBanner;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -29,22 +27,22 @@ public class SWTCBanner extends SWTControlWidget<CBanner> implements SWTContaine
     }
 
     @Override
-    public void ready() {
-        super.ready();
-        if (this.banner == null) {
+    public void initWidget(CBanner created) {
+        if (created == null) {
             return;
         }
+        super.initWidget(created);
         if (this.right != null) {
-            Control widget = (Control) right.create(this.banner,this);
+            Control widget = (Control) right.getWidget(banner);
             banner.setRight(widget);
             banner.setRightWidth(widget.getSize().x);
         }
         if (this.left != null) {
-            Widget widget = left.create(this.banner,this);
+            Widget widget = left.getWidget(banner);
             banner.setLeft((Control) widget);
         }
         if (this.bottom != null) {
-            Widget widget = bottom.create(this.banner,this);
+            Widget widget = bottom.getWidget(banner);
             banner.setBottom((Control) widget);
         }
 
@@ -107,6 +105,7 @@ public class SWTCBanner extends SWTControlWidget<CBanner> implements SWTContaine
             if (this.getLayoutData() != null) {
                 banner.setLayoutData(getLayoutData().get());
             }
+            this.initWidget(banner);
         }
         return banner;
     }

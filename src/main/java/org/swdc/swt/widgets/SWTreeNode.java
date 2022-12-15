@@ -66,6 +66,10 @@ public class SWTreeNode<T> {
         }
     }
 
+    public void setLabelFactory(Function<T, String> labelFactory) {
+        this.labelFactory = labelFactory;
+    }
+
     public void refresh(){
         Tree tree = this.tree.getWidget();
         if (tree == null) {
@@ -80,7 +84,7 @@ public class SWTreeNode<T> {
             }
         }
 
-        item.setText(value.toString());
+        item.setText(labelFactory.apply(value));
 
         for (SWTreeNode<T> node : children) {
             node.refresh();

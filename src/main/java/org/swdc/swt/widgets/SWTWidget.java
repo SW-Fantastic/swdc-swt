@@ -2,15 +2,12 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Widget;
 import org.swdc.swt.Modifiable;
 import org.swdc.swt.SWTViewLoader;
-import org.swdc.swt.ViewRequire;
 import org.swdc.swt.actions.DisposeProperty;
 import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.layouts.LayoutData;
 
 import java.lang.reflect.Field;
@@ -153,7 +150,6 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         }
     }
 
-
     public SWTWidget getFirst(){
         if (this.prev == null) {
             return this;
@@ -186,28 +182,6 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         return layoutData;
     }
 
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-
-        this.loader = loader;
-
-        this.parent = parentWidget;
-        this.widget = getWidget(parent);
-        // 通用属性
-        this.sizeProperty.manage(widget);
-        this.colorProperty.manage(widget);
-        this.disposeProperty.manage(this);
-
-        Object controller =  loader.getController((SWTWidget) this.getParent());
-
-        if (controller != null) {
-            this.setupController(controller);
-        }
-
-        this.ready();
-
-        return widget;
-    }
-
     public <R extends SWTWidget<T>> R onDispose(String method) {
         disposeProperty.setDisposeMethod(method);
         return (R)this;
@@ -215,10 +189,6 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
 
     public String getDisposeMethod() {
         return disposeProperty.getDisposeMethod();
-    }
-
-    public <S extends SWTWidget & SWTContainer> T create(Composite parent,S parentWidget) {
-        return create(parent,parentWidget,parentWidget.getLoader());
     }
 
     public SWTViewLoader getLoader() {
@@ -229,15 +199,48 @@ public abstract class SWTWidget<T extends Widget> implements Modifiable<SWTWidge
         this.loader = loader;
     }
 
+    public void setParent(SWTContainer parent) {
+        if (this.getLoader() == null && parent != null) {
+            SWTContainer iter = parent;
+            while (iter.getLoader() == null) {
+                if (iter instanceof SWTWidget) {
+                    iter = ((SWTWidget<?>) iter).getParent();
+                } else {
+                    break;
+                }
+            }
+            if (iter.getLoader() != null) {
+                this.setLoader(iter.getLoader());
+            }
+        }
+        this.parent = parent;
+    }
+
     /**
      * 创建SWT组件
      * @param parent
      * @return
      */
-    protected abstract T getWidget(Composite parent);
+    public abstract T getWidget(Composite parent);
 
-    public void ready() {
+    protected void initWidget(T created) {
+        // 通用属性
+        this.sizeProperty.manage(created);
+        this.colorProperty.manage(created);
+        this.disposeProperty.manage(this);
 
+        if (this.getLoader() != null) {
+            Object subControl = this.getLoader().getController(this);
+            setupController(subControl);
+
+            SWTWidget parent = (SWTWidget) this.getParent();
+            if (parent != null) {
+                Object ctrl = this.getLoader().getController(parent);
+                if (ctrl != subControl && getId() != null && !this.getId().isEmpty()) {
+                    setupController(ctrl);
+                }
+            }
+        }
     }
 
     public SWTWidget<T> id(String id) {

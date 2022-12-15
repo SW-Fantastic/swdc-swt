@@ -23,10 +23,10 @@ public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionab
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ToolItem created) {
         if (this.widget != null && item != null) {
-            Widget widget = this.widget.create(item.getParent(),this);
+            super.initWidget(item);
+            Widget widget = this.widget.getWidget(item.getParent());
             item.setControl((Control) widget);
 
             // 接管本组件的SelectionEvent
@@ -55,13 +55,14 @@ public class SWTToolItem extends SWTLabelWidget<ToolItem> implements Selectionab
     }
 
     @Override
-    protected ToolItem getWidget(Composite parent) {
+    public ToolItem getWidget(Composite parent) {
         if (!(parent instanceof ToolBar)) {
             throw new RuntimeException("ToolItem 必须放置在ToolBar里面");
         }
         ToolBar toolBar = (ToolBar) parent;
         if (item == null) {
             item = new ToolItem(toolBar,flag);
+            initWidget(item);
         }
 
         return item;

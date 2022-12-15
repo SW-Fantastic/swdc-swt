@@ -2,11 +2,8 @@ package org.swdc.swt.widgets.pane;
 
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.*;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTLabelWidget;
 
 import java.util.Arrays;
@@ -25,7 +22,7 @@ public class SWTTab extends SWTLabelWidget<TabItem> implements SWTContainer {
     }
 
     @Override
-    protected TabItem getWidget(Composite parent) {
+    public TabItem getWidget(Composite parent) {
         if (parent == null) {
             return null;
         }
@@ -37,17 +34,19 @@ public class SWTTab extends SWTLabelWidget<TabItem> implements SWTContainer {
 
         if (item == null) {
             item = new TabItem(tabFolder,this.flag);
+            initWidget(item);
         }
         return item;
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(TabItem created) {
         if (widget == null) {
             return;
         }
-        Widget view = widget.create(this.item.getParent(),this);
+        super.initWidget(item);
+        widget.setParent(getParent());
+        Widget view = widget.getWidget(this.item.getParent());
         Control target = (Control) view;
         if (target instanceof ScrolledComposite) {
             target = target.getParent();

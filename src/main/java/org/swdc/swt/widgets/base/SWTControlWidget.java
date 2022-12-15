@@ -45,19 +45,10 @@ public abstract class SWTControlWidget<T extends Control> extends SWTWidget<T>
     private EnableProperty enableProperty = new EnableProperty();
 
     @Override
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-        T widget = super.create(parent, parentWidget, loader);
+    public void initWidget(T widget) {
+        super.initWidget(widget);
         if (widget != null) {
             enableProperty.manage(widget);
-        }
-        return widget;
-    }
-
-    @Override
-    public void ready() {
-        super.ready();
-        T widget = this.getWidget();
-        if (widget != null) {
 
             widget.addControlListener(controlProperty.dispatcher());
             controlProperty.manage(this);

@@ -4,11 +4,8 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.widgets.*;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTLabelWidget;
 
 import java.util.Arrays;
@@ -27,7 +24,7 @@ public class SWTCTab extends SWTLabelWidget<CTabItem> implements SWTContainer {
     }
 
     @Override
-    protected CTabItem getWidget(Composite parent) {
+    public CTabItem getWidget(Composite parent) {
         if (parent == null) {
             return null;
         }
@@ -40,16 +37,18 @@ public class SWTCTab extends SWTLabelWidget<CTabItem> implements SWTContainer {
         if (item == null) {
             item = new CTabItem(tabFolder,this.flag);
         }
+        initWidget(item);
         return item;
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(CTabItem created) {
         if (widget == null || item == null) {
             return;
         }
-        Widget view = widget.create(this.item.getParent(),this);
+        super.initWidget(item);
+        widget.setParent(getParent());
+        Widget view = widget.getWidget(this.item.getParent());
         Control target = (Control) view;
         if (target instanceof ScrolledComposite) {
             target = target.getParent();

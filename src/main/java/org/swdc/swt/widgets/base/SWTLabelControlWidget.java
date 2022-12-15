@@ -11,13 +11,12 @@ public abstract class SWTLabelControlWidget<T extends Control> extends SWTContro
     private TextProperty property = new TextProperty();
 
     @Override
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-        T widget = super.create(parent, parentWidget,loader);
+    public void initWidget(T widget) {
+        super.initWidget(widget);
         if (widget == null) {
-            return widget;
+            return;
         }
         property.manage(widget);
-        return widget;
     }
 
     public <R extends SWTLabelControlWidget> R text(String text) {

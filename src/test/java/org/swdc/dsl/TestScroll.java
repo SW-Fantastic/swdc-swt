@@ -49,7 +49,7 @@ public class TestScroll {
         pane.children(new SWTPane(SWT.NORMAL).size(1000,1000));
         pane.layout(SWTGridLayout.cell().fillHeight(false).fillWidth(true));
 
-        pane.create(shell,null);
+        pane.getWidget(shell);
 
         StageTest test = new StageTest();
         test.children(pane);

@@ -5,7 +5,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.actions.SelectionProperty;
-import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -23,11 +22,11 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Selectionabl
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Text created) {
         if (textField == null) {
             return;
         }
+        super.initWidget(textField);
         selectionProperty.manage(this);
         textField.addSelectionListener(selectionProperty.dispatcher());
 
@@ -35,7 +34,7 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Selectionabl
     }
 
     @Override
-    protected Text getWidget(Composite parent) {
+    public Text getWidget(Composite parent) {
         if (this.textField == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -44,7 +43,13 @@ public class SWTText extends SWTLabelControlWidget<Text> implements Selectionabl
             } else {
                 textField = new Text(parent,this.flags);
             }
+            initWidget(textField);
         }
+        return textField;
+    }
+
+    @Override
+    public Text getWidget() {
         return textField;
     }
 

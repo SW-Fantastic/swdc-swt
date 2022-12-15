@@ -5,21 +5,7 @@ import org.swdc.swt.views.SWTView;
 import org.swdc.swt.views.View;
 import org.swdc.swt.widgets.Stage;
 
-@SWTView("TestWindow")
+@SWTView(value = "TestWindow",minWidth = 800,minHeight = 600)
 public class SWTTestView extends View {
-
-    @Override
-    public void config(Stage stage) {
-
-        stage.layout(SWTGridLayout
-                .gridLayout()
-                .margin(6,6)
-                .spacing(8,8)
-                .columns(6))
-                .size(800,600)
-                .text("swt demo");
-
-    }
-
 
 }

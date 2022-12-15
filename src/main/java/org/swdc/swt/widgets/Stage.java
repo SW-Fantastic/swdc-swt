@@ -108,8 +108,8 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Shell created) {
+        super.initWidget(created);
 
         SWTMenu menu = this.menu();
         if (menu != null) {
@@ -123,6 +123,12 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
         }
 
         if (!initialized) {
+            SWTWidget curr = widget;
+            while (curr != null) {
+                curr.setParent(this);
+                curr.getWidget(shell);
+                curr = curr.getNext();
+            }
             Object controller = this.getController();
             if (controller instanceof Initialize) {
                 Initialize initialize = (Initialize) controller;
@@ -135,6 +141,7 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
     }
 
     public void show() {
+
         shell.setVisible(true);
         shell.moveAbove(null);
     }
@@ -149,6 +156,7 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
     }
 
     public void open() {
+
         shell.removeShellListener(defaultActions);
         shell.open();
     }
@@ -158,6 +166,9 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
     }
 
     public Shell getShell() {
+        if (shell != null && !this.initialized) {
+            this.initWidget(shell);
+        }
         return shell;
     }
 
@@ -167,7 +178,10 @@ public class Stage extends SWTControlWidget<Shell> implements SWTContainer, Wind
     }
 
     @Override
-    protected Shell getWidget(Composite parent) {
+    public Shell getWidget(Composite parent) {
+        if (shell != null && !this.initialized) {
+            this.initWidget(shell);
+        }
         return shell;
     }
 

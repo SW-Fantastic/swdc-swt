@@ -4,7 +4,6 @@ import groovy.lang.Closure;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.widgets.Composite;
 import org.swdc.swt.actions.SelectionProperty;
-import org.swdc.swt.widgets.base.Controlable;
 import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -20,19 +19,25 @@ public class SWTCComboBox extends SWTLabelControlWidget<CCombo> implements Selec
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(CCombo created) {
         if (cCombo == null){
             return;
         }
+        super.initWidget(cCombo);
         selectionProperty.manage(this);
         cCombo.addSelectionListener(selectionProperty.dispatcher());
     }
 
     @Override
-    protected CCombo getWidget(Composite parent) {
+    public CCombo getWidget() {
+        return cCombo;
+    }
+
+    @Override
+    public CCombo getWidget(Composite parent) {
         if (cCombo == null && parent != null) {
             cCombo = new CCombo(parent,this.flag);
+            initWidget(cCombo);
         }
         return cCombo;
     }

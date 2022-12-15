@@ -22,15 +22,16 @@ public class SWTExpandBar extends SWTExpandableControlWidget<ExpandBar> implemen
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ExpandBar created) {
         if (expandBar == null) {
             return;
         }
+        super.initWidget(expandBar);
         if (widget != null && widget instanceof SWTExpandItem) {
             SWTExpandItem item = (SWTExpandItem) widget;
             while (item != null){
-                item.create(expandBar,this);
+                item.setParent(this);
+                item.getWidget(expandBar);
                 item = (SWTExpandItem) item.getNext();
             }
          }
@@ -38,9 +39,10 @@ public class SWTExpandBar extends SWTExpandableControlWidget<ExpandBar> implemen
     }
 
     @Override
-    protected ExpandBar getWidget(Composite parent) {
+    public ExpandBar getWidget(Composite parent) {
         if (expandBar == null && parent != null) {
             this.expandBar = new ExpandBar(parent,this.flag);
+            initWidget(expandBar);
         }
         return expandBar;
     }

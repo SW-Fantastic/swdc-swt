@@ -2,22 +2,18 @@ package org.swdc.swt.widgets;
 
 import groovy.lang.Closure;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, Selectionable {
@@ -46,6 +42,8 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
 
     private ObservableArrayList<Object> items = new ObservableArrayList<>();
 
+    private Map<TableItem, Map<SWTTableColumn, TableEditor>> editors = new HashMap<>();
+
     private SelectionProperty selectionProperty = new SelectionProperty();
 
     public SWTTable(int flags) {
@@ -53,27 +51,25 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
     }
 
     @Override
-    public void ready() {
-
-        super.ready();
+    public void initWidget(Table created) {
 
         if (table == null) {
             return;
         }
+        super.initWidget(table);
 
         this.table.setHeaderVisible(showHeader);
         this.table.setLinesVisible(lines);
         if (this.columns != null) {
-            SWTWidget item = columns.getFirst();
+            SWTTableColumn item =(SWTTableColumn) columns.getFirst();
             while (item != null) {
-                item.create(this.table,this);
-                item = item.getNext();
+                item.getWidget(table);
+                item = (SWTTableColumn)item.getNext();
             }
         }
 
         if (this.items != null && this.items.size() > 0 ) {
-            List<Object> copied = new ArrayList<>(this.items);
-            this.data(copied);
+            this.refresh();
         }
 
         if (fixColumnWidth) {
@@ -84,11 +80,14 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
         this.table.addSelectionListener(selectionProperty.dispatcher());
 
         SWTWidgets.setupLayoutData(this,this.table);
+        this.items.addListener(changed -> {
+            this.refresh();
+        });
 
     }
 
     @Override
-    protected Table getWidget(Composite parent) {
+    public Table getWidget(Composite parent) {
         if (this.table == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -97,6 +96,7 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
             } else {
                 this.table = new Table(parent,this.flags);
             }
+            this.initWidget(table);
         }
         return table;
     }
@@ -114,16 +114,13 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
         return this;
     }
 
-    public SWTTable data(List<Object> data) {
-        this.items.clear();
-        this.items.addAll(data);
+    public SWTTable refresh(){
         if (this.table != null) {
             for (TableItem obj: table.getItems()){
                 obj.dispose();
             }
             this.table.clearAll();
-
-            for (Object item: data) {
+            for (Object item: this.items) {
                 TableItem cell = new TableItem(this.table,SWT.NORMAL);
                 SWTTableColumn column = (SWTTableColumn) this.columns;
 
@@ -134,6 +131,27 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
                         cell.setText(columnIndex,"");
                     } else {
                         cell.setText(columnIndex,factory.getValue(item));
+                    }
+                    SWTTableColumn.ColumnEditorFactory editorFactory = column.getEditorFactory();
+                    if (editorFactory != null) {
+                        Map<SWTTableColumn,TableEditor> colEditorMap = editors
+                                .computeIfAbsent(cell, t -> new HashMap<>());
+                        if (colEditorMap.containsKey(column)) {
+                            TableEditor editor = colEditorMap.remove(column);
+                            editor.getEditor()
+                                    .dispose();
+                        }
+                        SWTWidget swtCtrl = editorFactory.create(item);
+
+                        Control widget = (Control) swtCtrl.getWidget(table);
+                        widget.computeSize(SWT.DEFAULT,table.getItemHeight());
+
+                        TableEditor editor = new TableEditor(table);
+                        editor.grabHorizontal = true;
+                        editor.grabVertical = true;
+                        editor.setEditor(widget,cell,columnIndex);
+
+                        colEditorMap.put(column,editor);
                     }
                     column = (SWTTableColumn) column.getNext();
                     columnIndex ++;
@@ -146,6 +164,14 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
 
         }
         return this;
+    }
+
+    public SWTTable data(List<Object> data) {
+        if (data != null) {
+            this.items.clear();
+            this.items.addAll(data);
+        }
+        return refresh();
     }
 
     @Override
@@ -180,10 +206,6 @@ public class SWTTable extends SWTControlWidget<Table> implements SWTContainer, S
         return items;
     }
 
-    public void setItems(ObservableArrayList<Object> items) {
-        this.items = items;
-        this.items = items;
-    }
 
     @Override
     public void onAction(String methodName) {

@@ -11,12 +11,11 @@ public abstract class SWTExpandableWidget<T extends Widget> extends SWTLabelWidg
     private ExpandProperty expandProperty = new ExpandProperty();
 
     @Override
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-        T widget = super.create(parent, parentWidget, loader);
-        if (widget != null) {
-            expandProperty.manage(widget);
+    protected void initWidget(T created) {
+        if (created != null) {
+            expandProperty.manage(created);
+            super.initWidget(created);
         }
-        return widget;
     }
 
     public void expand(boolean expand) {

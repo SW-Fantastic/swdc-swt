@@ -17,14 +17,19 @@ public class SWTLabel extends SWTLabelControlWidget<Label> {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public Label getWidget() {
+        return label;
+    }
+
+    @Override
+    public void initWidget(Label created) {
         if (this.label != null) {
             SWTWidgets.setupLayoutData(this,label);
+            super.initWidget(label);
         }
     }
 
-    protected Label getWidget(Composite parent) {
+    public Label getWidget(Composite parent) {
         if (label == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -33,6 +38,7 @@ public class SWTLabel extends SWTLabelControlWidget<Label> {
             }  else {
                 label =  new Label(parent,flag);
             }
+            initWidget(label);
         }
         return label;
     }

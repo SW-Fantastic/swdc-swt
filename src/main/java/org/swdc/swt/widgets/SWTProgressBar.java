@@ -18,19 +18,25 @@ public class SWTProgressBar extends SWTControlWidget<ProgressBar> {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ProgressBar created) {
         if (progressBar == null) {
             return;
         }
+        super.initWidget(progressBar);
         SWTWidgets.setupLayoutData(this,this.progressBar);
     }
 
     @Override
-    protected ProgressBar getWidget(Composite parent) {
+    public ProgressBar getWidget() {
+        return progressBar;
+    }
+
+    @Override
+    public ProgressBar getWidget(Composite parent) {
         if (progressBar == null && parent != null) {
             this.progressBar = new ProgressBar(parent,this.flag);
             this.progressProperty.manage(progressBar);
+            initWidget(progressBar);
         }
         return progressBar;
     }

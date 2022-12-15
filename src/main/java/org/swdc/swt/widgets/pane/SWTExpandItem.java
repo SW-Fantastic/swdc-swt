@@ -1,14 +1,10 @@
 package org.swdc.swt.widgets.pane;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
 import org.swdc.swt.beans.ExpandProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTExpandableWidget;
-import org.swdc.swt.widgets.base.SWTLabelWidget;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,18 +23,18 @@ public class SWTExpandItem extends SWTExpandableWidget<ExpandItem> implements SW
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ExpandItem created) {
         if (widget != null){
-            SWTExpandBar bar = (SWTExpandBar)this.getParent();
-            Widget widget = this.widget.create(bar.getWidget(),this);
+            super.initWidget(created);
+            widget.setParent(getParent());
+            Widget widget = this.widget.getWidget(created.getParent());
             item.setControl((Control) widget);
             this.expandProperty.manage(item);
         }
     }
 
     @Override
-    protected ExpandItem getWidget(Composite parent) {
+    public ExpandItem getWidget(Composite parent) {
         if (!(parent instanceof ExpandBar ) ){
             throw new RuntimeException("parent必须是ExpandBar");
         }
@@ -47,8 +43,8 @@ public class SWTExpandItem extends SWTExpandableWidget<ExpandItem> implements SW
             if (this.item == null && parent != null) {
                 this.item = new ExpandItem(bar,this.flag);
             }
+            initWidget(item);
         }
-
         return item;
     }
 

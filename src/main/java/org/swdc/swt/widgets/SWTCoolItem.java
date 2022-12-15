@@ -21,10 +21,9 @@ public class SWTCoolItem extends SWTLabelWidget<CoolItem> implements SWTContaine
 
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(CoolItem created) {
         if (this.widget != null && item != null) {
-            Widget widget = this.widget.create(item.getParent(),this);
+            Widget widget = this.widget.getWidget(item.getParent());
             Point size = this.widget.size();
 
             item.setSize(size.x,size.y);
@@ -36,6 +35,7 @@ public class SWTCoolItem extends SWTLabelWidget<CoolItem> implements SWTContaine
                 item.setSize(sizeChange.x,sizeChange.y);
                 item.setPreferredSize(sizeChange.x,sizeChange.y);
             });
+            super.initWidget(item);
 
         }
     }
@@ -58,13 +58,14 @@ public class SWTCoolItem extends SWTLabelWidget<CoolItem> implements SWTContaine
     }
 
     @Override
-    protected CoolItem getWidget(Composite parent) {
+    public CoolItem getWidget(Composite parent) {
         if (!(parent instanceof CoolBar)) {
             throw new RuntimeException("ToolItem 必须放置在ToolBar里面");
         }
         CoolBar toolBar = (CoolBar) parent;
         if (item == null && parent != null) {
             item = new CoolItem(toolBar,flag);
+            initWidget(item);
         }
 
         return item;

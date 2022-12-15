@@ -2,7 +2,6 @@ package org.swdc.swt.widgets;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.ToolBar;
-import org.swdc.swt.beans.ColorProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 public class SWTToolBar extends SWTControlWidget<ToolBar> implements SWTContainer {
@@ -17,27 +16,31 @@ public class SWTToolBar extends SWTControlWidget<ToolBar> implements SWTContaine
     }
 
     @Override
-    protected ToolBar getWidget(Composite parent) {
+    public ToolBar getWidget(Composite parent) {
         if (toolBar == null && parent != null) {
             toolBar = new ToolBar(parent,flag);
+            initWidget(toolBar);
         }
         return toolBar;
     }
 
+    public ToolBar getWidget() {
+        return toolBar;
+    }
+
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ToolBar created) {
         if (toolBar == null) {
             return;
         }
+        super.initWidget(toolBar);
         if (this.widget != null) {
             SWTToolItem item = this.widget;
             while (item != null) {
-                item.create(toolBar,this);
+                item.getWidget(toolBar);
                 item = (SWTToolItem) item.getNext();
             }
         }
-
         SWTWidgets.setupLayoutData(this,toolBar);
     }
 

@@ -2,12 +2,10 @@ package org.swdc.swt.widgets.pane;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -37,18 +35,19 @@ public class SWTTabPane extends SWTControlWidget<TabFolder> implements SWTContai
 
 
     @Override
-    protected TabFolder getWidget(Composite parent) {
+    public TabFolder getWidget(Composite parent) {
         if (this.folder == null && parent != null){
             this.folder = new TabFolder(parent,flags);
 
             if (this.layout != null) {
                 folder.setLayout(layout.getLayout());
             }
-
+            initWidget(folder);
             if (this.tabs != null) {
                 SWTTab item = (SWTTab) tabs.getFirst();
                 while (item != null) {
-                    item.create(this.folder,this);
+                    item.setParent(this);
+                    item.getWidget(this.folder);
                     item = (SWTTab) item.getNext();
                 }
             }
@@ -57,11 +56,11 @@ public class SWTTabPane extends SWTControlWidget<TabFolder> implements SWTContai
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(TabFolder created) {
         if (folder == null) {
             return;
         }
+        super.initWidget(folder);
         if (this.tabs != null) {
             SWTTab item = (SWTTab) tabs.getFirst();
             while (item != null) {

@@ -5,7 +5,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.actions.TreeProperty;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.Selectionable;
 
 public class SWTTree extends SWTWidget<Tree> implements Selectionable {
@@ -27,11 +26,16 @@ public class SWTTree extends SWTWidget<Tree> implements Selectionable {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public Tree getWidget() {
+        return tree;
+    }
+
+    @Override
+    public void initWidget(Tree created) {
         if (tree == null) {
             return;
         }
+        super.initWidget(tree);
         selectionProperty.manage(this);
         tree.addSelectionListener(selectionProperty.dispatcher());
 
@@ -42,12 +46,13 @@ public class SWTTree extends SWTWidget<Tree> implements Selectionable {
     }
 
     @Override
-    protected Tree getWidget(Composite parent) {
+    public Tree getWidget(Composite parent) {
         if (this.tree == null && parent != null) {
             tree = new Tree(parent,flag);
             if (this.getLayoutData() != null) {
                 tree.setLayoutData(getLayoutData().get());
             }
+            this.initWidget(tree);
         }
         return tree;
     }

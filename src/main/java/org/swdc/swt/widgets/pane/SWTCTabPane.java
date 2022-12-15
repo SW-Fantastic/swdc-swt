@@ -3,12 +3,10 @@ package org.swdc.swt.widgets.pane;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.widgets.Composite;
 import org.swdc.swt.beans.SelectProperty;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -39,33 +37,34 @@ public class SWTCTabPane extends SWTControlWidget<CTabFolder> implements SWTCont
     }
 
     @Override
-    protected CTabFolder getWidget(Composite parent) {
+    public CTabFolder getWidget(Composite parent) {
         if (this.folder == null && parent != null){
             this.folder = new CTabFolder(parent,flags);
 
             if (this.layout != null) {
                 folder.setLayout(layout.getLayout());
             }
-
+            this.selectProperty.manage(folder);
+            initWidget(folder);
             if (this.tabs != null) {
                 SWTCTab item = (SWTCTab) tabs.getFirst();
                 while (item != null) {
-                    item.create(this.folder,this);
+                    item.setParent(this);
+                    item.getWidget(this.folder);
                     item = (SWTCTab) item.getNext();
                 }
             }
-            this.selectProperty.manage(folder);
         }
 
         return folder;
     }
 
     @Override
-    public void ready() {
-        super.ready();
-        if (folder == null) {
+    public void initWidget(CTabFolder created) {
+        if (created == null) {
             return;
         }
+        super.initWidget(created);
         if (this.tabs != null) {
             SWTCTab item = (SWTCTab) tabs.getFirst();
             while (item != null) {

@@ -22,7 +22,7 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
     }
 
     @Override
-    protected Button getWidget(Composite parent) {
+    public Button getWidget(Composite parent) {
         if (this.button == null && parent != null) {
             if (SWTWidgets.isFormAPI(parent)) {
                 FormToolkit toolkit = SWTWidgets.factory();
@@ -31,6 +31,7 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
             } else {
                 button = new Button(parent,flags);
             }
+            this.initWidget(button);
         }
         return button;
     }
@@ -44,17 +45,21 @@ public class SWTButton extends SWTLabelControlWidget<Button> implements Selectio
     }
 
     @Override
-    public void ready() {
-        super.ready();
-        if (button == null) {
+    public void initWidget(Button created) {
+        if (created == null) {
             return;
         }
+        super.initWidget(created);
         SWTWidgets.setupLayoutData(this,this.button);
-
         // 接管本组件的SelectionEvent
         selectionProperty.manage(this);
         // 添加本Section的Listener到button。
         button.addSelectionListener(selectionProperty.dispatcher());
+    }
+
+    @Override
+    public Button getWidget() {
+        return button;
     }
 
     public void onAction(Closure closure) {

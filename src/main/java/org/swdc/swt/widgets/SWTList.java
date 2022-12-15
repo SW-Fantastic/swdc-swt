@@ -5,11 +5,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.List;
 import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.ObservableArrayList;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
-
-import java.util.ArrayList;
 
 public class SWTList extends SWTControlWidget<List> implements Selectionable {
 
@@ -63,9 +60,14 @@ public class SWTList extends SWTControlWidget<List> implements Selectionable {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public List getWidget() {
+        return list;
+    }
+
+    @Override
+    public void initWidget(List created) {
         if (list != null) {
+            super.initWidget(list);
             if (data != null && factory != null) {
                 for (Object item : data) {
                     if (item == null) {
@@ -96,9 +98,10 @@ public class SWTList extends SWTControlWidget<List> implements Selectionable {
     }
 
     @Override
-    protected List getWidget(Composite parent) {
+    public List getWidget(Composite parent) {
         if (this.list == null && parent != null) {
             list = new List(parent,flags);
+            initWidget(list);
         }
         return list;
     }

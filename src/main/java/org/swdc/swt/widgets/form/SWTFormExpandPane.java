@@ -1,22 +1,15 @@
 package org.swdc.swt.widgets.form;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.forms.events.ExpansionAdapter;
 import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.swdc.swt.beans.ExpandProperty;
-import org.swdc.swt.beans.SizeProperty;
-import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
-import org.swdc.swt.widgets.base.SWTCollapseControlWidget;
 import org.swdc.swt.widgets.base.SWTExpansationControlWidget;
-import org.swdc.swt.widgets.base.SWTLabelControlWidget;
 
 public class SWTFormExpandPane extends SWTExpansationControlWidget<ExpandableComposite> implements SWTContainer {
 
@@ -31,10 +24,11 @@ public class SWTFormExpandPane extends SWTExpansationControlWidget<ExpandableCom
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(ExpandableComposite created) {
         if (this.composite != null && this.widget != null) {
-            Control tartget = (Control) widget.create(composite,this);
+            super.initWidget(composite);
+            widget.setParent(this);
+            Control tartget = (Control) widget.getWidget(composite);
             composite.setClient(tartget);
             SWTWidgets.setupLayoutData(this,composite);
         }
@@ -42,7 +36,7 @@ public class SWTFormExpandPane extends SWTExpansationControlWidget<ExpandableCom
 
 
     @Override
-    protected ExpandableComposite getWidget(Composite parent) {
+    public ExpandableComposite getWidget(Composite parent) {
         if (parent != null && this.composite == null) {
             FormToolkit toolkit = SWTWidgets.factory();
             composite = toolkit.createExpandableComposite(parent,this.flag);
@@ -53,6 +47,7 @@ public class SWTFormExpandPane extends SWTExpansationControlWidget<ExpandableCom
                     expand(composite.isExpanded());
                 }
             });
+            initWidget(composite);
         }
         return composite;
     }

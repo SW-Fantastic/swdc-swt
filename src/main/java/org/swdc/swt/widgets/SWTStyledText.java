@@ -20,18 +20,24 @@ public class SWTStyledText extends SWTControlWidget<StyledText> implements Selec
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(StyledText created) {
         if (text != null) {
+            super.initWidget(text);
             selectionProperty.manage(this);
             text.addSelectionListener(selectionProperty.dispatcher());
         }
     }
 
     @Override
-    protected StyledText getWidget(Composite parent) {
+    public StyledText getWidget() {
+        return text;
+    }
+
+    @Override
+    public StyledText getWidget(Composite parent) {
         if (parent != null && text == null) {
             text = new StyledText(parent,flag);
+            initWidget(text);
         }
         return text;
     }

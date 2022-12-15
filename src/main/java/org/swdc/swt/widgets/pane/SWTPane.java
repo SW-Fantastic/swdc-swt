@@ -1,12 +1,10 @@
 package org.swdc.swt.widgets.pane;
 
 import org.eclipse.swt.widgets.Composite;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -36,14 +34,15 @@ public class SWTPane extends SWTControlWidget<Composite> implements SWTContainer
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Composite created) {
         if (composite == null) {
             return;
         }
+        super.initWidget(composite);
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
-            swtWidget.create(composite,this);
+            swtWidget.setParent(this);
+            swtWidget.getWidget(composite);
             swtWidget = swtWidget.getNext();
         }
 
@@ -52,7 +51,7 @@ public class SWTPane extends SWTControlWidget<Composite> implements SWTContainer
     }
 
     @Override
-    protected Composite getWidget(Composite parent) {
+    public Composite getWidget(Composite parent) {
         if (composite == null && parent != null) {
             boolean isFormWidget = parent.getClass().getPackage().getName().contains("org.eclipse.ui.forms");
             if (isFormWidget) {
@@ -63,6 +62,7 @@ public class SWTPane extends SWTControlWidget<Composite> implements SWTContainer
             if (this.layout != null) {
                 composite.setLayout(layout.getLayout());
             }
+            initWidget(composite);
         }
         return composite;
     }

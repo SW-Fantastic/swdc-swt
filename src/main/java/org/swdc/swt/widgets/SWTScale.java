@@ -5,7 +5,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Scale;
 import org.swdc.swt.actions.SelectionProperty;
 import org.swdc.swt.beans.RangeProperty;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 import org.swdc.swt.widgets.base.Selectionable;
 
@@ -39,21 +38,27 @@ public class SWTScale extends SWTControlWidget<Scale> implements Selectionable {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Scale created) {
         if (scale != null) {
+            super.initWidget(scale);
             selectionProperty.manage(this);
+            rangeProperty.manage(scale);
             scale.addSelectionListener(selectionProperty.dispatcher());
             SWTWidgets.setupLayoutData(this,scale);
         }
     }
 
     @Override
-    protected Scale getWidget(Composite parent) {
+    public Scale getWidget(Composite parent) {
         if (this.scale == null && parent != null) {
             scale = new Scale(parent,this.flags);
-            rangeProperty.manage(scale);
+            initWidget(scale);
         }
+        return scale;
+    }
+
+    @Override
+    public Scale getWidget() {
         return scale;
     }
 

@@ -55,7 +55,7 @@ public class SWTViewLoader {
 
     private GroovyClassLoader loader = new GroovyClassLoader();
 
-    private SWTWidget parent;
+    private SWTContainer parent;
 
     private Module module;
 
@@ -65,7 +65,7 @@ public class SWTViewLoader {
         this(path,null);
     }
 
-    public SWTViewLoader(String path, SWTWidget parent) {
+    public SWTViewLoader(String path, SWTContainer parent) {
        this(
                path,
                parent,
@@ -76,7 +76,7 @@ public class SWTViewLoader {
        );
     }
 
-    public SWTViewLoader(String path, SWTWidget parent, Module module) {
+    public SWTViewLoader(String path, SWTContainer parent, Module module) {
         this.module = module;
         this.parent = parent;
         this.path = path;
@@ -129,18 +129,6 @@ public class SWTViewLoader {
 
         try {
 
-            if (parent == null) {
-                Stage stage = new Stage();
-                stage.layout(new SWTRowLayout(SWT.HORIZONTAL));
-                this.parent = stage;
-            }
-
-            if (parent.getLoader() == null) {
-                parent.setLoader(this);
-            } else {
-                parentLoader = parent.getLoader();
-            }
-
             Class<SWTView> widgetClass = loadedViewClasses.get(className);
 
             SWTView view = widgetClass
@@ -155,33 +143,34 @@ public class SWTViewLoader {
                     this.loadClass(item);
                 }
             }
+            SWTWidget viewPage = view.getView(this);
 
+            if (parent == null) {
+                Stage stage = new Stage();
+                stage.layout(view.getLayout() == null ? new SWTRowLayout(SWT.HORIZONTAL) : view.getLayout());
+                stage.children(viewPage);
+                this.parent = stage;
+            } else {
+                parent.children(viewPage);
+            }
+
+            if (parent.getLoader() == null) {
+                parent.setLoader(this);
+            } else {
+                parentLoader = parent.getLoader();
+            }
+
+            SWTWidget parentWidget = (SWTWidget)parent;
 
             Object controller = this.factory.createController(widgetClass);
-
             if (controller != null) {
-                controllerViewMap.put(parent.getControlId(),controller);
+                controllerViewMap.put(parentWidget.getControlId(),controller);
             }
 
-            SWTWidget viewPage = view.getView(this);
-            SWTWidget widget = viewPage;
-            while (widget != null) {
-
-                Object subController = factory.createController(widget.getClass());
-                if (subController != null) {
-                    controllerViewMap.put(widget.getControlId(),subController);
-                }
-
-                widget.create((Composite) parent.getWidget(),(SWTContainer) parent,this);
-                widget = widget.getNext();
-            }
-
-            // 调用ready，因为parent内部创建了新的组件。
-            parent.ready();
-
+            parentWidget.getWidget(null);
             logger.info(" view : " + path + " was loaded");
 
-            return parent;
+            return (SWTWidget) parent;
         } catch (Exception e) {
             logger.error("failed load view :  " + path + "caused by",e);
             throw new RuntimeException(e);
@@ -199,8 +188,8 @@ public class SWTViewLoader {
                 } else {
                     ViewController controller = item.getClass().getAnnotation(ViewController.class);
                     if (controller != null ) {
-                        Object subController = factory.createController(widget.getClass());
-                        controllerViewMap.put(widget.getControlId(),subController);
+                        Object subController = factory.createController(item.getClass());
+                        controllerViewMap.put(item.getControlId(),subController);
                         return (T)subController;
                     }
                 }
@@ -217,13 +206,13 @@ public class SWTViewLoader {
         }
         try {
 
-            SWTWidget widget =  (SWTWidget) viewClass
+            SWTView widget =  (SWTView) viewClass
                     .getConstructor()
                     .newInstance();
 
             widget.setLoader(this);
-
             return widget;
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

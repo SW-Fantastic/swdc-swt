@@ -59,4 +59,6 @@ public interface SWTContainer {
         return null;
     }
 
+    default void setLoader(SWTViewLoader loader){
+    }
 }

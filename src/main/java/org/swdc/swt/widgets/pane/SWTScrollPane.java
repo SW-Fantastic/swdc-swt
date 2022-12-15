@@ -9,12 +9,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Widget;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -54,17 +52,17 @@ public class SWTScrollPane extends SWTControlWidget<Composite> implements SWTCon
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Composite created) {
         if (wrapper == null) {
             return;
         }
+        super.initWidget(wrapper);
         if (this.widget != null) {
-            Widget composite = this.widget.create(scrolledComposite,this);
+            this.widget.setParent(this);
+            Widget composite = this.widget.getWidget(scrolledComposite);
             Control control = (Control) composite;
             scrolledComposite.setContent(control);
             control.requestLayout();
-
         }
         SWTWidgets.setupLayoutData(this,this.wrapper);
     }
@@ -82,7 +80,7 @@ public class SWTScrollPane extends SWTControlWidget<Composite> implements SWTCon
     }
 
     @Override
-    protected Composite getWidget(Composite parent) {
+    public Composite getWidget(Composite parent) {
         if (scrolledComposite == null && parent != null) {
             wrapper = new Composite(parent,SWT.NONE);
             wrapper.setLayout(new FillLayout());
@@ -104,7 +102,8 @@ public class SWTScrollPane extends SWTControlWidget<Composite> implements SWTCon
                     minSize = scrolledComposite.getContent().computeSize( SWT.DEFAULT, SWT.DEFAULT );
                 }
                 scrolledComposite.setMinSize( minSize );
-            } );
+            });
+            initWidget(wrapper);
         }
         return wrapper;
     }

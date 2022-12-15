@@ -18,22 +18,13 @@ public abstract class SWTExpansationControlWidget<T extends Control> extends SWT
 
     private ExpansionProperty expansionProperty = new ExpansionProperty();
 
-    @Override
-    public T create(Composite parent, SWTContainer parentWidget, SWTViewLoader loader) {
-        T widget = super.create(parent, parentWidget, loader);
-        if (widget != null) {
-            expandProperty.manage(widget);
-        }
-        return widget;
-    }
 
     @Override
-    public void ready() {
-        super.ready();
-        T widget = getWidget();
+    public void initWidget(T created) {
+        super.initWidget(created);
         try {
-            Method adder = widget.getClass().getMethod("addExpansionListener", new Class[]{IExpansionListener.class});
-            adder.invoke(widget,expansionProperty.dispatcher());
+            Method adder = created.getClass().getMethod("addExpansionListener", new Class[]{IExpansionListener.class});
+            adder.invoke(created,expansionProperty.dispatcher());
             expansionProperty.manage(this);
         } catch (Exception ex) {
             ex.printStackTrace();

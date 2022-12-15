@@ -15,18 +15,24 @@ public class SWTCanvas extends SWTControlWidget<Canvas> {
     }
 
     @Override
-    public void ready() {
-        super.ready();
-        if (canvas == null) {
+    public void initWidget(Canvas created) {
+        if (created == null) {
             return;
         }
-        SWTWidgets.setupLayoutData(this,this.canvas);
+        super.initWidget(created);
+        SWTWidgets.setupLayoutData(this,created);
     }
 
     @Override
-    protected Canvas getWidget(Composite parent) {
+    public Canvas getWidget() {
+        return canvas;
+    }
+
+    @Override
+    public Canvas getWidget(Composite parent) {
         if (this.canvas == null && parent != null) {
             this.canvas = new Canvas(parent,this.flag);
+            initWidget(canvas);
         }
         return canvas;
     }

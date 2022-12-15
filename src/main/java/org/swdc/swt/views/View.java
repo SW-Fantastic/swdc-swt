@@ -1,5 +1,6 @@
 package org.swdc.swt.views;
 
+import org.eclipse.swt.widgets.Shell;
 import org.swdc.swt.ControllerFactory;
 import org.swdc.swt.SWTViewLoader;
 import org.swdc.swt.widgets.Stage;
@@ -18,25 +19,21 @@ public abstract class View {
 
     private Stage stage = null;
 
-    public abstract void config(Stage stage);
-
     public void loadView(){
         SWTView view = this.getClass().getAnnotation(SWTView.class);
         if (view == null) {
             throw new RuntimeException("view must has SWTView annotation。");
         }
 
-        stage = new Stage(view.style());
-
-        this.config(stage);
-
         String pathOnResource = view.value();
-        loader = new SWTViewLoader(pathOnResource,stage,this.getClass().getModule());
+        loader = new SWTViewLoader(pathOnResource,null,this.getClass().getModule());
         if (this.controllerFactory != null) {
             loader.setFactory(controllerFactory);
         }
 
         this.stage = (Stage) loader.loadView();
+        Shell shell = this.stage.getShell();
+        shell.setMinimumSize(view.minWidth(),view.minHeight());
     }
 
     public void factory(ControllerFactory controllerFactory) {

@@ -19,4 +19,8 @@ public @interface SWTView {
 
     int style() default SWT.SHELL_TRIM;
 
+    int minWidth() default 600;
+
+    int minHeight() default 400;
+
 }

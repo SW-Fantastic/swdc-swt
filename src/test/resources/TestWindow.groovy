@@ -10,6 +10,7 @@ import org.swdc.swt.layouts.SWTBorderLayout
 import org.swdc.swt.layouts.SWTFormData
 import org.swdc.swt.layouts.SWTFormLayout
 import org.swdc.swt.layouts.SWTGridLayout
+import org.swdc.swt.layouts.SWTLayout
 import org.swdc.swt.layouts.SWTRowLayout
 import org.swdc.swt.layouts.SWTStackLayout
 import org.swdc.swt.widgets.SWTButton
@@ -60,7 +61,6 @@ import org.swdc.swt.widgets.pane.SWTViewForm
 @ViewController(TestController.class)
 class SWTWindow extends SWTView {
 
-
     private demoTable() {
         SWTTable.table(SWT.NORMAL | SWT.FULL_SELECTION).define {
 
@@ -83,6 +83,9 @@ class SWTWindow extends SWTView {
                     text  "Test Col"
                     width 120
                     factory (TestCell obj) -> obj.getName()
+                    editor (TestCell obj) -> SWTButton.button(SWT.FLAT).define {
+                        text obj.getName()
+                    }
                 }
             } >> widget {
                 SWTTableColumn.tableColumn(SWT.CANCEL).define {
@@ -95,15 +98,16 @@ class SWTWindow extends SWTView {
     }
 
     @Override
-    protected SWTWidget viewPage() {
-
-     /*   layout SWTGridLayout.gridLayout().define {
+    protected SWTLayout layout() {
+        SWTGridLayout.gridLayout().define {
             margin 6,6
             spacing 8,8
             columns 6
-        } */
+        }
+    }
 
-        /* children */
+    @Override
+    protected SWTWidget viewPage() {
         widget {
             SWTLabel.label(SWT.NORMAL,"Test Label").define {
                 text "change"
@@ -238,12 +242,14 @@ class SWTWindow extends SWTView {
                                         children widget {
                                             new SWTToolItem(SWT.PUSH).define {
                                                 text "Tool"
+                                                size 120,40
                                             }
                                         } >> widget {
                                             new SWTToolItem(SWT.SEPARATOR).define {
                                                 size 120,SWT.DEFAULT
                                                 control SWTButton.button(SWT.PUSH).define {
                                                     text "Test"
+                                                    size 120,40
                                                 }
                                             }
                                         }

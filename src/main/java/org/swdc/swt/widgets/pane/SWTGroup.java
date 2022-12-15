@@ -1,16 +1,13 @@
 package org.swdc.swt.widgets.pane;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.beans.TextProperty;
 import org.swdc.swt.layouts.SWTLayout;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -37,14 +34,15 @@ public class SWTGroup extends SWTControlWidget<Group> implements SWTContainer {
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(Group created) {
         if (group == null) {
             return;
         }
+        super.initWidget(group);
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
-            swtWidget.create(group,this);
+            swtWidget.setParent(this);
+            swtWidget.getWidget(group);
             swtWidget = swtWidget.getNext();
         }
         SWTWidgets.setupLayoutData(this,group);
@@ -57,7 +55,7 @@ public class SWTGroup extends SWTControlWidget<Group> implements SWTContainer {
 
 
     @Override
-    protected Group getWidget(Composite parent) {
+    public Group getWidget(Composite parent) {
         if (parent != null && group == null) {
             group = new Group(parent,this.flags);
 
@@ -67,6 +65,7 @@ public class SWTGroup extends SWTControlWidget<Group> implements SWTContainer {
                 group.setLayout(new FillLayout());
             }
             textProperty.manage(group);
+            initWidget(group);
         }
         return group;
     }

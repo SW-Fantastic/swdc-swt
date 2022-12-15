@@ -3,11 +3,9 @@ package org.swdc.swt.widgets.pane;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Composite;
 import org.swdc.swt.beans.ObservableValue;
-import org.swdc.swt.beans.SizeProperty;
 import org.swdc.swt.widgets.SWTContainer;
 import org.swdc.swt.widgets.SWTWidget;
 import org.swdc.swt.widgets.SWTWidgets;
-import org.swdc.swt.widgets.Stage;
 import org.swdc.swt.widgets.base.SWTControlWidget;
 
 import java.util.Arrays;
@@ -56,14 +54,15 @@ public class SWTSashForm extends SWTControlWidget<SashForm> implements SWTContai
     }
 
     @Override
-    public void ready() {
-        super.ready();
+    public void initWidget(SashForm created) {
         if (form == null) {
             return;
         }
+        super.initWidget(form);
         SWTWidget swtWidget = widget;
         while (swtWidget != null) {
-            swtWidget.create(form,this);
+            swtWidget.setParent(this);
+            swtWidget.getWidget(form);
             swtWidget = swtWidget.getNext();
         }
         if (!percentage.isEmpty()) {
@@ -73,10 +72,11 @@ public class SWTSashForm extends SWTControlWidget<SashForm> implements SWTContai
     }
 
     @Override
-    protected SashForm getWidget(Composite parent) {
+    public SashForm getWidget(Composite parent) {
         if (this.form == null && parent != null) {
             this.form = new SashForm(parent,this.flag);
             form.SASH_WIDTH = spec.get();
+            this.initWidget(form);
         }
         return form;
     }

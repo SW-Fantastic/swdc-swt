@@ -146,7 +146,8 @@ public class SWTApplication extends AbstractApplication {
             });
 
         } catch (Exception e) {
-
+            logger.info(" application has shutdown.",e);
+            System.exit(0);
         }
     }
 
