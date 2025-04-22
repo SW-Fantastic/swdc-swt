@@ -2,6 +2,7 @@
 
 import org.eclipse.swt.SWT
 import org.swdc.dsl.SubController
+import org.swdc.swt.SWTViewLoader
 import org.swdc.swt.ViewController
 import org.swdc.swt.layouts.SWTGridLayout
 import org.swdc.swt.layouts.SWTLayout
@@ -13,7 +14,7 @@ import org.swdc.swt.widgets.SWTWidget
 class MountDemo extends SWTView {
 
     @Override
-    protected SWTWidget viewPage() {
+    protected SWTWidget viewPage(SWTWidget self) {
         SWTButton.button(SWT.FLAT).define {
             text "Mounted From Resource"
             onAction "resourceClick"

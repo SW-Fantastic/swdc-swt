@@ -23,10 +23,10 @@ public abstract class SWTView<C extends Scrollable> extends SWTWidget<Composite>
 
     public SWTWidget getView(SWTViewLoader loader) {
         this.loader = loader;
-        return viewPage();
+        return viewPage(this);
     }
 
-    protected abstract SWTWidget viewPage();
+    protected abstract SWTWidget viewPage(SWTWidget self);
 
     protected abstract SWTLayout layout();
 
@@ -58,7 +58,7 @@ public abstract class SWTView<C extends Scrollable> extends SWTWidget<Composite>
                     SWTFillLayout.fillLayout(SWT.NORMAL) : layout);
 
             widget.setParent(this);
-            widget.children(this.viewPage());
+            widget.children(this.viewPage(this));
             pane = widget.getWidget(parent);
             initWidget(pane);
         }

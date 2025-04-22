@@ -9,8 +9,9 @@ import org.swdc.dependency.EnvironmentLoader;
 import org.swdc.dependency.LoggerProvider;
 import org.swdc.dependency.application.AbstractApplication;
 import org.swdc.dependency.application.SWApplication;
-import org.swdc.dependency.utils.AnnotationDescription;
-import org.swdc.dependency.utils.AnnotationUtil;
+import org.swdc.ours.common.annotations.AnnotationDescription;
+import org.swdc.ours.common.annotations.AnnotationDescriptions;
+import org.swdc.ours.common.annotations.Annotations;
 import org.swdc.swt.views.Splash;
 import org.swdc.swt.views.ViewManager;
 import org.swdc.swt.widgets.SWTWidgets;
@@ -51,8 +52,8 @@ public class SWTApplication extends AbstractApplication {
 
             loader.withScope(new ViewManager());
 
-            Map<Class, AnnotationDescription> annotations = AnnotationUtil.getAnnotations(this.getClass());
-            AnnotationDescription appDesc = AnnotationUtil.findAnnotationIn(annotations,EclipseApplication.class);
+            AnnotationDescriptions annotations = Annotations.getAnnotations(this.getClass());
+            AnnotationDescription appDesc = Annotations.findAnnotationIn(annotations,EclipseApplication.class);
             logger.info(" using assets: " + appDesc.getProperty(String.class,"assetsFolder"));
             Class[] configs = appDesc.getProperty(Class[].class,"configs");
             Class splash = appDesc.getProperty(Class.class,"splash");

@@ -1,5 +1,8 @@
 # 基于自研框架application的Eclipse-SWT/JFace框架
 
+> 本模块复活了，以[Module-eclipse-swt](https://github.com/SW-Fantastic/modular-eclipse-swt)项目为基础，SWT模块将会
+> 继续开发。
+
 ## 运行截图
 
 ![截图 Linux](./docs/screen-shot/Linux.png)

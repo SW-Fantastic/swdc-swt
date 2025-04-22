@@ -3,7 +3,7 @@ import org.eclipse.swt.SWT
 import org.eclipse.ui.forms.widgets.Section
 import org.swdc.dsl.TestCell
 import org.swdc.dsl.TestController
-
+import org.swdc.swt.SWTViewLoader
 import org.swdc.swt.ViewController
 import org.swdc.swt.ViewRequire
 import org.swdc.swt.layouts.SWTBorderLayout
@@ -112,7 +112,7 @@ class SWTWindow extends SWTView {
     }
 
     @Override
-    protected SWTWidget viewPage() {
+    protected SWTWidget viewPage(SWTWidget self) {
         widget {
             SWTLabel.label(SWT.NORMAL,"Test Label").define {
                 text "change"
@@ -152,7 +152,7 @@ class SWTWindow extends SWTView {
                 }
             }
         } >> widget {
-            demoTable("tableA")
+            self.demoTable("tableA")
         } >> widget {
             SWTComboBox.comboBox(SWT.NORMAL).define {
 
@@ -317,7 +317,7 @@ class SWTWindow extends SWTView {
                             } >> widget {
                                 new SWTCanvas(SWT.FLAT|SWT.BORDER)
                             } >> widget {
-                                getLoader().create("MountDemo").define {
+                                self.getLoader().create("MountDemo").define {
                                     id "demo"
                                 }
                             } >> widget {
@@ -409,7 +409,7 @@ class SWTWindow extends SWTView {
                                                 text "测试文本"
                                             }
                                         } >> widget {
-                                            demoTable("tableB")
+                                            self.demoTable("tableB")
                                         } >> widget {
                                             SWTFormExpandPane.expandPane(Section.TWISTIE).define {
                                                 text "Expand Pane"
@@ -422,7 +422,7 @@ class SWTWindow extends SWTView {
                                                     fillWidth true
                                                 }
                                                 children widget {
-                                                    demoTable()
+                                                    self.demoTable()
                                                 }
                                             }
                                         }
